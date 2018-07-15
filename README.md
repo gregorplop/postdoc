@@ -1,5 +1,5 @@
 ## postdoc.
-### PostgreSQL-based Electronic Document Management framework for Xojo
+### A PostgreSQL-based Electronic Document Management framework for Xojo
 postdoc aims to be a way for Xojo developers to easily create workflow-enabled EDM applications. It abstracts the underlying database structure for storing metadata as well as version and status information. In addition to that, it provides a mechanism for storing binary content outside the database, while providing access to it via the same database connection.
 - - -
 ### The state of postdoc.
@@ -46,6 +46,6 @@ Below is a list of postdoc library components and applications that anyone inter
 
 - - -
 ### In conclusion...
-We're still at the beginning. Please feel free to try *pdstorage* or integrate it to your application. For any questions, do not hesitate to contact me at g.poulopoulos at gmail.com
+We're still at the beginning. Please feel free to play around with *pdstorage* or integrate it to your application. For any questions, do not hesitate to contact me at g.poulopoulos at gmail.com
 
 
