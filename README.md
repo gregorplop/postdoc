@@ -1,16 +1,16 @@
 ## postdoc.
-###PostgreSQL-based Electronic Document Management framework for Xojo
+### PostgreSQL-based Electronic Document Management framework for Xojo
 postdoc aims to be a way for Xojo developers to easily create workflow-enabled EDM applications. It abstracts the underlying database structure for storing metadata as well as version and status information. In addition to that, it provides a mechanism for storing binary content outside the database, while providing access to it via the same database connection.
 - - -
-###The state of postdoc.
+### The state of postdoc.
 *Well, postdoc doesn't really exist yet!*
 It is still under heavy development and large parts of it have not even left the design stage, meaning, it has not been decided on the optimal way to implement them!
 **But,** what does exist and it's pretty functional, is the storage subsystem, *pdstorage*.
 An important thing to note is the order of development: any meaningful work on postdoc cannot start before the storage and data transfer mechanisms are functional. So, all efforts are focused on them at the moment.
 - - - 
-###What's here
+### What's here
 Below is a list of postdoc library components and applications that anyone interested in this project can explore and test. This list is going to be the main reference point as to the overall progress of the project.
-####postdoc libraries
+#### postdoc libraries
 
 * **pdcore**
  This is the core library of methods, as well as utility classes that are to be universally required by any postdoc component. A good example (the only at this moment) is the pdoutcome class, which is the standard way for most methods to return their outcome or results. You may find some methods in the pdcorelib module useful to copy, but generally, nothing here is meaningful on its own.
@@ -30,7 +30,7 @@ Below is a list of postdoc library components and applications that anyone inter
  **A final note of caution on pdstorage: **
  While having multiple client applications running locally, mounting a VFS and performing I/O on Media is considered a safe practice, what is **ABSOLUTELY UNSAFE**, is connecting to a VFS or Media that reside on a shared network drive. This is an SQLite limitation and if at all possible to engage in such practice, you're risking database corruption. *You have been warned.*
 
-####postdoc applications (sample/test or backend)
+#### postdoc applications (sample/test or backend)
 * **pdvfs_testGUI**
  This is the first application to test the functionality of *pdstorage*, when it was still called pdvfs. It provides a good overview of how to use the *pdstorage* classes, as well as how to implement password protection for both the VFS and Storage Pools.
  
@@ -42,7 +42,7 @@ Below is a list of postdoc library components and applications that anyone inter
  An application for exploring SQLite database files. It was created for developing and debugging *pdstorage*. It supports opening password protected databases, **but** you need to keep in mind that *pdstorage* randomly salts all passwords. This means that the password you entered when creating the VFS or Pool is not the same password needed to manually open the VFS or Medium file using a database manager tool.
 
 - - -
-###In conclusion...
+### In conclusion...
 We're still at the beginning. Please feel free to try *pdstorage* or integrate it to your application. For any questions, do not hesitate to contact me at g.poulopoulos at gmail.com
 
 
