@@ -44,6 +44,9 @@ Below is a list of postdoc library components and applications that anyone inter
 * **pdSQLiteStudio**\
    An application for exploring SQLite database files. It was created for developing and debugging *pdstorage*. It supports opening password protected databases, **but** you need to keep in mind that *pdstorage* randomly salts all passwords. This means that the password you entered when creating the VFS or Pool is not the same password needed to manually open the VFS or Medium file using a database manager tool.
 
+* **pdPgQueueDebug**\
+   A diagnostic tool for the the PostgreSQL built-in message queue implemented using the LISTEN/NOTIFY statements. The document content transfer mechanism (*pdtransport*) will be relying on that message queue for communication between Postgres clients(=postdoc sessions) and the backend application that will be responding to their requests. This tool will be necessary for the debugging process.
+   
 - - -
 ### In conclusion...
 We're still at the beginning. Please feel free to play around with *pdstorage* or integrate it to your application. For any questions, do not hesitate to contact me at g.poulopoulos at gmail.com
