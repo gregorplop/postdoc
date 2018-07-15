@@ -30,10 +30,11 @@ Below is a list of postdoc library components and applications that anyone inter
    
    For examples over how *pdstorage* is implemented you can refer to **pdvfs_testGUI** and **pdStorageConsole** applications. For exploring the contents of the SQLite databases, you can use the **pdSQLiteStudio** application. More specific documentation on how to use the public methods will be included as notes in the corresponding classes, but generally an effort is being made to keep things as straightforward and self-explanatory as possible.
 
-   **A final note of caution on pdstorage:**  While having multiple client applications running locally, mounting a VFS and performing I/O on Media is considered a safe practice, what is **ABSOLUTELY UNSAFE**, is connecting to a VFS or Media that reside on a shared network drive. This is an SQLite limitation and if at all possible to engage in such practice, you're risking database corruption. *You have been warned.*
+   **A final note of caution on pdstorage:**\
+   While having multiple client applications running locally, mounting a VFS and performing I/O on Media is considered a safe practice, what is **ABSOLUTELY UNSAFE**, is connecting to a VFS or Media that reside on a shared network drive. This is an SQLite limitation and if at all possible to engage in such practice, you're risking database corruption. *You have been warned.*
 
 #### postdoc applications (sample/test or backend)
-* **pdvfs_testGUI**
+* **pdvfs_testGUI**\
  This is the first application to test the functionality of *pdstorage*, when it was still called pdvfs. It provides a good overview of how to use the *pdstorage* classes, as well as how to implement password protection for both the VFS and Storage Pools.
  
 * **pdStorageConsole**\
