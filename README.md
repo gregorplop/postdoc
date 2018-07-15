@@ -16,7 +16,7 @@ Below is a list of postdoc library components and applications that anyone inter
  This is the core library of methods, as well as utility classes that are to be universally required by any postdoc component. A good example (the only at this moment) is the pdoutcome class, which is the standard way for most methods to return their outcome or results. You may find some methods in the pdcorelib module useful to copy, but generally, nothing here is meaningful on its own.
 
 * **pdstorage**
- This is the binary storage subsystem of postdoc. It is meant for storing the document content off the database, in a structure that is convenient for both the developer and the system administrator. ++It is being developed in such way that it can be easily broken off the rest of postdoc and used in other projects.++
+ This is the binary storage subsystem of postdoc. It is meant for storing the document content off the database, in a structure that is convenient for both the developer and the system administrator. __It is being developed in such way that it can be easily broken off the rest of postdoc and used in other projects.__
  
  *pdstorage* is essentially a virtual file system where all data containers are SQLite databases. 
  There is a central "point of reference", which is called a **VFS** and it is the SQLite database file that holds object allocation and addressing information for the entire storage system. Access to a VFS can be password-protected if required.
@@ -27,7 +27,7 @@ Below is a list of postdoc library components and applications that anyone inter
  
  For examples over how *pdstorage* is implemented you can refer to **pdvfs_testGUI** and **pdStorageConsole** applications. For exploring the contents of the SQLite databases, you can use the **pdSQLiteStudio** application. More specific documentation on how to use the public methods will be included as notes in the corresponding classes, but generaally an effort is being made to keep things as sraightforward and self-explanatory as possible.
 
- **A final note of caution on pdstorage: **
+ **A final note of caution on pdstorage:**
  While having multiple client applications running locally, mounting a VFS and performing I/O on Media is considered a safe practice, what is **ABSOLUTELY UNSAFE**, is connecting to a VFS or Media that reside on a shared network drive. This is an SQLite limitation and if at all possible to engage in such practice, you're risking database corruption. *You have been warned.*
 
 #### postdoc applications (sample/test or backend)
