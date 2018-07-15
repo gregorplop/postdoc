@@ -15,10 +15,10 @@ Below is a list of postdoc library components and applications that anyone inter
 #### postdoc libraries
 
 * **pdcore**
- This is the core library of methods, as well as utility classes that are to be universally required by any postdoc component. A good example (the only at this moment) is the pdoutcome class, which is the standard way for most methods to return their outcome or results. You may find some methods in the pdcorelib module useful to copy, but generally, nothing here is meaningful on its own.
+   This is the core library of methods, as well as utility classes that are to be universally required by any postdoc component. A good example (the only at this moment) is the pdoutcome class, which is the standard way for most methods to return their outcome or results. You may find some methods in the pdcorelib module useful to copy, but generally, nothing here is meaningful on its own.
 
 * **pdstorage**
- This is the binary storage subsystem of postdoc. It is meant for storing the document content off the database, in a structure that is convenient for both the developer and the system administrator. It is being developed in such way that it can be easily broken off the rest of postdoc and used in other projects.
+   This is the binary storage subsystem of postdoc. It is meant for storing the document content off the database, in a structure that is convenient for both the developer and the system administrator. It is being developed in such way that it can be easily broken off the rest of postdoc and used in other projects.
  
    *pdstorage* is essentially a virtual file system where all data containers are SQLite databases. 
    
@@ -37,11 +37,11 @@ Below is a list of postdoc library components and applications that anyone inter
  This is the first application to test the functionality of *pdstorage*, when it was still called pdvfs. It provides a good overview of how to use the *pdstorage* classes, as well as how to implement password protection for both the VFS and Storage Pools.
  
 * **pdStorageConsole**
- A more recent testing ground for *pdstorage*. It allows creating and real time monitoring of Media usage but it does not support password protection.
+   A more recent testing ground for *pdstorage*. It allows creating and real time monitoring of Media usage but it does not support password protection.
  Also, allows for mass import of data for testing/benchmarking purposes.
  
 * **pdSQLiteStudio**
- An application for exploring SQLite database files. It was created for developing and debugging *pdstorage*. It supports opening password protected databases, **but** you need to keep in mind that *pdstorage* randomly salts all passwords. This means that the password you entered when creating the VFS or Pool is not the same password needed to manually open the VFS or Medium file using a database manager tool.
+   An application for exploring SQLite database files. It was created for developing and debugging *pdstorage*. It supports opening password protected databases, **but** you need to keep in mind that *pdstorage* randomly salts all passwords. This means that the password you entered when creating the VFS or Pool is not the same password needed to manually open the VFS or Medium file using a database manager tool.
 
 - - -
 ### In conclusion...
