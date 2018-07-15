@@ -458,7 +458,7 @@ Begin Window MainWindow
          TabIndex        =   10
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "tmfm123"
+         Text            =   ""
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
