@@ -1,276 +1,175 @@
-#tag Module
-Protected Module pdcoreLib
+#tag Class
+Protected Class pddataset
 	#tag Method, Flags = &h0
-		Function bulkSQLexecute(byref sqliteDB as SQLiteDatabase , statements() as string , singleTransaction as Boolean) As string()
-		  // returns an array of the same dimension as statements()
-		  // each element holds the error code for the corresponding element of statements() if any. if no error then the element is empty
-		  // if output.ubound < 0 then there was a parameter error
-		  dim output(-1) as string
-		  pdLastError =empty
+		Sub addRecord(newRecord as Dictionary)
+		  if container = nil then Raise newException(7 , "pddataset: Dataset is not initialized")
+		  if newRecord = nil then Raise newException(4 , "pddataset: No data to add to dataset")
+		  if newRecord.Count = 0 then Raise newException(4 , "pddataset: No data to add to dataset")
 		  
-		  if sqliteDB = nil then 
-		    pdLastError = CurrentMethodName+ ": SQLite database is null"
-		    return output
-		  end if
+		  dim inputFields(-1) as String
+		  dim inputValues(-1) as String
 		  
-		  if statements.Ubound < 0 then
-		    pdLastError = CurrentMethodName + ": No statement to execute"
-		    return output
-		  end if
+		  dim keys(-1) as Variant = newRecord.Keys
+		  dim values(-1) as Variant = newRecord.Values
 		  
-		  if singleTransaction = true then 
-		    sqliteDB.SQLExecute("BEGIN TRANSACTION")
-		    if sqliteDB.Error = true then 
-		      pdLastError = CurrentMethodName + ": Begin transaction failed: "+ sqliteDB.ErrorMessage
-		      return output
-		    end if
-		  end if
-		  
-		  ReDim output(statements.Ubound)
-		  dim ErrorOccured as Boolean = false
-		  
-		  for i as integer = 0 to statements.Ubound
-		    sqliteDB.SQLExecute(statements(i))
-		    if sqliteDB.error = true then 
-		      output(i) = sqliteDB.ErrorMessage
-		      ErrorOccured = true
-		    else
-		      output(i) = empty
-		    end if
+		  for i as integer = 0 to keys.Ubound
+		    inputFields.Append keys(i).stringvalue
+		    inputValues.Append nullTransform(values(i).stringvalue)
 		  next i
 		  
+		  dim auxrs as RecordSet
 		  
-		  if singleTransaction = true then 
-		    
-		    if ErrorOccured = False then
-		      sqliteDB.SQLExecute("COMMIT TRANSACTION")
-		      if sqliteDB.Error = true then 
-		        pdLastError = CurrentMethodName + ": Commit transaction failed: "+ sqliteDB.ErrorMessage
-		        ReDim output(-1)
-		        return output
-		      end if
-		    else  // an error has occured in one of the statements
-		      sqliteDB.SQLExecute("ROLLBACK TRANSACTION")
-		      if sqliteDB.Error = true then 
-		        pdLastError = CurrentMethodName + ": Rollback transaction failed: "+ sqliteDB.ErrorMessage
-		        ReDim output(-1)
-		        return output
-		      end if
-		    end if
-		    
+		  for i as integer = 0 to inputFields.Ubound
+		    if fieldNames_native.IndexOf(inputFields(i)) < 0 then raise newException(5 , "pddataset: Input record field " + inputFields(i) + " does not exist in dataset")
+		  next i
+		  
+		  if uniqueField <> empty then // we have a unique constraint to consider
+		    if inputFields.IndexOf(uniqueField) < 0 then raise newException(6 , "pddataset: Unique field " + uniqueField + " does not exist in input record")
+		    auxrs = container.SQLSelect("SELECT COUNT(*) FROM dataset WHERE " + uniqueField + " = '" + newRecord.Value(uniqueField).StringValue + "'")
+		    checkDBforError
+		    if auxrs.IdxField(1).IntegerValue > 0 then raise newException(9 , "pddataset: Unique constraint violation for value: " + newRecord.Value(uniqueField).StringValue)
 		  end if
 		  
-		  return output
+		  dim insertStatement as string = "INSERT INTO dataset (" + join(inputFields , ",") + ") VALUES (" + join(inputValues , ",") + ")"
+		  container.SQLExecute(insertStatement)
+		  if container.Error = true then raise newException(10 , "pddataset: Error inserting data: " + container.ErrorMessage)
 		  
 		  
-		  
-		End Function
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function fromBase64(extends input as string) As string
-		  return DecodeBase64(input)
-		End Function
+		Sub addRecord(inputValues() as string)
+		  // work in progress
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub checkDBforError()
+		  if container.error = true then raise newException(8 , "pddataset: Data query error: " + container.ErrorMessage)
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function getGUIappArguments() As string()
-		  dim arguments(-1) as string
-		  dim processCL as String = System.commandline
+		Sub Constructor(fieldNames() as string , initDescription as string , optional uniqueFieldname as string)
+		  if fieldNames.Ubound < 0 then raise newException(1 , "pddataset: No dataset init info")
 		  
-		  #if TargetHasGUI then
-		    
-		    #If TargetWindows then
-		      
-		      if processCL.Left(1) = """" then // called by another app
-		        processCL = processCL.Replace(app.ExecutableFile.NativePath , empty)
-		        processCL = processCL.Right(processCL.Len - 2)
-		        
-		      else  // launched from the command line
-		        
-		        if processCL.Replace(app.ExecutableFile.Name , empty) = processCL then // launched by name without extension
-		          processCL = processCL.Replace(app.ExecutableFile.Name.Replace(".exe" , empty), empty)
-		        else // launched by name with extension
-		          processCL = processCL.Replace(app.ExecutableFile.Name , empty)
-		        end if
-		        
-		      end if
-		      
-		    #Elseif TargetLinux
-		      processCL = processCL.Replace(app.ExecutableFile.NativePath , empty)
-		      
-		    #elseif TargetMacOS
-		      processCL = processCL.Replace(app.ExecutableFile.NativePath , empty)
-		      
-		    #Endif
-		    
-		    arguments = processCL.Split(" ")
-		    
-		    dim markEmpties(-1) as integer
-		    for i as integer = 0 to arguments.Ubound
-		      if arguments(i) = empty then markEmpties.Append i
-		    next i
-		    for i as Integer = 0 to markEmpties.Ubound
-		      arguments.Remove(markEmpties(i) - i)
-		    next i
-		    
-		    
-		  #endif
+		  if uniqueFieldname.trim <> empty then
+		    if fieldNames.IndexOf(uniqueFieldname) < 0 then raise newException(2 , "pddataset: unique field name " + uniqueFieldname + " is not amonst field names")
+		    uniqueField = uniqueFieldname.Trim
+		  end if
 		  
-		  return arguments
+		  container = new SQLiteDatabase  // create in-memory database
+		  call container.Connect
 		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function getNonEmptyElements(inputStringArray() as string) As integer()
-		  dim output(-1) as integer
-		  dim ArraySize as Integer = inputStringArray.Ubound
-		  
-		  for i as Integer = 0 to ArraySize
-		    if inputStringArray(i) <> empty then output.Append i
+		  for i as integer = 0 to fieldNames.Ubound
+		    fieldNames_native.append fieldNames(i)
 		  next i
 		  
-		  return output
+		  description = initDescription.Trim
 		  
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function makeSalt(chars as Integer) As string
-		  dim salt as string
-		  dim chaos as new random
-		  chaos.RandomizeSeed
-		  
-		  
-		  for i as integer = 1 to chars
-		    if i mod 2 = 0 then 
-		      salt = salt + chr(chaos.InRange(48,90))
-		    else
-		      salt = salt + chr(chaos.InRange(97,122))
-		    end if
+		  for i as integer = 0 to fieldNames.Ubound
+		    fieldNames(i) = fieldNames(i).trim + " TEXT "
 		  next i
 		  
-		  return salt
+		  container.SQLExecute("CREATE TABLE dataset (" + Join(fieldNames , ",") + " )")
+		  if container.Error = true then raise newException(3 , "pddataset: Could not initialize dataset: " + container.ErrorMessage)
 		  
+		  
+		  if uniqueField <> empty then 
+		    // create an index on the unique column, since WE will be enforcing the unique constraint and not the RDBMS, we'll be doing a lot of searching on it.
+		    container.SQLExecute("CREATE INDEX unique_index ON dataset(" + uniqueField + ")")
+		    if container.Error = true then raise newException(3 , "pddataset: Could not initialize dataset: " + container.ErrorMessage)
+		  end if
+		  
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Destructor()
+		  if IsNull(container) = false then container.Close  // maybe redundant but it never hurts...
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function getDescription() As string
+		  return description
 		  
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function now() As date
-		  dim d as new date
-		  return d
+	#tag Method, Flags = &h21
+		Private Function newException(errorNumber as integer , message as string) As RuntimeException
+		  dim auxException as new RuntimeException
+		  auxException.ErrorNumber = errorNumber
+		  auxException.Message = message
+		  return auxException
 		  
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function readBinaryFile(file as FolderItem , byref targetBlock as MemoryBlock , optional mbChunk as integer = 16) As pdOutcome
-		  if file = nil then return new pdOutcome(CurrentMethodName + ": Input file path is invalid")
-		  if file.Exists = false then Return new pdOutcome(CurrentMethodName + ": Input file does not exist")
-		  if file.Directory = true then return new pdOutcome(CurrentMethodName + ": Input file is really a folder")
-		  if mbChunk < 1 then return new pdOutcome(CurrentMethodName + ": Chunk smaller than 1 MB")
-		  
-		  targetBlock = empty
-		  
-		  dim ReadStream as BinaryStream
-		  dim WriteStream as new BinaryStream(targetBlock)
-		  
-		  try
-		    
-		    ReadStream = BinaryStream.Open(file , False)
-		    
-		    do until ReadStream.EOF
-		      
-		      WriteStream.Write(ReadStream.Read(MByte * mbChunk))
-		      
-		      if ReadStream.ReadError = true then 
-		        ReadStream.close
-		        WriteStream.Close
-		        return new pdOutcome(CurrentMethodName + ": Error code " + str(ReadStream.LastErrorCode) + " while reading file " + file.NativePath)
-		      end if
-		      
-		    loop
-		    
-		    ReadStream.close
-		    WriteStream.close
-		    
-		  catch e as IOException
-		    ReadStream.close
-		    WriteStream.Close
-		    return new pdOutcome(CurrentMethodName + ": IO Error while reading file " + file.NativePath)
-		  end try
-		  
-		  
-		  return new pdOutcome(true)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function sqlQuote(extends input as Boolean) As string
-		  if input = true then
-		    return "'true'"
+	#tag Method, Flags = &h21
+		Private Function nullTransform(value as String) As string
+		  if value = empty then
+		    return "null"
 		  else
-		    return "'false'"
+		    return "'" + value + "'"
 		  end if
 		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function sqlQuote(extends input as string) As string
-		  if input = empty then 
-		    return " NULL "
-		  else
-		    return " '" + input + "' "
-		  end if
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function toBase64(extends input as string) As string
-		  return EncodeBase64(input , 0)
+		Sub setFriendlynames(inputFriendlynames() as string)
+		  if inputFriendlynames.Ubound <> fieldNames_native.Ubound then raise newException(11 , "pddataset: Inconsistent field friendly names")
 		  
-		End Function
+		  ReDim fieldNames_friendly(-1)
+		  for i as integer = 0 to inputFriendlynames.Ubound
+		    fieldNames_friendly.Append inputFriendlynames(i)
+		  next i
+		  
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function writeBinaryFile(file as FolderItem , byref content as MemoryBlock ,  optional mbChunk as integer = 16) As pdOutcome
-		  if IsNull(file) = true then return new pdOutcome(CurrentMethodName + ": Path to file is invalid")
-		  if file.Exists = true then return new pdOutcome(CurrentMethodName + ": File " + file.NativePath + " already exists")
+		Sub write2Listbox(targetList as Listbox , optional useFriendlyNames as Boolean = false)
+		  if useFriendlyNames = true and fieldNames_friendly.Ubound <> fieldNames_native.Ubound then raise newException(11 , "pddataset: Inconsistent field friendly names")
 		  
+		  dim fieldCount as integer = fieldNames_native.Ubound
 		  
-		  dim writeStream as BinaryStream
-		  dim inputStream as new BinaryStream(content)
-		  dim filename as string = file.NativePath
+		  targetList.DeleteAllRows
+		  targetList.ColumnCount = fieldCount + 1
 		  
-		  try
-		    writeStream = BinaryStream.Create(file , true)
+		  for i as integer = 0 to fieldCount
+		    targetList.Heading(i) = if(useFriendlyNames , fieldNames_friendly(i) , fieldNames_native(i))
+		    targetList.ColumnTag(i) = fieldNames_native(i)
+		  next i
+		  
+		  targetList.HasHeading = true
+		  targetList.ColumnsResizable = true
+		  
+		  dim row(-1) as string
+		  dim auxrs as RecordSet = container.SQLSelect("SELECT * FROM dataset ORDER BY rowid ASC")
+		  checkDBforError  // will generate exception if database error
+		  
+		  do
+		    ReDim row(-1)
 		    
-		    while not inputStream.EOF
-		      writeStream.Write(inputStream.Read(MByte * mbChunk))
-		      if writeStream.WriteError = true then
-		        writeStream.close
-		        file.Delete
-		        inputStream.close
-		        return new pdOutcome(CurrentMethodName + ": Write error code " + str(writeStream.LastErrorCode) + " while writing to " + filename)
-		      end if
-		    wend
+		    for i as integer = 0 to fieldCount
+		      row.Append auxrs.Field(fieldNames_native(i)).StringValue
+		    next i
 		    
-		  catch e as IOException
-		    writeStream.close
-		    inputStream.close
-		    if IsNull(file) = false then file.Delete
-		    return new pdOutcome(CurrentMethodName + ": Write error while writing to " + filename)
-		  end try
-		  
-		  return new pdOutcome(true)
+		    targetList.AddRow row
+		    auxrs.MoveNext
+		  loop until auxrs.EOF
 		  
 		  
-		End Function
+		End Sub
 	#tag EndMethod
 
 
@@ -479,20 +378,39 @@ Protected Module pdcoreLib
 		   limitations under the License.
 	#tag EndNote
 
+	#tag Note, Name = README
+		This class is part of the pdcore library of postdoc, the PostgreSQL-based Electronic Document Management framework for Xojo
+		https://github.com/gregorplop/postdoc
+		-----------------------------------------------------------------------------------------------------------------------------
+		
+		Description
+		-----------
+		pddataset provides the functionality of a general purpose table data container.
+		Its internal storage mechanism is an in-memory SQLite database.
+		
+		
+	#tag EndNote
 
-	#tag Property, Flags = &h0
-		pdLastError As string
+
+	#tag Property, Flags = &h21
+		Private container As SQLiteDatabase
 	#tag EndProperty
 
+	#tag Property, Flags = &h21
+		Private description As string
+	#tag EndProperty
 
-	#tag Constant, Name = empty, Type = String, Dynamic = False, Default = \"", Scope = Public
-	#tag EndConstant
+	#tag Property, Flags = &h21
+		Private fieldNames_friendly(-1) As string
+	#tag EndProperty
 
-	#tag Constant, Name = MByte, Type = Double, Dynamic = False, Default = \"1048576", Scope = Public
-	#tag EndConstant
+	#tag Property, Flags = &h21
+		Private fieldNames_native(-1) As string
+	#tag EndProperty
 
-	#tag Constant, Name = pdVersion, Type = String, Dynamic = False, Default = \"1.0", Scope = Public
-	#tag EndConstant
+	#tag Property, Flags = &h21
+		Private uniqueField As String
+	#tag EndProperty
 
 
 	#tag ViewBehavior
@@ -517,12 +435,6 @@ Protected Module pdcoreLib
 			Type="String"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="pdLastError"
-			Group="Behavior"
-			Type="string"
-			EditorType="MultiLineEditor"
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
@@ -536,5 +448,5 @@ Protected Module pdcoreLib
 			Type="Integer"
 		#tag EndViewProperty
 	#tag EndViewBehavior
-End Module
-#tag EndModule
+End Class
+#tag EndClass
