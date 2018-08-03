@@ -14,7 +14,6 @@ Class=pdstorage_vfs;../libs/pdstorage/pdstorage_vfs.xojo_code;&h2E9AE7FF;&h42341
 Class=pdstorage_document;../libs/pdstorage/pdstorage_document.xojo_code;&h60C6CFFF;&h423417FF;false
 Class=pdstorage_fragment;../libs/pdstorage/pdstorage_fragment.xojo_code;&h51B367FF;&h423417FF;false
 Class=pdstorage_maintenance;../libs/pdstorage/pdstorage_maintenance.xojo_code;&h410287FF;&h423417FF;false
-Folder=graphics;graphics;&h7A0E0FFF;&h0;false
 Folder=pdcore;../libs/pdcore;&h1B826FFF;&h0;false
 Module=pdcoreLib;../libs/pdcore/pdcoreLib.xojo_code;&h667CD7FF;&h1B826FFF;false
 Class=pdOutcome;../libs/pdcore/pdOutcome.xojo_code;&h5700CFFF;&h1B826FFF;false
