@@ -1,6 +1,14 @@
 #tag Module
 Protected Module pdcoreLib
 	#tag Method, Flags = &h0
+		Sub AddRowWithTag(extends list as listbox , rowText as string , tag as Variant)
+		  list.AddRow rowText
+		  list.RowTag(list.LastIndex) = tag
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function bulkSQLexecute(byref sqliteDB as SQLiteDatabase , statements() as string , singleTransaction as Boolean) As string()
 		  // returns an array of the same dimension as statements()
 		  // each element holds the error code for the corresponding element of statements() if any. if no error then the element is empty
@@ -63,6 +71,17 @@ Protected Module pdcoreLib
 		  return output
 		  
 		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function Contains(extends input as string , what as string) As Boolean
+		  if input.InStr(what) > 0 then 
+		    return true
+		  else
+		    return false
+		  end if
 		  
 		End Function
 	#tag EndMethod
@@ -167,6 +186,47 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function QND_extractFieldname(extends input as string) As string
+		  dim char as string
+		  dim nameStart as integer
+		  
+		  for i as integer = 1 to input.Len
+		    char = input.Mid(i , 1)
+		    
+		    if QNDtypes.InStr(char) = 0 then 
+		      nameStart = i
+		      exit for i
+		    end if
+		    
+		  next i
+		  
+		  return  input.Right(input.len - nameStart + 1)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function QND_extractTypes(extends input as string) As string
+		  dim output as string = empty
+		  dim char as string
+		  
+		  for i as integer = 1 to input.Len
+		    char = input.Mid(i , 1)
+		    
+		    if QNDtypes.InStr(char) > 0 then 
+		      output = output + char
+		    else
+		      exit for i
+		    end if
+		    
+		  next i
+		  
+		  return output
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function readBinaryFile(file as FolderItem , byref targetBlock as MemoryBlock , optional mbChunk as integer = 16) As pdOutcome
 		  if file = nil then return new pdOutcome(CurrentMethodName + ": Input file path is invalid")
 		  if file.Exists = false then Return new pdOutcome(CurrentMethodName + ": Input file does not exist")
@@ -205,6 +265,17 @@ Protected Module pdcoreLib
 		  
 		  
 		  return new pdOutcome(true)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function RowHavingTag(extends list as listbox , tag as string) As integer
+		  for i as integer =0 to list.ListCount
+		    if list.RowTag(i).StringValue = tag then return i
+		  next i
+		  
+		  return -1
+		  
 		End Function
 	#tag EndMethod
 
@@ -479,6 +550,25 @@ Protected Module pdcoreLib
 		   limitations under the License.
 	#tag EndNote
 
+	#tag Note, Name = QND
+		QND types or Quick N' Dirty types are is a postdoc-specific notation for specifying datatypes and other properties when declaring field names
+		just use them as a prefix to your field names
+		goes whithout saying that field names cannot start with any of these characters
+		
+		! = mandatory
+		@ = 
+		# = numeric
+		$ = reference to file contents
+		% = boolean
+		^ = read-only
+		& = 
+		* = 
+		+ = 
+		~ = 
+		? = 
+		
+	#tag EndNote
+
 
 	#tag Property, Flags = &h0
 		pdLastError As string
@@ -492,6 +582,9 @@ Protected Module pdcoreLib
 	#tag EndConstant
 
 	#tag Constant, Name = pdVersion, Type = String, Dynamic = False, Default = \"1.0", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = QNDtypes, Type = String, Dynamic = False, Default = \"!@#$%^&*+-~\?", Scope = Public
 	#tag EndConstant
 
 

@@ -1,14 +1,16 @@
 #tag Class
 Protected Class pdservicetoken
 	#tag Method, Flags = &h21
-		Private Sub Constructor()
+		Private Sub Constructor(initPassword as string)
+		  filePassword = initPassword.Trim
 		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function getNew() As pdservicetoken
-		  return new pdservicetoken
+		Shared Function getNew(password as string) As pdservicetoken
+		  return new pdservicetoken(password)
+		  
 		  
 		End Function
 	#tag EndMethod
@@ -36,6 +38,10 @@ Protected Class pdservicetoken
 
 	#tag Property, Flags = &h0
 		file As FolderItem
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		filePassword As string
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -83,7 +89,7 @@ Protected Class pdservicetoken
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		tokenCreated As Date
+		tokenIssued As Date
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
@@ -93,9 +99,28 @@ Protected Class pdservicetoken
 
 	#tag ViewBehavior
 		#tag ViewProperty
-			Name="file"
+			Name="comments"
 			Group="Behavior"
-			Type="Integer"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="description"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="friendlyName"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="host"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
@@ -118,6 +143,51 @@ Protected Class pdservicetoken
 			Type="String"
 		#tag EndViewProperty
 		#tag ViewProperty
+			Name="objidx"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="organization"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="password"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="port"
+			Group="Behavior"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ssl_ca"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ssl_certificate"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ssl_force"
+			Group="Behavior"
+			Type="Boolean"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="ssl_key"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
 			Name="Super"
 			Visible=true
 			Group="ID"
@@ -129,6 +199,12 @@ Protected Class pdservicetoken
 			Group="Position"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="username"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

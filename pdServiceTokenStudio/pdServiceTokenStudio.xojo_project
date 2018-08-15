@@ -8,7 +8,6 @@ Folder=pdcore;../libs/pdcore;&h1E944FFF;&h0;false
 Class=pdservicetoken;../libs/pdcore/pdservicetoken.xojo_code;&h60DA7FF;&h1E944FFF;false
 Class=pdOutcome;../libs/pdcore/pdOutcome.xojo_code;&h3EA70FFF;&h1E944FFF;false
 Module=pdcoreLib;../libs/pdcore/pdcoreLib.xojo_code;&h31754FFF;&h1E944FFF;false
-Class=dbRecordListbox;dbRecordListbox.xojo_code;&h1BB76FFF;&h0;false
 DefaultWindow=MainWindow
 MajorVersion=1
 MinorVersion=0

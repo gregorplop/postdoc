@@ -127,10 +127,10 @@ Begin Window MainWindow
       End
       Begin PushButton PasswordOKbtn
          AutoDeactivate  =   True
-         Bold            =   False
+         Bold            =   True
          ButtonStyle     =   "0"
          Cancel          =   False
-         Caption         =   "Open"
+         Caption         =   "OK"
          Default         =   False
          Enabled         =   True
          Height          =   35
@@ -280,7 +280,7 @@ Begin Window MainWindow
          Visible         =   True
          Width           =   100
       End
-      Begin dbRecordListbox TokenDataList
+      Begin Listbox TokenContentsList
          AutoDeactivate  =   True
          AutoHideScrollbars=   True
          Bold            =   False
@@ -298,14 +298,14 @@ Begin Window MainWindow
          GridLinesVertical=   0
          HasHeading      =   False
          HeadingIndex    =   -1
-         Height          =   412
+         Height          =   351
          HelpTag         =   ""
          Hierarchical    =   False
          Index           =   -2147483648
          InitialParent   =   "MainPagePanel"
          InitialValue    =   ""
          Italic          =   False
-         Left            =   0
+         Left            =   20
          LockBottom      =   True
          LockedInPosition=   False
          LockLeft        =   True
@@ -323,21 +323,158 @@ Begin Window MainWindow
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Top             =   25
+         Top             =   67
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
-         Width           =   672
+         Width           =   632
          _ScrollOffset   =   0
          _ScrollWidth    =   -1
+      End
+      Begin Label Label1
+         AutoDeactivate  =   True
+         Bold            =   True
+         DataField       =   ""
+         DataSource      =   ""
+         Enabled         =   True
+         Height          =   20
+         HelpTag         =   ""
+         Index           =   -2147483648
+         InitialParent   =   "MainPagePanel"
+         Italic          =   False
+         Left            =   20
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   True
+         LockRight       =   False
+         LockTop         =   True
+         Multiline       =   False
+         Scope           =   2
+         Selectable      =   False
+         TabIndex        =   6
+         TabPanelIndex   =   1
+         Text            =   "Current Limitation: One service token per file"
+         TextAlign       =   0
+         TextColor       =   &c00000000
+         TextFont        =   "System"
+         TextSize        =   0.0
+         TextUnit        =   0
+         Top             =   37
+         Transparent     =   True
+         Underline       =   False
+         Visible         =   True
+         Width           =   302
+      End
+      Begin Label PasswordProtectedLabel
+         AutoDeactivate  =   True
+         Bold            =   False
+         DataField       =   ""
+         DataSource      =   ""
+         Enabled         =   True
+         Height          =   20
+         HelpTag         =   ""
+         Index           =   -2147483648
+         InitialParent   =   "MainPagePanel"
+         Italic          =   False
+         Left            =   368
+         LockBottom      =   False
+         LockedInPosition=   False
+         LockLeft        =   False
+         LockRight       =   True
+         LockTop         =   True
+         Multiline       =   False
+         Scope           =   2
+         Selectable      =   False
+         TabIndex        =   7
+         TabPanelIndex   =   1
+         Text            =   "Not password protected"
+         TextAlign       =   2
+         TextColor       =   &c00000000
+         TextFont        =   "System"
+         TextSize        =   0.0
+         TextUnit        =   0
+         Top             =   37
+         Transparent     =   True
+         Underline       =   False
+         Visible         =   True
+         Width           =   284
       End
    End
 End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Event
+		Sub Open()
+		  dim args(-1) as String = getGUIappArguments
+		  
+		  if args.Ubound < 0 then // no file to open
+		    
+		    SetState(WindowModes.RequestingPasswordForNew)
+		    
+		    
+		    
+		  else  // try to open file
+		    
+		    
+		    
+		    
+		    
+		  end if 
+		End Sub
+	#tag EndEvent
+
+
 	#tag Method, Flags = &h0
-		Sub initTokenContents()
+		Sub SetState(newState as WindowModes)
+		  select case newState
+		    
+		  case WindowModes.RequestingPasswordForNew
+		    
+		    Title = "pdServiceTokenStudio - new"
+		    MainPagePanel.Value = 1
+		    
+		  case WindowModes.EditingNew
+		    
+		    PasswordProtectedLabel.Text = if(activeToken.filePassword = empty , "Not password protected" , "Password protected")
+		    MainPagePanel.Value = 0
+		    
+		    
+		  end select
+		  
+		  state = newState
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub tokenToList(token as pdservicetoken , list as Listbox)
+		  if list.ColumnCount <> 2 or list.Heading(0) <> "Field name" or list.Heading(1) <> "Field value" then
+		    list.ColumnCount = 2
+		    list.Heading(0) = "Field name"
+		    list.Heading(1) = "Field value"
+		    list.HasHeading = true
+		    list.HeaderType(-1) = Listbox.HeaderTypes.NotSortable
+		    list.ColumnWidths = "30%,70%"
+		  end if
+		  
+		  
+		  list.AddRowWithTag("Name *" , "!name")  // mandatory
+		  list.AddRowWithTag("Friendly name *", "!friendlyname")
+		  list.AddRowWithTag("Description" , "description")
+		  list.AddRowWithTag("Comments" , "comments")
+		  list.AddRowWithTag("(Read Only) Token issued on" , "^tokenissued")  // not editable
+		  list.AddRowWithTag("Organization *" , "!organization")
+		  list.AddRowWithTag("Server address *" , "!host")
+		  list.AddRowWithTag("Server port *" , "!#port")
+		  list.AddRowWithTag("User name *" , "!username")
+		  list.AddRowWithTag("Password" , "password")
+		  list.AddRowWithTag("Secure Connection *" , "%secure")  // Boolean
+		  list.AddRowWithTag("SSL Private key (if secure)" , "$ssl_key") // pick file
+		  list.AddRowWithTag("SSL Public certificate (if secure)" , "$ssl_certificate") // pick file
+		  list.AddRowWithTag("SSL CA certificate (if secure)" , "$ssl_ca") // pick file
+		  
+		  list.CellType(list.RowHavingTag("%secure") , 1) = Listbox.TypeCheckbox
 		  
 		End Sub
 	#tag EndMethod
@@ -347,9 +484,51 @@ End
 		activeToken As pdservicetoken
 	#tag EndProperty
 
+	#tag Property, Flags = &h0
+		State As WindowModes
+	#tag EndProperty
+
+
+	#tag Enum, Name = WindowModes, Type = Integer, Flags = &h0
+		RequestingPasswordForOpening
+		  EditingNew
+		  EditingOpened
+		  RequestingPasswordForNew
+		VerifyingPasswordForNew
+	#tag EndEnum
+
 
 #tag EndWindowCode
 
+#tag Events PasswordOKbtn
+	#tag Event
+		Sub Action()
+		  select case state
+		    
+		  case WindowModes.RequestingPasswordForNew
+		    
+		    dim inputPass as String = TokenPasswordField.Text.Trim
+		    activeToken = pdservicetoken.getNew(inputPass)
+		    tokenToList(activeToken , TokenContentsList)
+		    
+		    SetState(WindowModes.EditingNew)
+		    
+		  end select
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events NewBtn
+	#tag Event
+		Sub Action()
+		  dim s as string
+		  
+		  s = "!@#test"
+		  
+		  MsgBox s.QND_extractTypes
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="BackColor"
@@ -545,6 +724,19 @@ End
 		InitialValue="True"
 		Type="Boolean"
 		EditorType="Boolean"
+	#tag EndViewProperty
+	#tag ViewProperty
+		Name="State"
+		Group="Behavior"
+		Type="WindowModes"
+		EditorType="Enum"
+		#tag EnumValues
+			"0 - RequestingPasswordForOpening"
+			"1 - EditingNew"
+			"2 - EditingOpened"
+			"3 - RequestingPasswordForNew"
+			"4 - VerifyingPasswordForNew"
+		#tag EndEnumValues
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="Super"
