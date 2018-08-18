@@ -87,6 +87,12 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Extension(extends file as FolderItem) As string
+		  return file.Name.NthField("." , file.name.CountFields("."))
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function fromBase64(extends input as string) As string
 		  return DecodeBase64(input)
 		End Function

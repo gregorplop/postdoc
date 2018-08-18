@@ -432,7 +432,9 @@ End
 		  case WindowModes.RequestingPasswordForNew
 		    
 		    Title = "pdServiceTokenStudio - new"
+		    TokenPasswordField.Text = empty
 		    MainPagePanel.Value = 1
+		    TokenPasswordField.SetFocus
 		    
 		  case WindowModes.EditingNew
 		    
@@ -450,31 +452,59 @@ End
 	#tag Method, Flags = &h0
 		Sub tokenToList(token as pdservicetoken , list as Listbox)
 		  if list.ColumnCount <> 2 or list.Heading(0) <> "Field name" or list.Heading(1) <> "Field value" then
+		    list.DeleteAllRows
 		    list.ColumnCount = 2
 		    list.Heading(0) = "Field name"
 		    list.Heading(1) = "Field value"
 		    list.HasHeading = true
 		    list.HeaderType(-1) = Listbox.HeaderTypes.NotSortable
 		    list.ColumnWidths = "30%,70%"
+		    
+		    list.AddRowWithTag("Name *" , "!name")  // mandatory
+		    list.AddRowWithTag("Friendly name *", "!friendlyname")
+		    list.AddRowWithTag("Description" , "description")
+		    list.AddRowWithTag("Comments" , "comments")
+		    list.AddRowWithTag("(Read Only) Token issued on" , "^tokenissued")  // not editable
+		    list.AddRowWithTag("Organization *" , "!organization")
+		    list.AddRowWithTag("Server address *" , "!host")
+		    list.AddRowWithTag("Server port *" , "!#port")
+		    list.AddRowWithTag("User name *" , "!username")
+		    list.AddRowWithTag("Password" , "password")
+		    list.AddRowWithTag("Secure Connection *" , "%secure")  // Boolean
+		    list.AddRowWithTag("SSL Private key (if secure)" , "$ssl_key") // pick file
+		    list.AddRowWithTag("SSL Public certificate (if secure)" , "$ssl_certificate") // pick file
+		    list.AddRowWithTag("SSL CA certificate (if secure)" , "$ssl_ca") // pick file
+		    
+		    list.CellType(list.RowHavingTag("%secure") , 1) = Listbox.TypeCheckbox
+		    
 		  end if
 		  
 		  
-		  list.AddRowWithTag("Name *" , "!name")  // mandatory
-		  list.AddRowWithTag("Friendly name *", "!friendlyname")
-		  list.AddRowWithTag("Description" , "description")
-		  list.AddRowWithTag("Comments" , "comments")
-		  list.AddRowWithTag("(Read Only) Token issued on" , "^tokenissued")  // not editable
-		  list.AddRowWithTag("Organization *" , "!organization")
-		  list.AddRowWithTag("Server address *" , "!host")
-		  list.AddRowWithTag("Server port *" , "!#port")
-		  list.AddRowWithTag("User name *" , "!username")
-		  list.AddRowWithTag("Password" , "password")
-		  list.AddRowWithTag("Secure Connection *" , "%secure")  // Boolean
-		  list.AddRowWithTag("SSL Private key (if secure)" , "$ssl_key") // pick file
-		  list.AddRowWithTag("SSL Public certificate (if secure)" , "$ssl_certificate") // pick file
-		  list.AddRowWithTag("SSL CA certificate (if secure)" , "$ssl_ca") // pick file
 		  
-		  list.CellType(list.RowHavingTag("%secure") , 1) = Listbox.TypeCheckbox
+		  list.CellCheck(list.RowHavingTag("%secure") , 1) = token.ssl_force
+		  list.Cell(list.RowHavingTag("!name") , 1) = token.name
+		  list.Cell(list.RowHavingTag("!friendlyname") , 1)  = token.friendlyName
+		  list.Cell(list.RowHavingTag("description") , 1)  = token.description
+		  list.Cell(list.RowHavingTag("comments") , 1)  = token.comments
+		  
+		  if IsNull(token.tokenIssued) = false then
+		    list.Cell(list.RowHavingTag("^tokenissued") , 1)  = token.tokenIssued.SQLDateTime
+		  else
+		    list.Cell(list.RowHavingTag("^tokenissued") , 1)  = "Not issued yet"
+		  end if
+		  
+		  list.Cell(list.RowHavingTag("!organization") , 1)  = token.organization
+		  list.Cell(list.RowHavingTag("!host") , 1)  = token.host
+		  list.Cell(list.RowHavingTag("!#port") , 1)  = str(token.port)
+		  list.Cell(list.RowHavingTag("!username") , 1)  = token.username
+		  list.Cell(list.RowHavingTag("password") , 1)  = token.password.toBase64
+		  
+		  
+		  list.Cell(list.RowHavingTag("$ssl_key") , 1)  = token.ssl_key
+		  list.Cell(list.RowHavingTag("$ssl_certificate") , 1)  = token.ssl_certificate
+		  list.Cell(list.RowHavingTag("$ssl_ca") , 1)  = token.ssl_ca
+		  
+		  
 		  
 		End Sub
 	#tag EndMethod
@@ -507,7 +537,7 @@ End
 		    
 		  case WindowModes.RequestingPasswordForNew
 		    
-		    dim inputPass as String = TokenPasswordField.Text.Trim
+		    dim inputPass as String = TokenPasswordField.Text
 		    activeToken = pdservicetoken.getNew(inputPass)
 		    tokenToList(activeToken , TokenContentsList)
 		    
@@ -521,12 +551,119 @@ End
 #tag Events NewBtn
 	#tag Event
 		Sub Action()
-		  dim s as string
-		  
-		  s = "!@#test"
-		  
-		  MsgBox s.QND_extractTypes
+		  SetState(WindowModes.RequestingPasswordForNew)
 		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events QuitBtn
+	#tag Event
+		Sub Action()
+		  quit
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events TokenContentsList
+	#tag Event
+		Sub DoubleClick()
+		  Dim row, column As Integer
+		  row = Me.RowFromXY(System.MouseX - Me.Left - Self.Left, System.MouseY - Me.Top - Self.Top)
+		  column = Me.ColumnFromXY(System.MouseX - Me.Left - Self.Left, System.MouseY - Me.Top - Self.Top)
+		  
+		  if state <> WindowModes.EditingNew then exit sub
+		  if me.RowTag(row).StringValue.QND_extractTypes.Contains("%") = true then exit sub
+		  if me.RowTag(row).StringValue.QND_extractTypes.Contains("^") = true then exit sub
+		  
+		  if me.RowTag(row).StringValue.QND_extractTypes.Contains("$") = false then 
+		    
+		    me.EditCell(row,1)
+		    // cont'd at cellaction event
+		    
+		  else  // file contents
+		    
+		    dim ff as FolderItem = GetOpenFolderItem("*.*")
+		    if ff = nil then exit sub
+		    if ff.Length > 4096 or ff.Length < 128 then
+		      MsgBox "This file is probably not a certificate, will not read it"
+		      exit sub
+		    end if
+		    
+		    dim textStream as TextInputStream
+		    textStream = TextInputStream.Open(ff)
+		    dim contents as string = textStream.ReadAll
+		    textStream.Close
+		    
+		    
+		    contents = contents.ReplaceAll(EndOfLine.Windows , empty)
+		    contents = contents.ReplaceAll(EndOfLine.UNIX , empty)
+		    me.CellTag(row , 1) = contents
+		    me.cell(row,1) = ff.NativePath
+		    
+		    select case me.RowTag(row).StringValue.QND_extractFieldname
+		    case "ssl_key"
+		      activeToken.ssl_key = me.CellTag(row,1).StringValue
+		    case "ssl_certificate"
+		      activeToken.ssl_certificate = me.CellTag(row,1).StringValue
+		    case "ssl_ca"
+		      activeToken.ssl_ca = me.CellTag(row,1).StringValue
+		    end select
+		    
+		    activeToken.ssl_force = true
+		    me.CellState(me.RowHavingTag("%secure") , 1) = CheckBox.CheckedStates.Checked
+		    
+		    
+		  end if
+		  
+		  
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub CellAction(row As Integer, column As Integer)
+		  
+		  
+		  select case me.RowTag(row).StringValue.QND_extractFieldname
+		    
+		  case "secure"
+		    activeToken.ssl_force = me.CellCheck(row,1)
+		    if activeToken.ssl_force = false then
+		      activeToken.ssl_certificate = empty
+		      activeToken.ssl_ca = empty
+		      activeToken.ssl_key = empty
+		    end if
+		    
+		    
+		  case "name"
+		    activeToken.name = me.cell(row,column).Trim
+		  case "friendlyname"
+		    activeToken.friendlyName = me.cell(row,column).Trim
+		  case "description"
+		    activeToken.description = me.cell(row,column).Trim
+		  case "comments"
+		    activeToken.comments = me.cell(row,column).Trim
+		  case "organization"
+		    activeToken.organization = me.cell(row,column).Trim
+		  case "host"
+		    activeToken.host = me.cell(row,column).Trim
+		  case "port"
+		    activeToken.port = me.cell(row,column).Trim.Val
+		  case "username"
+		    activeToken.username = me.cell(row,column).Trim
+		  case "password"
+		    activeToken.password = me.cell(row,column).Trim.toBase64
+		    
+		  else
+		    MsgBox "error assigning field to token object"
+		  end select
+		  
+		  tokenToList(activeToken , me)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events PasswordProtectedLabel
+	#tag Event
+		Function MouseDown(X As Integer, Y As Integer) As Boolean
+		  if activeToken.filePassword <> empty then MsgBox "Password is " + EndOfLine + activeToken.filePassword.fromBase64
+		End Function
 	#tag EndEvent
 #tag EndEvents
 #tag ViewBehavior
