@@ -9,7 +9,7 @@ Begin Window MainWindow
    FullScreen      =   False
    FullScreenButton=   False
    HasBackColor    =   False
-   Height          =   438
+   Height          =   508
    ImplicitInstance=   True
    LiveResize      =   True
    MacProcID       =   0
@@ -25,11 +25,11 @@ Begin Window MainWindow
    Resizeable      =   False
    Title           =   "pdServiceTokenStudio - new"
    Visible         =   True
-   Width           =   672
+   Width           =   742
    Begin PagePanel MainPagePanel
       AutoDeactivate  =   True
       Enabled         =   True
-      Height          =   438
+      Height          =   508
       HelpTag         =   ""
       Index           =   -2147483648
       InitialParent   =   ""
@@ -47,7 +47,7 @@ Begin Window MainWindow
       Top             =   0
       Value           =   0
       Visible         =   True
-      Width           =   672
+      Width           =   742
       Begin TextField TokenPasswordField
          AcceptTabs      =   False
          Alignment       =   2
@@ -66,7 +66,7 @@ Begin Window MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainPagePanel"
          Italic          =   False
-         Left            =   261
+         Left            =   296
          LimitText       =   0
          LockBottom      =   False
          LockedInPosition=   False
@@ -85,7 +85,7 @@ Begin Window MainWindow
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Top             =   154
+         Top             =   161
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -123,7 +123,7 @@ Begin Window MainWindow
          Transparent     =   True
          Underline       =   False
          Visible         =   True
-         Width           =   632
+         Width           =   702
       End
       Begin PushButton PasswordOKbtn
          AutoDeactivate  =   True
@@ -138,7 +138,7 @@ Begin Window MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainPagePanel"
          Italic          =   False
-         Left            =   261
+         Left            =   296
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   True
@@ -151,7 +151,7 @@ Begin Window MainWindow
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
-         Top             =   220
+         Top             =   216
          Underline       =   False
          Visible         =   True
          Width           =   150
@@ -262,7 +262,7 @@ Begin Window MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainPagePanel"
          Italic          =   False
-         Left            =   572
+         Left            =   642
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   False
@@ -298,7 +298,7 @@ Begin Window MainWindow
          GridLinesVertical=   0
          HasHeading      =   False
          HeadingIndex    =   -1
-         Height          =   351
+         Height          =   421
          HelpTag         =   ""
          Hierarchical    =   False
          Index           =   -2147483648
@@ -321,13 +321,13 @@ Begin Window MainWindow
          TabPanelIndex   =   1
          TabStop         =   True
          TextFont        =   "System"
-         TextSize        =   0.0
+         TextSize        =   16.0
          TextUnit        =   0
          Top             =   67
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
-         Width           =   632
+         Width           =   702
          _ScrollOffset   =   0
          _ScrollWidth    =   -1
       End
@@ -376,7 +376,7 @@ Begin Window MainWindow
          Index           =   -2147483648
          InitialParent   =   "MainPagePanel"
          Italic          =   False
-         Left            =   368
+         Left            =   438
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   False
@@ -440,7 +440,12 @@ End
 		    
 		    PasswordProtectedLabel.Text = if(activeToken.filePassword = empty , "Not password protected" , "Password protected")
 		    MainPagePanel.Value = 0
+		    SaveBtn.Enabled = true
+		    TokenContentsList.EnableD = true
 		    
+		  case WindowModes.SavedOK
+		    SaveBtn.Enabled = false
+		    TokenContentsList.EnableD = false
 		    
 		  end select
 		  
@@ -458,7 +463,7 @@ End
 		    list.Heading(1) = "Field value"
 		    list.HasHeading = true
 		    list.HeaderType(-1) = Listbox.HeaderTypes.NotSortable
-		    list.ColumnWidths = "30%,70%"
+		    list.ColumnWidths = "40%,60%"
 		    
 		    list.AddRowWithTag("Name *" , "!name")  // mandatory
 		    list.AddRowWithTag("Friendly name *", "!friendlyname")
@@ -524,7 +529,8 @@ End
 		  EditingNew
 		  EditingOpened
 		  RequestingPasswordForNew
-		VerifyingPasswordForNew
+		  VerifyingPasswordForNew
+		SavedOK
 	#tag EndEnum
 
 
@@ -552,6 +558,35 @@ End
 	#tag Event
 		Sub Action()
 		  SetState(WindowModes.RequestingPasswordForNew)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events SaveBtn
+	#tag Event
+		Sub Action()
+		  select case state
+		    
+		  case WindowModes.EditingNew
+		    
+		    dim target as FolderItem = GetSaveFolderItem("*.*" , activeToken.name + ".pdst")
+		    if target = nil then exit sub
+		    
+		    activeToken.file = target
+		    
+		    dim outcome as pdOutcome = activeToken.Create
+		    if outcome.ok then 
+		      SetState(WindowModes.SavedOK)
+		    else
+		      MsgBox outcome.fatalErrorMsg
+		    end if
+		    
+		  case WindowModes.EditingOpened
+		    
+		    // in progress
+		    
+		    
+		  end select
+		  
 		End Sub
 	#tag EndEvent
 #tag EndEvents

@@ -35,7 +35,78 @@ Protected Class pdservicetoken
 		  end if
 		  
 		  sqliteDB = new SQLiteDatabase
+		  dim error as string
+		  
+		  sqliteDB.DatabaseFile = file
+		  if filePassword <> empty then sqliteDB.EncryptionKey = filePassword.fromBase64
+		  
+		  if sqliteDB.CreateDatabaseFile = false then return new pdOutcome(CurrentMethodName + ": Could not create token file: " + sqliteDB.ErrorMessage)
+		  // we now have the token file created and ready 
+		  
+		  dim init as string = "CREATE TABLE services ("
+		  init = init.Append("objidx INTEGER PRIMARY KEY AUTOINCREMENT , ")
+		  init = init.Append("name TEXT NOT NULL , ")
+		  init = init.Append("friendlyname TEXT NOT NULL , ")
+		  init = init.Append("description TEXT , ")
+		  init = init.Append("comments TEXT , ")
+		  init = init.Append("tokenissued DATETIME NOT NULL , ")
+		  init = init.Append("organization TEXT NOT NULL , ")
+		  init = init.Append("host TEXT NOT NULL , ")
+		  init = init.Append("port INTEGER NOT NULL , ")
+		  init = init.Append("username TEXT , ")
+		  init = init.Append("password TEXT , ")
+		  init = init.Append("secure BOOLEAN NOT NULL , ")
+		  init = init.Append("ssl_key TEXT , ")
+		  init = init.Append("ssl_certificate TEXT , ")
+		  init = init.Append("ssl_ca TEXT )")
+		  
+		  sqliteDB.SQLExecute(init)
+		  if sqliteDB.Error = true then
+		    error = sqliteDB.ErrorMessage
+		    sqlitedb.Close
+		    file.Delete
+		    return new pdOutcome(CurrentMethodName + ": Error initializing token file: " + error)
+		  end if
+		  
 		  dim tokenRecord as new DatabaseRecord
+		  
+		  tokenRecord.Column("name") = name
+		  tokenRecord.Column("friendlyname") = friendlyName
+		  tokenRecord.Column("description") = description
+		  tokenRecord.Column("comments") = comments
+		  tokenRecord.DateColumn("tokenIssued") = tokenIssued
+		  tokenRecord.Column("organization") = organization
+		  tokenRecord.Column("host") = host
+		  tokenRecord.IntegerColumn("port") = port
+		  tokenRecord.Column("username") = username
+		  tokenRecord.Column("password") = password
+		  tokenRecord.BooleanColumn("secure") = ssl_force
+		  tokenRecord.Column("ssl_key") = ssl_key
+		  tokenRecord.Column("ssl_certificate") = ssl_certificate
+		  tokenRecord.Column("ssl_ca") = ssl_ca
+		  
+		  sqliteDB.InsertRecord("services" , tokenRecord)
+		  if sqliteDB.Error = true then 
+		    error = sqliteDB.ErrorMessage
+		    sqlitedb.Close
+		    file.Delete
+		    return new pdOutcome(CurrentMethodName + ": Error writing token data: " + error)
+		  end if
+		  
+		  sqliteDB.close
+		  return new pdOutcome(true)
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
+		  
 		  
 		  
 		  
