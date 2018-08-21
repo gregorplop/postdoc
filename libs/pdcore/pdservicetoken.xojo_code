@@ -2,6 +2,7 @@
 Protected Class pdservicetoken
 	#tag Method, Flags = &h21
 		Private Sub Constructor(initPassword as string)
+		  // plaintext password expected
 		  filePassword = initPassword.Trim.toBase64
 		  
 		End Sub
@@ -34,7 +35,7 @@ Protected Class pdservicetoken
 		    if ssl_certificate.Trim <> empty then return new pdOutcome(CurrentMethodName + ": SSL Certificate carries content while SSL is disabled")
 		  end if
 		  
-		  sqliteDB = new SQLiteDatabase
+		  dim sqliteDB as SQLiteDatabase = new SQLiteDatabase
 		  dim error as string
 		  
 		  sqliteDB.DatabaseFile = file
@@ -124,15 +125,51 @@ Protected Class pdservicetoken
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function Open(tokenFile as FolderItem , password as string) As pdservicetoken
-		  // password is exptected to be plaintext
+		Shared Function Open(tokenFile as FolderItem , password as string) As pdOutcome
+		  // password is exptected to be base64-encoded
+		  // pdservicetoken is expected in pdOutcome.returnObject if pdOutcome.ok
+		  
+		  if tokenFile = nil then return new pdOutcome(CurrentMethodName + ": Invalid token path")
+		  if tokenFile.Exists = false then return new pdOutcome(CurrentMethodName + ": Token file does not exist")
+		  if tokenFile.Extension <> "pdst" then return new pdOutcome(CurrentMethodName + ": Extension is not .pdst")
+		  
+		  dim db as new SQLiteDatabase
+		  if password.Trim <> empty then db.EncryptionKey = password.Trim.fromBase64
+		  db.DatabaseFile = tokenFile
+		  
+		  if db.Connect = false then return new pdOutcome(CurrentMethodName + ": Error opening token")
+		  
+		  dim tokendata as RecordSet = db.SQLSelect("SELECT * FROM services")
+		  if db.Error = true then Return new pdOutcome(CurrentMethodName + ": Error getting token data: " + db.ErrorMessage)
+		  if tokendata.RecordCount <> 1 then Return new pdOutcome(CurrentMethodName + ": Invalid token data records: " + str(tokendata.RecordCount))
+		  
+		  dim token as new pdservicetoken(password.fromBase64)
+		  
+		  token.comments = tokendata.Field("comments").StringValue
+		  token.description = tokendata.Field("description").StringValue
+		  token.file = tokenFile
+		  token.friendlyName = tokendata.Field("friendlyname").StringValue
+		  token.host = tokendata.Field("host").StringValue
+		  token.name = tokendata.Field("name").StringValue
+		  token.objidx = tokendata.Field("objidx").IntegerValue
+		  token.organization  = tokendata.Field("organization").StringValue
+		  token.password = tokendata.Field("password").StringValue   // base64-encoded
+		  token.port = tokendata.Field("port").IntegerValue
+		  token.ssl_ca = tokendata.Field("ssl_ca").StringValue // base64-encoded
+		  token.ssl_certificate = tokendata.Field("ssl_certificate").StringValue // base64-encoded
+		  token.ssl_key = tokendata.Field("ssl_key").StringValue // base64-encoded
+		  token.ssl_force = tokendata.Field("secure").BooleanValue
+		  token.tokenIssued = tokendata.Field("tokenIssued").DateValue
+		  token.username = tokendata.Field("username").StringValue
+		  
+		  dim success as new pdOutcome(true)
+		  success.returnObject = token
+		  return success
 		  
 		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function Update() As pdOutcome
+		  
+		  
+		  
 		  
 		End Function
 	#tag EndMethod
@@ -180,10 +217,6 @@ Protected Class pdservicetoken
 
 	#tag Property, Flags = &h0
 		port As Integer
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		sqliteDB As SQLiteDatabase
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

@@ -45,7 +45,7 @@ Begin Window MainWindow
       TabIndex        =   0
       TabPanelIndex   =   0
       Top             =   0
-      Value           =   0
+      Value           =   1
       Visible         =   True
       Width           =   742
       Begin TextField TokenPasswordField
@@ -323,7 +323,7 @@ Begin Window MainWindow
          TextFont        =   "System"
          TextSize        =   16.0
          TextUnit        =   0
-         Top             =   67
+         Top             =   69
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -447,6 +447,13 @@ End
 		    SaveBtn.Enabled = false
 		    TokenContentsList.EnableD = false
 		    
+		    
+		  case WindowModes.RequestingPasswordForOpening
+		    
+		    
+		    
+		    
+		    
 		  end select
 		  
 		  state = newState
@@ -549,6 +556,13 @@ End
 		    
 		    SetState(WindowModes.EditingNew)
 		    
+		    
+		  case WindowModes.RequestingPasswordForOpening
+		    
+		    
+		    
+		    
+		    
 		  end select
 		  
 		End Sub
@@ -558,6 +572,14 @@ End
 	#tag Event
 		Sub Action()
 		  SetState(WindowModes.RequestingPasswordForNew)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events OpenBtn
+	#tag Event
+		Sub Action()
+		  
+		  SetState(WindowModes.RequestingPasswordForOpening)
 		End Sub
 	#tag EndEvent
 #tag EndEvents
@@ -636,11 +658,11 @@ End
 		    
 		    select case me.RowTag(row).StringValue.QND_extractFieldname
 		    case "ssl_key"
-		      activeToken.ssl_key = me.CellTag(row,1).StringValue
+		      activeToken.ssl_key = me.CellTag(row,1).StringValue.toBase64
 		    case "ssl_certificate"
-		      activeToken.ssl_certificate = me.CellTag(row,1).StringValue
+		      activeToken.ssl_certificate = me.CellTag(row,1).StringValue.toBase64
 		    case "ssl_ca"
-		      activeToken.ssl_ca = me.CellTag(row,1).StringValue
+		      activeToken.ssl_ca = me.CellTag(row,1).StringValue.toBase64
 		    end select
 		    
 		    activeToken.ssl_force = true
@@ -908,6 +930,7 @@ End
 			"2 - EditingOpened"
 			"3 - RequestingPasswordForNew"
 			"4 - VerifyingPasswordForNew"
+			"5 - SavedOK"
 		#tag EndEnumValues
 	#tag EndViewProperty
 	#tag ViewProperty
