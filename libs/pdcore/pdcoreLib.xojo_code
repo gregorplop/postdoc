@@ -212,7 +212,10 @@ Protected Module pdcoreLib
 		  
 		  dim rs as RecordSet = localconfDB.SQLSelect(query)
 		  if localconfDB.Error = true then return new pdOutcome(CurrentMethodName + ": Error getting conf data : " + localconfDB.ErrorMessage)
-		  if rs.RecordCount <> 1 then return new pdOutcome(CurrentMethodName + ": Improper record count for conf data: " + str(rs.RecordCount))
+		  // no records found produces an error code -1
+		  if rs.RecordCount = 0 then return new pdOutcome(CurrentMethodName + ": No conf data found" , -1)
+		  if rs.RecordCount > 1 then return new pdOutcome(CurrentMethodName + ": Improper record count for conf data: " + str(rs.RecordCount))
+		  
 		  
 		  dim values(4) as string
 		  dim success as new pdOutcome(true)
@@ -236,6 +239,51 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function localconf_getpasswd(vfs as String , pool as string) As pdOutcome
+		  if vfs.Trim = empty then return new pdOutcome(CurrentMethodName + ": No vfs name")
+		  if pool.Trim = empty then return new pdOutcome(CurrentMethodName + ": No pool name")
+		  
+		  dim localconf as FolderItem = localconf_try
+		  if localconf = nil then 
+		    dim initoutcome as pdOutcome = localconf_init
+		    if initoutcome.ok = false then return new pdOutcome(CurrentMethodName + ": " + initoutcome.fatalErrorMsg)
+		  end if
+		  
+		  // localconf is there
+		  
+		  dim localconfDB as new SQLiteDatabase
+		  localconfDB.DatabaseFile = localconf
+		  localconfDB.EncryptionKey = localconf_encryptionkey
+		  
+		  if localconfDB.Connect = false then
+		    return new pdOutcome(CurrentMethodName + ": localconf probably corrupted: " + localconfDB.ErrorMessage)
+		  end if
+		  
+		  // connected to localconf
+		  
+		  dim query as string = "SELECT password FROM storagepass WHERE "
+		  query = query.Append("vfs = " + vfs.sqlQuote + " AND ")
+		  query = query.Append("pool = " + pool.sqlQuote)
+		  
+		  dim rs as RecordSet = localconfDB.SQLSelect(query)
+		  if localconfDB.Error = true then return new pdOutcome(CurrentMethodName + ": Error getting passwd data : " + localconfDB.ErrorMessage)
+		  
+		  // no records found produces an error code -1
+		  if rs.RecordCount = 0 then return new pdOutcome(CurrentMethodName + ": No passwd data found" , -1)
+		  if rs.RecordCount > 1 then return new pdOutcome(CurrentMethodName + ": Improper record count for passwd data: " + str(rs.RecordCount))
+		  
+		  dim success as new pdOutcome(true)
+		  
+		  success.returnObject = rs.IdxField(1).StringValue
+		  
+		  return success
+		  
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function localconf_init(optional reset as Boolean = false) As pdOutcome
 		  dim localconf as FolderItem = localconf_try
 		  dim ApplicationData as FolderItem
@@ -249,11 +297,11 @@ Protected Module pdcoreLib
 		  
 		  dim db as SQLiteDatabase
 		  dim initStatements(-1) as string
-		  initStatements.Append "CREATE TABLE storagepass (vfs TEXT , pool TEXT , password TEXT)"
-		  initStatements.Append "ALTER TABLE storagepass ADD CONSTRAINT onePasswordPerPool UNIQUE (vfs , pool)"
-		  initStatements.Append "CREATE TABLE localconf (service TEXT , section TEXT , key TEXT , value0 TEXT , value1 TEXT , value2 TEXT , value3 TEXT , value4 TEXT)"
-		  initStatements.Append "ALTER TABLE localconf ADD CONSTRAINT oneValuesetPerKey UNIQUE (service , section , key)"
-		  initStatements.Append "INSERT INTO localconf (service , section , key , value0) VALUES (NULL , NULL , 'init' , 'ok')"
+		  initStatements.Append "CREATE TABLE storagepass (vfs TEXT , pool TEXT , password TEXT , UNIQUE (vfs , pool))"
+		  //initStatements.Append "ALTER TABLE storagepass ADD CONSTRAINT onePasswordPerPool UNIQUE (vfs , pool)"
+		  initStatements.Append "CREATE TABLE localconf (service TEXT , section TEXT , key TEXT , value0 TEXT , value1 TEXT , value2 TEXT , value3 TEXT , value4 TEXT , UNIQUE (service , section , key))"
+		  //initStatements.Append "ALTER TABLE localconf ADD CONSTRAINT oneValuesetPerKey UNIQUE (service , section , key)"
+		  initStatements.Append "INSERT INTO localconf (service , section , key , value0 , value1) VALUES (NULL , NULL , NULL , 'init' , 'ok')"
 		  
 		  if localconf = nil then  // handle possibility of folder or file not there
 		    ApplicationData = SpecialFolder.ApplicationData
@@ -362,6 +410,71 @@ Protected Module pdcoreLib
 		  localconfDB.SQLExecute(query)
 		  if localconfDB.Error = true then return new pdOutcome(CurrentMethodName + ": Error writing conf data : " + localconfDB.ErrorMessage)
 		  
+		  localconfDB.close
+		  return new pdOutcome(true)
+		  
+		  
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function localconf_setpasswd(vfs as String , pool as string , passwd as string) As pdOutcome
+		  // input password is expected to be plaintext. it is stored base64-encoded
+		  // if password if empty for an existing vfs/pool then this pair is removed
+		  
+		  if vfs.Trim = empty then return new pdOutcome(CurrentMethodName + ": No vfs name")
+		  if pool.Trim = empty then return new pdOutcome(CurrentMethodName + ": No pool name")
+		  
+		  dim localconf as FolderItem = localconf_try
+		  if localconf = nil then 
+		    dim initoutcome as pdOutcome = localconf_init
+		    if initoutcome.ok = false then return new pdOutcome(CurrentMethodName + ": " + initoutcome.fatalErrorMsg)
+		  end if
+		  
+		  // localconf is there
+		  
+		  dim localconfDB as new SQLiteDatabase
+		  localconfDB.DatabaseFile = localconf
+		  localconfDB.EncryptionKey = localconf_encryptionkey
+		  
+		  if localconfDB.Connect = false then
+		    return new pdOutcome(CurrentMethodName + ": localconf probably corrupted: " + localconfDB.ErrorMessage)
+		  end if
+		  
+		  dim query as string = "SELECT COUNT(*) FROM storagepass WHERE "
+		  query = query.Append("vfs = " + vfs.sqlQuote + " AND ")
+		  query = query.Append("pool = " + pool.sqlQuote)
+		  
+		  dim rs as RecordSet = localconfDB.SQLSelect(query)
+		  if localconfDB.Error = true then return new pdOutcome(CurrentMethodName + ": Error surveying passwd data : " + localconfDB.ErrorMessage)
+		  
+		  select case rs.IdxField(1).IntegerValue
+		  case 0 // insert
+		    if passwd.Trim = empty then return new pdOutcome(true) // empty password for a pool that doesn't exist - do nothing
+		    query = "INSERT INTO storagepass (vfs , pool , password) "
+		    query = query.Append("VALUES ( " + vfs.sqlQuote + " , " + pool.sqlQuote + " , " + passwd.toBase64.sqlQuote + ")")
+		    
+		  case 1 // update
+		    if passwd.Trim <> empty then
+		      query = "UPDATE storagepass SET password = " + passwd.toBase64.sqlQuote + " WHERE "
+		      query = query.Append("vfs = " + vfs.sqlQuote + " AND ")
+		      query = query.Append("pool = " + pool.sqlQuote)
+		    else  // no password supplied - delete the record
+		      query = "DELETE FROM storagepass WHERE "
+		      query = query.Append("vfs = " + vfs.sqlQuote + " AND ")
+		      query = query.Append("pool = " + pool.sqlQuote)
+		    end if
+		    
+		  else // invalid
+		    return new pdOutcome(CurrentMethodName + ": Multiple entries for vfs/pool combination: file probably tampered with")
+		  end select
+		  
+		  localconfDB.SQLExecute(query)
+		  if localconfDB.Error = true then return new pdOutcome(CurrentMethodName + ": Error writing passwd data : " + localconfDB.ErrorMessage)
+		  
+		  localconfDB.close
 		  return new pdOutcome(true)
 		  
 		  

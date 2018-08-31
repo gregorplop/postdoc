@@ -18,10 +18,10 @@ Protected Class pdOutcome
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(errorMsgValue as string)
+		Sub Constructor(errorMsgValue as string , optional errorCode as integer = 1)
 		  ok = false
 		  fatalErrorMsg = errorMsgValue.Trim
-		  fatalErrorCode = 1
+		  fatalErrorCode = errorCode
 		  
 		  
 		End Sub

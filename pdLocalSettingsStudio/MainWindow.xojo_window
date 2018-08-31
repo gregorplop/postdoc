@@ -119,6 +119,68 @@ Begin Window MainWindow
       Visible         =   True
       Width           =   164
    End
+   Begin PushButton setBtn1
+      AutoDeactivate  =   True
+      Bold            =   False
+      ButtonStyle     =   "0"
+      Cancel          =   False
+      Caption         =   "localconf pass set test"
+      Default         =   False
+      Enabled         =   True
+      Height          =   30
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   234
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Scope           =   2
+      TabIndex        =   3
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   16.0
+      TextUnit        =   0
+      Top             =   62
+      Underline       =   False
+      Visible         =   True
+      Width           =   192
+   End
+   Begin PushButton getBtn2
+      AutoDeactivate  =   True
+      Bold            =   False
+      ButtonStyle     =   "0"
+      Cancel          =   False
+      Caption         =   "localconf pass get test"
+      Default         =   False
+      Enabled         =   True
+      Height          =   30
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   234
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Scope           =   2
+      TabIndex        =   4
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   16.0
+      TextUnit        =   0
+      Top             =   104
+      Underline       =   False
+      Visible         =   True
+      Width           =   192
+   End
 End
 #tag EndWindow
 
@@ -180,6 +242,40 @@ End
 		    else
 		      MsgBox outcome.returnObject.StringValue
 		    end if
+		  else
+		    MsgBox outcome.fatalErrorMsg
+		  end if
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events setBtn1
+	#tag Event
+		Sub Action()
+		  dim outcome as pdOutcome 
+		  
+		  
+		  outcome = localconf_setpasswd("vfs" , "pooL" , "test")
+		  
+		  if outcome.ok = true then
+		    MsgBox "OK"
+		  else
+		    MsgBox outcome.fatalErrorMsg
+		  end if
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events getBtn2
+	#tag Event
+		Sub Action()
+		  dim outcome as pdOutcome 
+		  
+		  
+		  outcome = localconf_getpasswd("vfs" , "pooL")
+		  
+		  if outcome.ok = true then
+		    MsgBox outcome.returnObject.StringValue.fromBase64
 		  else
 		    MsgBox outcome.fatalErrorMsg
 		  end if
