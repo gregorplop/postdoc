@@ -45,7 +45,7 @@ Begin Window MainWindow
       TabIndex        =   0
       TabPanelIndex   =   0
       Top             =   0
-      Value           =   1
+      Value           =   0
       Visible         =   True
       Width           =   742
       Begin TextField TokenPasswordField
@@ -480,6 +480,7 @@ End
 		    list.AddRowWithTag("Organization *" , "!organization")
 		    list.AddRowWithTag("Server address *" , "!host")
 		    list.AddRowWithTag("Server port *" , "!#port")
+		    list.AddRowWithTag("Database *" , "!database")
 		    list.AddRowWithTag("User name *" , "!username")
 		    list.AddRowWithTag("Password" , "password")
 		    list.AddRowWithTag("Secure Connection *" , "%secure")  // Boolean
@@ -508,6 +509,7 @@ End
 		  list.Cell(list.RowHavingTag("!organization") , 1)  = token.organization
 		  list.Cell(list.RowHavingTag("!host") , 1)  = token.host
 		  list.Cell(list.RowHavingTag("!#port") , 1)  = str(token.port)
+		  list.Cell(list.RowHavingTag("!database"), 1) = token.database
 		  list.Cell(list.RowHavingTag("!username") , 1)  = token.username
 		  list.Cell(list.RowHavingTag("password") , 1)  = token.password.toBase64
 		  
@@ -703,6 +705,8 @@ End
 		    activeToken.host = me.cell(row,column).Trim
 		  case "port"
 		    activeToken.port = me.cell(row,column).Trim.Val
+		  case "database"
+		    activeToken.database = me.cell(row,column).Trim
 		  case "username"
 		    activeToken.username = me.cell(row,column).Trim
 		  case "password"

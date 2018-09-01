@@ -22,6 +22,7 @@ Protected Class pdservicetoken
 		  if host.Trim = empty then return new pdOutcome(CurrentMethodName + ": Host not defined")
 		  if host.Trim.InStr(" ") > 0 then return new pdOutcome(CurrentMethodName + ": Host cannot contain a space")
 		  if port <= 1024 then return new pdOutcome(CurrentMethodName + ": Invalid port")
+		  if database.Trim = empty then return new pdOutcome(CurrentMethodName + ": Database not defined")
 		  
 		  if password.Trim <> empty and username.Trim = empty then return new pdOutcome(CurrentMethodName  + ": Password is invalid without a username")
 		  
@@ -54,6 +55,7 @@ Protected Class pdservicetoken
 		  init = init.Append("organization TEXT NOT NULL , ")
 		  init = init.Append("host TEXT NOT NULL , ")
 		  init = init.Append("port INTEGER NOT NULL , ")
+		  init = init.Append("database TEXT NOT NULL , ")
 		  init = init.Append("username TEXT , ")
 		  init = init.Append("password TEXT , ")
 		  init = init.Append("secure BOOLEAN NOT NULL , ")
@@ -155,6 +157,7 @@ Protected Class pdservicetoken
 		  token.organization  = tokendata.Field("organization").StringValue
 		  token.password = tokendata.Field("password").StringValue   // base64-encoded
 		  token.port = tokendata.Field("port").IntegerValue
+		  token.database = tokendata.Field("database").StringValue
 		  token.ssl_ca = tokendata.Field("ssl_ca").StringValue // base64-encoded
 		  token.ssl_certificate = tokendata.Field("ssl_certificate").StringValue // base64-encoded
 		  token.ssl_key = tokendata.Field("ssl_key").StringValue // base64-encoded
@@ -177,6 +180,10 @@ Protected Class pdservicetoken
 
 	#tag Property, Flags = &h0
 		comments As string
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		database As string
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
