@@ -952,6 +952,9 @@ Protected Module pdcoreLib
 	#tag Constant, Name = pdVersion, Type = String, Dynamic = False, Default = \"1.0", Scope = Public
 	#tag EndConstant
 
+	#tag Constant, Name = projectURL, Type = String, Dynamic = False, Default = \"https://github.com/gregorplop/postdoc", Scope = Public
+	#tag EndConstant
+
 	#tag Constant, Name = QNDtypes, Type = String, Dynamic = False, Default = \"!@#$%^&*+-~\?", Scope = Public
 	#tag EndConstant
 

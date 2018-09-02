@@ -26,12 +26,12 @@ Begin Window MainWindow
    Title           =   "pdInitWizard"
    Visible         =   True
    Width           =   646
-   Begin PushButton PushButton1
+   Begin PushButton initSystemUsers_btn
       AutoDeactivate  =   True
       Bold            =   False
       ButtonStyle     =   "0"
       Cancel          =   False
-      Caption         =   "Button"
+      Caption         =   "initSystemUsers"
       Default         =   False
       Enabled         =   True
       Height          =   51
@@ -39,7 +39,7 @@ Begin Window MainWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
-      Left            =   66
+      Left            =   20
       LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   True
@@ -52,7 +52,38 @@ Begin Window MainWindow
       TextFont        =   "System"
       TextSize        =   16.0
       TextUnit        =   0
-      Top             =   46
+      Top             =   20
+      Underline       =   False
+      Visible         =   True
+      Width           =   146
+   End
+   Begin PushButton initDatabase_btn
+      AutoDeactivate  =   True
+      Bold            =   False
+      ButtonStyle     =   "0"
+      Cancel          =   False
+      Caption         =   "initDatabase"
+      Default         =   False
+      Enabled         =   True
+      Height          =   51
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   178
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      Scope           =   0
+      TabIndex        =   1
+      TabPanelIndex   =   0
+      TabStop         =   True
+      TextFont        =   "System"
+      TextSize        =   16.0
+      TextUnit        =   0
+      Top             =   20
       Underline       =   False
       Visible         =   True
       Width           =   146
@@ -63,7 +94,7 @@ End
 #tag WindowCode
 #tag EndWindowCode
 
-#tag Events PushButton1
+#tag Events initSystemUsers_btn
 	#tag Event
 		Sub Action()
 		  
@@ -75,12 +106,38 @@ End
 		  db.UserName = "postgres"
 		  db.Password = empty
 		  
-		  dim outcome as pdOutcome = pdinit.initAdmins(db , "test")
+		  dim outcome as pdOutcome = pdinit.initSystemUsers(db , "test" , "test2")
 		  
 		  if outcome.ok = true then
 		    MsgBox "OK"
 		  Else
 		    MsgBox outcome.warnings(0)
+		  end if
+		  
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events initDatabase_btn
+	#tag Event
+		Sub Action()
+		  
+		  dim db as new PostgreSQLDatabase
+		  
+		  db.Host = "127.0.0.1"
+		  db.Port = 5432
+		  db.DatabaseName = "postgres"
+		  db.UserName = "postgres"
+		  db.Password = empty
+		  
+		  dim root as new FolderItem("c:\temp")
+		  
+		  dim outcome as pdOutcome = pdinit.initDatabase(db , "postdoc" , root , "" , "")
+		  
+		  if outcome.ok = true then
+		    MsgBox "OK"
+		  Else
+		    MsgBox outcome.fatalErrorMsg + EndOfLine + Join(outcome.warnings , EndOfLine)
 		  end if
 		  
 		  
