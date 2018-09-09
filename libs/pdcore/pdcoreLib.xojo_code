@@ -298,9 +298,7 @@ Protected Module pdcoreLib
 		  dim db as SQLiteDatabase
 		  dim initStatements(-1) as string
 		  initStatements.Append "CREATE TABLE storagepass (vfs TEXT , pool TEXT , password TEXT , UNIQUE (vfs , pool))"
-		  //initStatements.Append "ALTER TABLE storagepass ADD CONSTRAINT onePasswordPerPool UNIQUE (vfs , pool)"
 		  initStatements.Append "CREATE TABLE localconf (service TEXT , section TEXT , key TEXT , value0 TEXT , value1 TEXT , value2 TEXT , value3 TEXT , value4 TEXT , UNIQUE (service , section , key))"
-		  //initStatements.Append "ALTER TABLE localconf ADD CONSTRAINT oneValuesetPerKey UNIQUE (service , section , key)"
 		  initStatements.Append "INSERT INTO localconf (service , section , key , value0 , value1) VALUES (NULL , NULL , NULL , 'init' , 'ok')"
 		  
 		  if localconf = nil then  // handle possibility of folder or file not there
@@ -308,7 +306,7 @@ Protected Module pdcoreLib
 		    if ApplicationData = nil then return new pdOutcome(CurrentMethodName + ": Could not initialize localconf file: No path to ApplicationData")
 		    if ApplicationData.exists = false then return new pdOutcome(CurrentMethodName + ": Could not initialize localconf file: No path to ApplicationData")
 		    
-		    postdocFolder = ApplicationData.Child("postdoc")
+		    postdocFolder = ApplicationData.Child(localconf_Folder)
 		    if postdocFolder.Exists = false then
 		      postdocFolder.CreateAsFolder
 		      if postdocFolder.LastErrorCode <> 0 then Return new pdOutcome(CurrentMethodName + ": Error while creating localconf folder: " + str(postdocFolder.LastErrorCode))
@@ -319,7 +317,7 @@ Protected Module pdcoreLib
 		      end if
 		    end if
 		    
-		    localconf = postdocFolder.Child("localconf")
+		    localconf = postdocFolder.Child(localconf_File)
 		    if localconf = nil then return new pdOutcome(CurrentMethodName + ": Error while verifying newly created postdoc folder")
 		    
 		    db = new SQLiteDatabase
@@ -490,13 +488,13 @@ Protected Module pdcoreLib
 		  
 		  dim ApplicationData as FolderItem = SpecialFolder.ApplicationData
 		  if ApplicationData = nil then return nil
-		  dim postdocFolder as FolderItem = ApplicationData.Child("postdoc")
+		  dim postdocFolder as FolderItem = ApplicationData.Child(localconf_Folder)
 		  
 		  if postdocFolder = nil then return nil
 		  if postdocFolder.Exists = false then return nil
 		  if postdocFolder.Directory = false then return nil
 		  
-		  dim localconf as FolderItem = postdocFolder.Child("localconf")
+		  dim localconf as FolderItem = postdocFolder.Child(localconf_File)
 		  
 		  if localconf = nil then return nil
 		  if localconf.Exists = false then return nil
@@ -944,6 +942,12 @@ Protected Module pdcoreLib
 
 
 	#tag Constant, Name = empty, Type = String, Dynamic = False, Default = \"", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = localconf_File, Type = String, Dynamic = False, Default = \"localconf", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = localconf_Folder, Type = String, Dynamic = False, Default = \"postdoc", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = MByte, Type = Double, Dynamic = False, Default = \"1048576", Scope = Public
