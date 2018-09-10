@@ -539,6 +539,20 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function OneLine(extends input as string) As string
+		  return input.ReplaceAll(EndOfLine.UNIX , " // ")
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function pgMD5hash(username as string , password as string) As string
+		  // creates a PostgreSQL-stype salted md5 hash out of a PLAINTEXT username and password
+		  return "md5" + EncodeHex(MD5(password + username)).Lowercase
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function QND_extractFieldname(extends input as string) As string
 		  dim char as string
 		  dim nameStart as integer

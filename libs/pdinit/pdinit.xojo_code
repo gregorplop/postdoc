@@ -92,7 +92,7 @@ Protected Class pdinit
 		        rollbackOK = false
 		      end if
 		    next i
-		    app.CurrentThread.Sleep(200)
+		    app.SleepCurrentThread(200)
 		    dbFolder.Delete  // try deleting the folder if empty
 		    failure.fatalErrorMsg = failure.fatalErrorMsg.Append(if(rollbackOK = true , ": Rollback SUCCESS" , ": Rollback FAIL"))
 		    Return failure
@@ -141,11 +141,12 @@ Protected Class pdinit
 		  statements.Append "REVOKE ALL ON TABLE storage.request_states FROM public"
 		  statements.Append "GRANT SELECT ON TABLE storage.request_states TO GROUP pd_users"
 		  
-		  statements.Append "CREATE TABLE storage.requests (reqid BIGINT PRIMARY KEY , handlerpid INTEGER NOT NULL , type TEXT REFERENCES storage.request_types(type) , state TEXT REFERENCES storage.request_states(state) , pgpid INTEGER NOT NULL , pguser TEXT NOT NULL , pduser TEXT NOT NULL , pool TEXT NOT NULL , storageid BIGINT NOT NULL , loid INTEGER NOT NULL , errormsg TEXT)"
+		  statements.Append "CREATE TABLE storage.requests (reqid BIGINT PRIMARY KEY , register_stamp TIMESTAMP WITHOUT TIME ZONE , complete_stamp TIMESTAMP WITHOUT TIME ZONE , handlerpid INTEGER NOT NULL , type TEXT REFERENCES storage.request_types(type) , state TEXT REFERENCES storage.request_states(state) , pgpid INTEGER NOT NULL , pguser TEXT NOT NULL , pduser TEXT NOT NULL , pool TEXT NOT NULL , storageid BIGINT NOT NULL , loid INTEGER NOT NULL , errormsg TEXT)"
 		  statements.Append "REVOKE ALL ON TABLE storage.requests FROM public"
 		  statements.Append "GRANT ALL ON TABLE storage.requests TO GROUP pd_admins"
 		  statements.Append "GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE storage.requests TO GROUP pd_backends"
 		  statements.Append "GRANT SELECT, INSERT ON TABLE storage.requests TO GROUP pd_users"
+		  statements.Append "ALTER TABLE storage.requests ALTER COLUMN register_stamp SET DEFAULT now()::TIMESTAMP WITHOUT TIME ZONE"
 		  
 		  statements.Append "CREATE SEQUENCE storage.requests_reqid_seq CYCLE INCREMENT 1 START 1 MINVALUE 1 NO MAXVALUE CACHE 1 OWNED BY storage.requests.reqid"  
 		  statements.Append "REVOKE ALL ON SEQUENCE storage.requests_reqid_seq FROM public"
@@ -182,8 +183,8 @@ Protected Class pdinit
 		  dim rollback(-1) as string
 		  dim fail as Boolean = false
 		  dim rollbackOK as Boolean = true
-		  dim adminPasswd as String = "md5" + EncodeHex(MD5(adminPassword + "pdadmin")).Lowercase
-		  dim backendPasswd as string = "md5" + EncodeHex(MD5(backendPassword + "pdbackend")).Lowercase
+		  dim adminPasswd as String = pgMD5hash("pdadmin" , adminPassword)
+		  dim backendPasswd as string = pgMD5hash("pdbackend" , backendPassword)
 		  
 		  statements.Append "CREATE ROLE pd_admins SUPERUSER CREATEDB CREATEROLE REPLICATION VALID UNTIL 'infinity'"   // administrators go into this group
 		  statements.Append "CREATE ROLE pd_users VALID UNTIL 'infinity'"  // add all postdoc users to this group: it gives them the proper access rights for the base functionality
