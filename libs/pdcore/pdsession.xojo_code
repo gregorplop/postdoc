@@ -2,24 +2,60 @@
 Protected Class pdsession
 	#tag Method, Flags = &h0
 		Function connect() As pdOutcome
+		  if activeServiceToken = nil then return new pdOutcome(CurrentMethodName + ": Service token is invalid")
+		  if pgsession = nil then return new pdOutcome(CurrentMethodName + ": Session has not been initialized properly")
+		  if pgsession.AppName.Trim = empty then return new pdOutcome(CurrentMethodName + ": postdoc application name not defined")
+		  
+		  dim postConnectActions(-1) as string
+		  
+		  if pgsession.Connect = False then  // error connecting
+		    
+		    Return new pdOutcome(CurrentMethodName + ": Error opening postdoc session to " + pgsession.DatabaseName + " : " + pgsession.ErrorMessage)
+		    
+		  else  // connected
+		    connected = true
+		    dim success as new pdOutcome(true)
+		    success.returnObject = pgPID
+		    
+		    if success.returnObject.StringValue = empty then 
+		      connected = false
+		      return new pdOutcome(CurrentMethodName + ": Session seemingly open but failed to get session PID")
+		    end if
+		    
+		    postConnectActions.Append "LISTEN " + activeServiceToken.database.Uppercase + "_" + "PUBLIC"
+		    postConnectActions.Append "LISTEN " + activeServiceToken.database.Uppercase + "_" + success.returnObject.StringValue
+		    // more if needed
+		    
+		    for i as integer = 0 to postConnectActions.Ubound
+		      pgsession.SQLExecute(postConnectActions(i))
+		      if pgsession.Error = true then 
+		        dim fail as new pdOutcome(CurrentMethodName + ": Error initializing new postdoc session: " + pgsession.ErrorMessage)
+		        pgsession.Close
+		        connected = false
+		        return fail
+		      end if
+		    next i
+		    
+		    pgQueuePoll.Mode = timer.ModeMultiple
+		    
+		    return success
+		    
+		  end if
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(serviceToken as pdservicetoken , appName as string)
+		Sub Constructor(serviceToken as pdservicetoken , appName as string , optional pdUsername as string = "")
 		  // the developer needs to set the app name
+		  // also, if applicable, the pdUsername is required
 		  
-		  if serviceToken = nil then
-		    System.DebugLog("postdoc session in " + appName + " : invalid service token")
-		    exit sub // nothing is initialized
-		  end if
-		  
+		  if serviceToken = nil then exit sub
 		  
 		  // initialize the PostgreSQL NOTIFY queue poll timer
 		  pgQueuePoll = new Timer
 		  pgQueuePoll.Mode = timer.ModeOff
-		  pgQueuePoll.Period = 500
+		  pgQueuePoll.Period = pgQueueRefreshInterval
 		  AddHandler pgQueuePoll.Action , WeakAddressOf pgQueuePoll_Action
 		  
 		  // initialize the PostgreSQL database session
@@ -29,6 +65,7 @@ Protected Class pdsession
 		  pgsession.Host = serviceToken.host
 		  pgsession.Port = serviceToken.port
 		  pgsession.DatabaseName = serviceToken.database
+		  
 		  if serviceToken.username = empty then
 		    dim outsideCredentials as pair  // left = username , right = password
 		    outsideCredentials = RaiseEvent serviceCredentialsRequest(serviceToken.name , serviceToken.friendlyName)
@@ -38,13 +75,23 @@ Protected Class pdsession
 		    pgsession.UserName = serviceToken.username
 		    pgsession.Password = serviceToken.password.fromBase64
 		  end if
+		  
 		  AddHandler pgsession.ReceivedNotification , WeakAddressOf pgsession_ReceivedNotification
+		  
+		  pgsession.AppName = appName + " // " + if(pdUsername = empty , pgsession.UserName , pdUsername)
 		  
 		  activeServiceToken = serviceToken
 		  connected = false
 		  
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function inTransaction() As Boolean
+		  Return transactionActive
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -59,11 +106,13 @@ Protected Class pdsession
 		  // returns the server current time
 		  // if service is unavailable then returns local current time
 		  
+		  if pgsession = nil or connected = false then return new date
+		  
 		  dim data as RecordSet = pgsession.SQLSelect("SELECT NOW()::TIMESTAMP WITHOUT TIME ZONE")
 		  if pgsession.Error = true then 
-		    Return new date
+		    Return new date  // return local datetime if database is unreachable
 		  else
-		    return data.IdxField(1).DateValue
+		    return data.IdxField(1).DateValue  // return the server datetime
 		  end if
 		  
 		  
@@ -72,6 +121,8 @@ Protected Class pdsession
 
 	#tag Method, Flags = &h0
 		Function pgPID() As string
+		  if connected = false or pgsession = nil then return empty
+		  
 		  dim data as RecordSet = pgsession.SQLSelect("SELECT pg_backend_pid()")
 		  if pgsession.Error = true then
 		    return empty
@@ -85,7 +136,9 @@ Protected Class pdsession
 
 	#tag Method, Flags = &h21
 		Private Sub pgQueuePoll_Action(sender as Timer)
+		  System.DebugLog("poll")
 		  pgsession.CheckForNotifications
+		  
 		  
 		  ServiceCheckCounter = ServiceCheckCounter + 1
 		  if ServiceCheckCounter = 200 then 
@@ -123,7 +176,7 @@ Protected Class pdsession
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private connected As Boolean
+		Private connected As Boolean = false
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -137,6 +190,14 @@ Protected Class pdsession
 	#tag Property, Flags = &h21
 		Private ServiceCheckCounter As Integer = 0
 	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private transactionActive As Boolean = false
+	#tag EndProperty
+
+
+	#tag Constant, Name = pgQueueRefreshInterval, Type = Double, Dynamic = False, Default = \"333", Scope = Public
+	#tag EndConstant
 
 
 	#tag ViewBehavior
@@ -159,11 +220,6 @@ Protected Class pdsession
 			Visible=true
 			Group="ID"
 			Type="String"
-		#tag EndViewProperty
-		#tag ViewProperty
-			Name="pgsession"
-			Group="Behavior"
-			Type="Integer"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Super"

@@ -81,6 +81,7 @@ Protected Class pdservicetoken
 		  tokenRecord.Column("organization") = organization
 		  tokenRecord.Column("host") = host
 		  tokenRecord.IntegerColumn("port") = port
+		  tokenRecord.Column("database") = database
 		  tokenRecord.Column("username") = username
 		  tokenRecord.Column("password") = password
 		  tokenRecord.BooleanColumn("secure") = ssl_force
@@ -127,7 +128,7 @@ Protected Class pdservicetoken
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function Open(tokenFile as FolderItem , password as string) As pdOutcome
+		Shared Function Open(tokenFile as FolderItem , optional password as string = "") As pdOutcome
 		  // password is exptected to be base64-encoded
 		  // pdservicetoken is expected in pdOutcome.returnObject if pdOutcome.ok
 		  
@@ -254,6 +255,12 @@ Protected Class pdservicetoken
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="comments"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="database"
 			Group="Behavior"
 			Type="string"
 			EditorType="MultiLineEditor"

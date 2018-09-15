@@ -126,9 +126,9 @@ Protected Class pdinit
 		  statements.Append "GRANT USAGE ON SCHEMA storage TO GROUP pd_users"
 		  
 		  statements.Append "CREATE TABLE storage.request_types(type TEXT PRIMARY KEY , description TEXT NOT NULL)"
-		  statements.Append "INSERT INTO storage.request_types VALUES ('PUSH' , 'Push a Large Object into the pool and get a storage ID back for pulling it back')"
-		  statements.Append "INSERT INTO storage.request_types VALUES ('PULL' , 'Pull a storage ID out of a pull and load it into a Large Object')"
-		  statements.Append "INSERT INTO storage.request_types VALUES ('CLEARLO' , 'Delete this Large Object')"
+		  statements.Append "INSERT INTO storage.request_types VALUES ('IMPORT' , 'Import a Large Object into the pool and get a storage ID back for pulling it back')"
+		  statements.Append "INSERT INTO storage.request_types VALUES ('RETRIEVE' , 'Retrieve a storage ID from a pool and load it into a Large Object')"
+		  statements.Append "INSERT INTO storage.request_types VALUES ('CLEARLO' , 'Delete this Large Object, effectively removing this document from the cache')"
 		  statements.Append "REVOKE ALL ON TABLE storage.request_types FROM public"
 		  statements.Append "GRANT SELECT ON TABLE storage.request_types TO GROUP pd_users"
 		  
