@@ -25,13 +25,13 @@ Begin Window MainWindow
    Resizeable      =   True
    Title           =   "pdsessionDrydock"
    Visible         =   True
-   Width           =   600
-   Begin PushButton PushButton1
+   Width           =   714
+   Begin PushButton connect_btn
       AutoDeactivate  =   True
       Bold            =   False
       ButtonStyle     =   "0"
       Cancel          =   False
-      Caption         =   "Button"
+      Caption         =   "Connect"
       Default         =   False
       Enabled         =   True
       Height          =   42
@@ -39,7 +39,7 @@ Begin Window MainWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
-      Left            =   29
+      Left            =   20
       LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   True
@@ -52,15 +52,90 @@ Begin Window MainWindow
       TextFont        =   "System"
       TextSize        =   16.0
       TextUnit        =   0
-      Top             =   45
+      Top             =   20
       Underline       =   False
       Visible         =   True
-      Width           =   125
+      Width           =   127
+   End
+   Begin Label serviceToken_label
+      AutoDeactivate  =   True
+      Bold            =   False
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Height          =   42
+      HelpTag         =   ""
+      Index           =   -2147483648
+      InitialParent   =   ""
+      Italic          =   False
+      Left            =   172
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      Multiline       =   True
+      Scope           =   0
+      Selectable      =   False
+      TabIndex        =   1
+      TabPanelIndex   =   0
+      Text            =   "Service token label"
+      TextAlign       =   0
+      TextColor       =   &c00000000
+      TextFont        =   "System"
+      TextSize        =   16.0
+      TextUnit        =   0
+      Top             =   20
+      Transparent     =   True
+      Underline       =   False
+      Visible         =   True
+      Width           =   522
    End
 End
 #tag EndWindow
 
 #tag WindowCode
+	#tag Event
+		Sub Open()
+		  if appFolder.Child("tokens").Exists = False then
+		    appFolder.Child("tokens").CreateAsFolder
+		    serviceToken_label.Text = "No tokens in folder, create one, place it there and restart the application"
+		    exit sub
+		  end if
+		  
+		  for i as Integer = 1 to appFolder.Child("tokens").Count
+		    if appFolder.Child("tokens").Item(i).Extension.Uppercase <> "PDST" then
+		      Continue for i
+		    else  // assign the first pdst file present in the tokens folder - no selection mechanism, we're just testing out stuff here
+		      activeTokenFile = appFolder.Child("tokens").Item(i)
+		      exit for i
+		    end if
+		  next i
+		  
+		  if activeTokenFile = nil then 
+		    serviceToken_label.Text = "No tokens in folder, create one, place it there and restart the application"
+		  else
+		    serviceToken_label.Text = "Token found: " + EndOfLine + activeTokenFile.Name
+		  end if
+		  
+		  
+		End Sub
+	#tag EndEvent
+
+
+	#tag Method, Flags = &h0
+		Sub serviceDisconnected(sender as pdsession)
+		  MsgBox "service disconnected"
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+
+	#tag Property, Flags = &h0
+		activeTokenFile As FolderItem
+	#tag EndProperty
+
 	#tag Property, Flags = &h0
 		session As pdsession
 	#tag EndProperty
@@ -68,12 +143,15 @@ End
 
 #tag EndWindowCode
 
-#tag Events PushButton1
+#tag Events connect_btn
 	#tag Event
 		Sub Action()
-		  dim tokenFile as FolderItem = SpecialFolder.Desktop.Child("pduser@experimental.pdst")
+		  if activeTokenFile = nil Then
+		    MsgBox "No service token file found"
+		    exit sub
+		  end if
 		  
-		  dim token as pdservicetoken 
+		  dim tokenFile as FolderItem = activeTokenFile
 		  dim openToken as pdOutcome = pdservicetoken.Open(tokenFile)
 		  
 		  if openToken.ok = false then
@@ -81,11 +159,13 @@ End
 		    exit sub
 		  end if
 		  
-		  token = openToken.returnObject
+		  dim token as pdservicetoken = openToken.returnObject
 		  
-		  session = new pdsession(token , "pdTestApp")
+		  session = new pdsession(token , "pdTestApp" )
 		  
 		  dim outcome as pdOutcome = session.connect
+		  
+		  AddHandler session.ServiceDisconnected , WeakAddressOf serviceDisconnected
 		  
 		  if outcome.ok =false then 
 		    MsgBox outcome.fatalErrorMsg
@@ -292,11 +372,6 @@ End
 		InitialValue="True"
 		Type="Boolean"
 		EditorType="Boolean"
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="session"
-		Group="Behavior"
-		Type="Integer"
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="Super"

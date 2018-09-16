@@ -304,7 +304,7 @@ Begin Window MainWindow
          TabIndex        =   6
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "dis_test"
+         Text            =   "postdoc"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -381,7 +381,7 @@ Begin Window MainWindow
          TabIndex        =   8
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "postgres"
+         Text            =   "pduser"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -458,7 +458,7 @@ Begin Window MainWindow
          TabIndex        =   10
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   ""
+         Text            =   "test"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -1040,6 +1040,7 @@ End
 		  db.AppName = app.ExecutableFile.Name
 		  db.Host = dbAddress_field.Text.Trim
 		  db.Port = dbPort_field.Text.Trim.Val
+		  db.DatabaseName = dbDatabase_field.Text.Trim
 		  db.UserName = dbUsername_field.Text.Trim
 		  db.Password = dbPassword_field.Text.Trim
 		  

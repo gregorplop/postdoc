@@ -22,12 +22,13 @@ Protected Class pdsession
 		      return new pdOutcome(CurrentMethodName + ": Session seemingly open but failed to get session PID")
 		    end if
 		    
-		    postConnectActions.Append "LISTEN " + activeServiceToken.database.Uppercase + "_" + "PUBLIC"
-		    postConnectActions.Append "LISTEN " + activeServiceToken.database.Uppercase + "_" + success.returnObject.StringValue
+		    postConnectActions.Append "LISTEN " + activeServiceToken.database.Lowercase + "_" + "public"
+		    postConnectActions.Append "LISTEN " + activeServiceToken.database.Lowercase + "_" + success.returnObject.StringValue
 		    // more if needed
 		    
 		    for i as integer = 0 to postConnectActions.Ubound
 		      pgsession.SQLExecute(postConnectActions(i))
+		      System.DebugLog(postConnectActions(i))
 		      if pgsession.Error = true then 
 		        dim fail as new pdOutcome(CurrentMethodName + ": Error initializing new postdoc session: " + pgsession.ErrorMessage)
 		        pgsession.Close
@@ -122,12 +123,12 @@ Protected Class pdsession
 	#tag Method, Flags = &h0
 		Function pgPID() As string
 		  if connected = false or pgsession = nil then return empty
-		  
 		  dim data as RecordSet = pgsession.SQLSelect("SELECT pg_backend_pid()")
 		  if pgsession.Error = true then
 		    return empty
 		  else
-		    return data.IdxField(1).StringValue
+		    lastPID = data.IdxField(1).StringValue
+		    return lastPID
 		  end if
 		  
 		  
@@ -136,12 +137,10 @@ Protected Class pdsession
 
 	#tag Method, Flags = &h21
 		Private Sub pgQueuePoll_Action(sender as Timer)
-		  System.DebugLog("poll")
 		  pgsession.CheckForNotifications
 		  
-		  
 		  ServiceCheckCounter = ServiceCheckCounter + 1
-		  if ServiceCheckCounter = 200 then 
+		  if ServiceCheckCounter = 200 then // this deterines the service verify period
 		    ServiceCheckCounter = 0
 		    if pgPID = empty then
 		      
@@ -157,6 +156,13 @@ Protected Class pdsession
 
 	#tag Method, Flags = &h21
 		Private Sub pgsession_ReceivedNotification(sender as PostgreSQLDatabase, Name as string, ID as integer, Extra as String)
+		  // we're expecting messages from 2 channels here:
+		  //  (database name)_PUBLIC  and  (database name)_(pid number)
+		  
+		  dim publicChannel as String = activeServiceToken.database.Lowercase + "_" + "public"
+		  dim privateChannel as string = activeServiceToken.database.Lowercase + "_" + lastPID
+		  
+		  System.DebugLog("name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra)
 		  
 		End Sub
 	#tag EndMethod
@@ -177,6 +183,10 @@ Protected Class pdsession
 
 	#tag Property, Flags = &h21
 		Private connected As Boolean = false
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private lastPID As string
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

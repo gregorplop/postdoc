@@ -16,6 +16,17 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function appFolder() As FolderItem
+		  #if DebugBuild then
+		    return  app.ExecutableFile.parent.parent
+		  #else
+		    return app.ExecutableFile.Parent
+		  #endif
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function bulkSQLexecute(byref sqliteDB as SQLiteDatabase , statements() as string , singleTransaction as Boolean) As string()
 		  // returns an array of the same dimension as statements()
 		  // each element holds the error code for the corresponding element of statements() if any. if no error then the element is empty
