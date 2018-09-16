@@ -8,6 +8,36 @@ Protected Class pdinit
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function InitArchive_db(byref activeSession as PostgreSQLDatabase , name as string , friendlyName as string) As pdOutcome
+		  // 3rd step of an initialization
+		  // initDatabase should run it automatically
+		  
+		  if activeSession = nil then return new pdOutcome(CurrentMethodName + ": No session to a PostgreSQL database")
+		  if activeSession.Connect = false then return new pdOutcome(CurrentMethodName + ": Could not open the session to the PostgreSQL database: " + activeSession.ErrorMessage)
+		  
+		  dim statements(-1) as string
+		  
+		  //  create storage schema and tables
+		  statements.Append ""
+		  
+		  
+		  dim failure as new pdOutcome(CurrentMethodName +  ": Failed to create new archive "+ name)
+		  
+		  for i as integer = 0 to statements.Ubound
+		    activeSession.SQLExecute(statements(i))
+		    if activeSession.Error = true then
+		      failure.warnings.Append activeSession.ErrorMessage
+		      Return failure  // one error is enough + the calling method will take care of rollback
+		    end if
+		  next i
+		  
+		  
+		  Return new pdOutcome(true)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function initDatabase(byref activeSession as PostgreSQLDatabase , pdSystemName as string , dbFolderRoot as FolderItem , charType as string , collation as string) As pdOutcome
 		  // 2nd step of an initialization
 		  // you need to be connected to a service database as a server administrator, eg user postgres
@@ -141,17 +171,19 @@ Protected Class pdinit
 		  statements.Append "REVOKE ALL ON TABLE storage.request_states FROM public"
 		  statements.Append "GRANT SELECT ON TABLE storage.request_states TO GROUP pd_users"
 		  
-		  statements.Append "CREATE TABLE storage.requests (reqid BIGINT PRIMARY KEY , register_stamp TIMESTAMP WITHOUT TIME ZONE , complete_stamp TIMESTAMP WITHOUT TIME ZONE , handlerpid INTEGER NOT NULL , type TEXT REFERENCES storage.request_types(type) , state TEXT REFERENCES storage.request_states(state) , pgpid INTEGER NOT NULL , pguser TEXT NOT NULL , pduser TEXT NOT NULL , pool TEXT NOT NULL , storageid BIGINT NOT NULL , loid INTEGER NOT NULL , errormsg TEXT)"
+		  statements.Append "CREATE TABLE storage.requests (reqid BIGINT PRIMARY KEY , register_stamp TIMESTAMP WITHOUT TIME ZONE , complete_stamp TIMESTAMP WITHOUT TIME ZONE , requestorpid INTEGER NOT NULL  , handlerpid INTEGER NOT NULL , type TEXT REFERENCES storage.request_types(type) , state TEXT REFERENCES storage.request_states(state) , pguser TEXT NOT NULL , pduser TEXT NOT NULL , pool TEXT NOT NULL , storageid BIGINT NOT NULL , loid INTEGER NOT NULL , errormsg TEXT)"
 		  statements.Append "REVOKE ALL ON TABLE storage.requests FROM public"
 		  statements.Append "GRANT ALL ON TABLE storage.requests TO GROUP pd_admins"
 		  statements.Append "GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE storage.requests TO GROUP pd_backends"
 		  statements.Append "GRANT SELECT, INSERT ON TABLE storage.requests TO GROUP pd_users"
 		  statements.Append "ALTER TABLE storage.requests ALTER COLUMN register_stamp SET DEFAULT now()::TIMESTAMP WITHOUT TIME ZONE"
+		  statements.Append "ALTER TABLE storage.requests ALTER COLUMN requestorpid SET DEFAULT pg_backend_pid()"
 		  
 		  statements.Append "CREATE SEQUENCE storage.requests_reqid_seq CYCLE INCREMENT 1 START 1 MINVALUE 1 NO MAXVALUE CACHE 1 OWNED BY storage.requests.reqid"  
 		  statements.Append "REVOKE ALL ON SEQUENCE storage.requests_reqid_seq FROM public"
 		  statements.Append "GRANT ALL ON SEQUENCE storage.requests_reqid_seq TO GROUP pd_users"
 		  statements.Append "ALTER TABLE storage.requests ALTER COLUMN reqid SET DEFAULT nextval('storage.requests_reqid_seq'::regclass)"
+		  
 		  
 		  dim failure as new pdOutcome(CurrentMethodName +  ": Failed to create system tables")
 		  
