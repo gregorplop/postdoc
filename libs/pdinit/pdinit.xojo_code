@@ -185,6 +185,17 @@ Protected Class pdinit
 		  statements.Append "ALTER TABLE storage.requests ALTER COLUMN reqid SET DEFAULT nextval('storage.requests_reqid_seq'::regclass)"
 		  
 		  
+		  statements.Append "CREATE SCHEMA resources AUTHORIZATION pdadmin"
+		  statements.Append "COMMENT ON SCHEMA resources IS 'Resource declaration and access rights management'"
+		  statements.Append "REVOKE ALL ON SCHEMA resources FROM public"
+		  statements.Append "GRANT ALL ON SCHEMA resources TO GROUP pd_admins"
+		  statements.Append "GRANT USAGE ON SCHEMA resources TO GROUP pd_backends"
+		  statements.Append "GRANT USAGE ON SCHEMA resources TO GROUP pd_users"
+		  
+		  
+		  
+		  
+		  
 		  dim failure as new pdOutcome(CurrentMethodName +  ": Failed to create system tables")
 		  
 		  for i as integer = 0 to statements.Ubound
