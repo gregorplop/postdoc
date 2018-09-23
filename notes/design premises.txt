@@ -1,2 +1,6 @@
 -every storage pool object is associated with an archive document: there is no way to import content into a pool that is not registered as content of a document
 -every archive document can point to 2 storage pool objects: the main and the auxiliary. It can also carry no content at all.
+-all database objects belong to user pdadmin
+-all database objects are commented appropriately
+-comments of all postdoc-related postgres server roles (login&group) begin with the string "postdoc"
+-datasets must be associated with an archive

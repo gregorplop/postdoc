@@ -147,7 +147,7 @@ Protected Class pdinit
 		  // a minor housekeeping thing first: remove the public schema (if it exists)
 		  statements.Append "DROP SCHEMA public"
 		  
-		  //  create storage schema and tables
+		  //  storage
 		  statements.Append "CREATE SCHEMA storage AUTHORIZATION pdadmin"
 		  statements.Append "COMMENT ON SCHEMA storage IS 'Coordination facilites for the external binary storage backend'"
 		  statements.Append "REVOKE ALL ON SCHEMA storage FROM public"
@@ -155,14 +155,18 @@ Protected Class pdinit
 		  statements.Append "GRANT USAGE ON SCHEMA storage TO GROUP pd_backends"
 		  statements.Append "GRANT USAGE ON SCHEMA storage TO GROUP pd_users"
 		  
-		  statements.Append "CREATE TABLE storage.request_types(type TEXT PRIMARY KEY , description TEXT NOT NULL)"
+		  statements.Append "CREATE TABLE storage.request_types(type TEXT PRIMARY KEY , description TEXT NOT NULL)"  // to be replaced with an enum data type
+		  statements.Append "COMMENT ON TABLE storage.request_types IS 'Storage subsystem table for enumerating all valid request types and a brief description for each'"
+		  statements.Append "ALTER TABLE storage.request_types OWNER TO pdadmin"
 		  statements.Append "INSERT INTO storage.request_types VALUES ('IMPORT' , 'Import a Large Object into the pool and get a storage ID back for pulling it back')"
 		  statements.Append "INSERT INTO storage.request_types VALUES ('RETRIEVE' , 'Retrieve a storage ID from a pool and load it into a Large Object')"
 		  statements.Append "INSERT INTO storage.request_types VALUES ('CLEARLO' , 'Delete this Large Object, effectively removing this document from the cache')"
 		  statements.Append "REVOKE ALL ON TABLE storage.request_types FROM public"
 		  statements.Append "GRANT SELECT ON TABLE storage.request_types TO GROUP pd_users"
 		  
-		  statements.Append "CREATE TABLE storage.request_states(state TEXT PRIMARY KEY , description TEXT NOT NULL)"
+		  statements.Append "CREATE TABLE storage.request_states(state TEXT PRIMARY KEY , description TEXT NOT NULL)"  // to be replaced with an enum data type
+		  statements.Append "COMMENT ON TABLE storage.request_states IS 'Storage subsystem table for enumerating all valid request states and a brief description for each'"
+		  statements.Append "ALTER TABLE storage.request_states OWNER TO pdadmin"
 		  statements.Append "INSERT INTO storage.request_states VALUES ('NEW' , 'This is a new request, waiting to be handled')"
 		  statements.Append "INSERT INTO storage.request_states VALUES ('INPROGRESS' , 'Request is being worked on')"
 		  statements.Append "INSERT INTO storage.request_states VALUES ('DONE' , 'Request has been fulfilled')"
@@ -172,6 +176,7 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE storage.request_states TO GROUP pd_users"
 		  
 		  statements.Append "CREATE TABLE storage.requests (reqid BIGINT PRIMARY KEY , register_stamp TIMESTAMP WITHOUT TIME ZONE , complete_stamp TIMESTAMP WITHOUT TIME ZONE , requestorpid INTEGER NOT NULL  , handlerpid INTEGER NOT NULL , type TEXT REFERENCES storage.request_types(type) , state TEXT REFERENCES storage.request_states(state) , pguser TEXT NOT NULL , pduser TEXT NOT NULL , pool TEXT NOT NULL , storageid BIGINT NOT NULL , loid INTEGER NOT NULL , errormsg TEXT)"
+		  statements.Append "COMMENT ON TABLE storage.requests IS 'Storage subsystem table for registering requests that are handled by the postdoc backend'"
 		  statements.Append "REVOKE ALL ON TABLE storage.requests FROM public"
 		  statements.Append "GRANT ALL ON TABLE storage.requests TO GROUP pd_admins"
 		  statements.Append "GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE storage.requests TO GROUP pd_backends"
@@ -180,11 +185,12 @@ Protected Class pdinit
 		  statements.Append "ALTER TABLE storage.requests ALTER COLUMN requestorpid SET DEFAULT pg_backend_pid()"
 		  
 		  statements.Append "CREATE SEQUENCE storage.requests_reqid_seq CYCLE INCREMENT 1 START 1 MINVALUE 1 NO MAXVALUE CACHE 1 OWNED BY storage.requests.reqid"  
+		  statements.Append "COMMENT ON SEQUENCE storage.requests_reqid_seq IS 'Storage requests table request id autoincrement sequence'"
 		  statements.Append "REVOKE ALL ON SEQUENCE storage.requests_reqid_seq FROM public"
 		  statements.Append "GRANT ALL ON SEQUENCE storage.requests_reqid_seq TO GROUP pd_users"
 		  statements.Append "ALTER TABLE storage.requests ALTER COLUMN reqid SET DEFAULT nextval('storage.requests_reqid_seq'::regclass)"
 		  
-		  
+		  // resources
 		  statements.Append "CREATE SCHEMA resources AUTHORIZATION pdadmin"
 		  statements.Append "COMMENT ON SCHEMA resources IS 'Resource declaration and access rights management'"
 		  statements.Append "REVOKE ALL ON SCHEMA resources FROM public"
@@ -192,8 +198,83 @@ Protected Class pdinit
 		  statements.Append "GRANT USAGE ON SCHEMA resources TO GROUP pd_backends"
 		  statements.Append "GRANT USAGE ON SCHEMA resources TO GROUP pd_users"
 		  
+		  statements.Append "CREATE TABLE resources.pgusers (name TEXT PRIMARY KEY , friendlyname TEXT , description TEXT , groups TEXT , tokens TEXT , syslog TEXT)"
+		  statements.Append "COMMENT ON TABLE resources.pgusers IS 'postdoc-related postgres server login roles for configuring rdbms-enforced access restrictions on archives and datasets'"
+		  statements.Append "REVOKE ALL ON TABLE resources.pgusers FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.pgusers TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT ON TABLE resources.pgusers TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.pgusers TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.pgusers OWNER TO pdadmin"
 		  
+		  statements.Append "CREATE TABLE resources.pggroups (name TEXT PRIMARY KEY , friendlyname TEXT , description TEXT , tokens TEXT , syslog TEXT)"
+		  statements.Append "COMMENT ON TABLE resources.pggroups IS 'postdoc-related postgres server group roles for configuring rdbms-enforced access restrictions on archives and datasets'"
+		  statements.Append "REVOKE ALL ON TABLE resources.pggroups FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.pggroups TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT ON TABLE resources.pggroups TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.pggroups TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.pggroups OWNER TO pdadmin"
 		  
+		  statements.Append "CREATE TABLE resources.pdusers (name TEXT PRIMARY KEY , friendlyname TEXT , passwd TEXT , description TEXT , email TEXT , locked BOOLEAN NOT NULL , active BOOLEAN NOT NULL , groups TEXT , tokens TEXT , syslog TEXT)"
+		  statements.Append "COMMENT ON TABLE resources.pdusers IS 'postdoc session users for configuring framework-enforced access restrictions on resources'"
+		  statements.Append "REVOKE ALL ON TABLE resources.pdusers FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.pdusers TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT ON TABLE resources.pdusers TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.pdusers TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.pdusers OWNER TO pdadmin"
+		  
+		  statements.Append "CREATE TABLE resources.pdgroups (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , active BOOLEAN NOT NULL , tokens TEXT , syslog TEXT)"
+		  statements.Append "COMMENT ON TABLE resources.pdgroups IS 'postdoc session user groups for configuring framework-enforced access restrictions on resources'"
+		  statements.Append "REVOKE ALL ON TABLE resources.pdgroups FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.pdgroups TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT ON TABLE resources.pdgroups TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.pdgroups TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.pdgroups OWNER TO pdadmin"
+		  
+		  statements.Append "CREATE TABLE resources.archives (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , storagepool TEXT , options TEXT , fieldnames TEXT , syslog TEXT)"
+		  statements.Append "COMMENT ON TABLE resources.archives IS 'Archives registry: any archive not listed here is not considered valid. Archives are a postdoc resource'"
+		  statements.Append "REVOKE ALL ON TABLE resources.archives FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.archives TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT ON TABLE resources.archives TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.archives TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.archives OWNER TO pdadmin"
+		  
+		  statements.Append "CREATE TABLE resources.datasets (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , archive TEXT REFERENCES resources.archives(name) , fieldnames TEXT , syslog TEXT)"
+		  statements.Append "COMMENT ON TABLE resources.datasets IS 'Datasets registry: any dataset not listed here is not considered valid. Datasets are a postdoc resource'"
+		  statements.Append "REVOKE ALL ON TABLE resources.datasets FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.datasets TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT ON TABLE resources.datasets TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.datasets TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.datasets OWNER TO pdadmin"
+		  
+		  statements.Append "CREATE TABLE resources.applications (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , active BOOLEAN NOT NULL , features TEXT , syslog TEXT)"
+		  statements.Append "COMMENT ON TABLE resources.applications IS 'Applications registry: any application not listed here is not considered valid. Applications are a postdoc resource'"
+		  statements.Append "REVOKE ALL ON TABLE resources.applications FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.applications TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT ON TABLE resources.applications TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.applications TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.applications OWNER TO pdadmin"
+		  
+		  statements.Append "CREATE TYPE resources.resourcetypes AS ENUM ('ARCHIVE' , 'DATASET' , 'APPLICATION')"
+		  statements.Append "ALTER TYPE resources.resourcetypes OWNER TO pdadmin"
+		  statements.Append "COMMENT ON TYPE resources.resourcetypes IS 'Enumerates all possible resource types within a postdoc system'"
+		  statements.Append "REVOKE ALL ON TYPE resources.resourcetypes FROM public"
+		  statements.Append "GRANT USAGE ON TYPE resources.resourcetypes TO GROUP pd_users"
+		  
+		  statements.Append "CREATE TABLE resources.accesstokens (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , active BOOLEAN NOT NULL , resourcetype resources.resourcetypes NOT NULL , resourcename TEXT NOT NULL , createnew BOOLEAN NOT NULL , read BOOLEAN NOT NULL , update BOOLEAN NOT NULL , delete BOOLEAN NOT NULL , execute BOOLEAN NOT NULL , features TEXT , content BOOLEAN NOT NULL , syslog TEXT)"
+		  statements.Append "COMMENT ON TABLE resources.accesstokens IS 'This is the access tokens registry: An access token is a piece of information that ascribes specific access properties to a resource. Whoever carries the token, inherits these access properties on that resource. Token carriers can be users and groups.'"
+		  statements.Append "REVOKE ALL ON TABLE resources.accesstokens FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.accesstokens TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT ON TABLE resources.accesstokens TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.accesstokens TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.accesstokens OWNER TO pdadmin"
+		  
+		  // datasets
+		  statements.Append "CREATE SCHEMA datasets AUTHORIZATION pdadmin"
+		  statements.Append "COMMENT ON SCHEMA datasets IS 'Datasets schema: All datasets reside here'"
+		  statements.Append "REVOKE ALL ON SCHEMA datasets FROM public"
+		  statements.Append "GRANT ALL ON SCHEMA datasets TO GROUP pd_admins"
+		  statements.Append "GRANT USAGE ON SCHEMA datasets TO GROUP pd_backends"
+		  statements.Append "GRANT USAGE ON SCHEMA datasets TO GROUP pd_users"
 		  
 		  
 		  dim failure as new pdOutcome(CurrentMethodName +  ": Failed to create system tables")
@@ -233,13 +314,19 @@ Protected Class pdinit
 		  statements.Append "CREATE ROLE pd_users VALID UNTIL 'infinity'"  // add all postdoc users to this group: it gives them the proper access rights for the base functionality
 		  statements.Append "CREATE ROLE pd_backends VALID UNTIL 'infinity'"  // this is for users used for backend services to log in
 		  
+		  statements.Append "COMMENT ON ROLE pd_admins IS 'postdoc-related user group'"
+		  statements.Append "COMMENT ON ROLE pd_users IS 'postdoc-related user group'"
+		  statements.Append "COMMENT ON ROLE pd_backends IS 'postdoc-related user group'"
+		  
 		  statements.Append "CREATE ROLE pdadmin LOGIN ENCRYPTED PASSWORD '" + adminPasswd + "' VALID UNTIL 'infinity'"
 		  statements.Append "GRANT pd_admins TO pdadmin"
 		  statements.Append "GRANT pd_users TO pdadmin"
+		  statements.Append "COMMENT ON ROLE pdadmin IS 'postdoc-related user'"
 		  
 		  statements.Append "CREATE ROLE pdbackend LOGIN ENCRYPTED PASSWORD '" + backendPasswd + "' VALID UNTIL 'infinity'"
 		  statements.Append "GRANT pd_backends TO pdbackend"
 		  statements.Append "GRANT pd_users TO pdbackend"
+		  statements.Append "COMMENT ON ROLE pdbackend IS 'postdoc-related user'"
 		  
 		  dim failure as new pdOutcome(CurrentMethodName +  ": Failed to create administrative group or role")
 		  
