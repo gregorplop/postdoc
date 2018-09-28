@@ -4,3 +4,4 @@
 -all database objects are commented appropriately
 -comments of all postdoc-related postgres server roles (login&group) begin with the string "postdoc"
 -datasets must be associated with an archive
+-one postdoc database can be associated with a single pdstorage vfs

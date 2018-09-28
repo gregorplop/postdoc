@@ -230,7 +230,15 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.pdgroups TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.pdgroups OWNER TO pdadmin"
 		  
-		  statements.Append "CREATE TABLE resources.archives (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , storagepool TEXT , options TEXT , fieldnames TEXT , syslog TEXT)"
+		  statements.Append "CREATE TABLE  resources.storage (vfs TEXT NOT NULL , pool TEXT PRIMARY KEY , vfspath TEXT NOT NULL)"
+		  statements.Append "COMMENT ON TABLE resources.storage IS 'VFS and pool registry: this is where the postdoc system looks for its storage mechanism'"
+		  statements.Append "REVOKE ALL ON TABLE resources.storage FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.storage TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT ON TABLE resources.storage TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.storage TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.storage OWNER TO pdadmin"
+		  
+		  statements.Append "CREATE TABLE resources.archives (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , pool TEXT REFERENCES resources.storage(pool) , options TEXT , fieldnames TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.archives IS 'Archives registry: any archive not listed here is not considered valid. Archives are a postdoc resource'"
 		  statements.Append "REVOKE ALL ON TABLE resources.archives FROM public"
 		  statements.Append "GRANT ALL ON TABLE resources.archives TO GROUP pd_admins"

@@ -1,14 +1,6 @@
 #tag Module
 Protected Module pdcoreLib
 	#tag Method, Flags = &h0
-		Sub AddRowWithTag(extends list as listbox , rowText as string , tag as Variant)
-		  list.AddRow rowText
-		  list.RowTag(list.LastIndex) = tag
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function Append(extends target as String , source as string) As string
 		  return target + source
 		  
@@ -643,17 +635,6 @@ Protected Module pdcoreLib
 		  
 		  
 		  return new pdOutcome(true)
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function RowHavingTag(extends list as listbox , tag as string) As integer
-		  for i as integer =0 to list.ListCount
-		    if list.RowTag(i).StringValue = tag then return i
-		  next i
-		  
-		  return -1
-		  
 		End Function
 	#tag EndMethod
 
