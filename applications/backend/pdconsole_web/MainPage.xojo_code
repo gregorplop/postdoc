@@ -18,7 +18,7 @@ Begin WebPage MainPage
    LockVertical    =   False
    MinHeight       =   400
    MinWidth        =   600
-   Style           =   "None"
+   Style           =   "1422591999"
    TabOrder        =   0
    Title           =   "pdconsole_web"
    Top             =   0
@@ -36,6 +36,138 @@ Begin WebPage MainPage
    _OpenEventFired =   False
    _ShownEventFired=   False
    _VerticalPercent=   0.0
+   Begin WebLabel StatusFooter_label
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   273
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   False
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "1985513471"
+      TabOrder        =   0
+      Text            =   "Status footer"
+      TextAlign       =   2
+      Top             =   622
+      VerticalCenter  =   0
+      Visible         =   False
+      Width           =   819
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLabel appName_label
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   93
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   545
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "1170515967"
+      TabOrder        =   1
+      Text            =   "pdconsole_web"
+      TextAlign       =   0
+      Top             =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   547
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebListBox AppletsList
+      AlternateRowColor=   &cEDF3FE00
+      ColumnCount     =   1
+      ColumnWidths    =   "*"
+      Cursor          =   0
+      Enabled         =   True
+      HasHeading      =   False
+      HeaderStyle     =   "0"
+      Height          =   604
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      InitialValue    =   ""
+      Left            =   20
+      ListIndex       =   -1
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      MinimumRowHeight=   22
+      Multiline       =   False
+      PrimaryRowColor =   &cFFFFFF00
+      Scope           =   0
+      SelectionStyle  =   "0"
+      Style           =   "807745535"
+      TabOrder        =   -1
+      Top             =   20
+      VerticalCenter  =   0
+      Visible         =   False
+      Width           =   241
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLink postdoc_link
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   False
+      Height          =   42
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   625
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "807522303"
+      TabOrder        =   3
+      Target          =   2
+      Text            =   "part of the postdoc project"
+      TextAlign       =   3
+      Top             =   91
+      URL             =   "https://github.com/gregorplop/postdoc"
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   467
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
 End
 #tag EndWebPage
 
@@ -50,6 +182,21 @@ End
 	#tag EndEvent
 
 
+	#tag Method, Flags = &h0
+		Sub init()
+		  dim token as pdservicetoken = Session.getServiceToken
+		  
+		  MainPage.Title = "pdconsole_web  - " + token.username + "@" + token.database + "@" + token.host
+		  StatusFooter_label.Text = "user " + token.username.Uppercase + " connected to database " + token.database.Uppercase + " on server " + token.host.Uppercase
+		  
+		  AppletsList.Visible = true
+		  StatusFooter_label.Visible = true
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+
 	#tag Property, Flags = &h0
 		myLoginDialog As LoginDialog
 	#tag EndProperty
@@ -57,6 +204,48 @@ End
 
 #tag EndWindowCode
 
+#tag Events AppletsList
+	#tag Event
+		Sub Shown()
+		  me.AddRow "setup postdoc on a server"
+		  me.CellStyle(me.LastIndex,0) = textBold_style
+		  
+		  me.AddRow "system roles initialization"
+		  me.RowTag(me.LastIndex) = "SYSROLESINIT"
+		  
+		  me.AddRow "initialize postdoc"
+		  me.RowTag(me.LastIndex) = "PDDBINIT"
+		  
+		  me.AddRow "create service tokens"
+		  me.RowTag(me.LastIndex) = "SERVICETOKENBUILDER"
+		  
+		  
+		  
+		  me.AddRow "setup archives"
+		  me.CellStyle(me.LastIndex,0) = textBold_style
+		  
+		  me.AddRow "create new storage pool"
+		  me.RowTag(me.LastIndex) = "CREATEPOOL"
+		  
+		  me.AddRow "create new archive"
+		  me.RowTag(me.LastIndex) = "CREATEARCHIVE"
+		  
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub MouseDown(X As Integer, Y As Integer, Details As REALbasic.MouseEvent)
+		  
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub SelectionChanged()
+		  dim row as integer = me.ListIndex
+		  if row < 0 then exit sub
+		  
+		  if me.CellStyle(row,0) = textBold_style then me.Selected(row) = false
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Cursor"

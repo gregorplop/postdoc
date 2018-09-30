@@ -1,0 +1,16 @@
+#tag WebStyle
+WebStyle Style1
+Inherits WebStyle
+	#tag WebStyleStateGroup
+		text-size=100%
+		text-decoration=false True false false false
+	#tag EndWebStyleStateGroup
+	#tag WebStyleStateGroup
+	#tag EndWebStyleStateGroup
+	#tag WebStyleStateGroup
+	#tag EndWebStyleStateGroup
+	#tag WebStyleStateGroup
+	#tag EndWebStyleStateGroup
+End WebStyle Style1
+#tag EndWebStyle
+

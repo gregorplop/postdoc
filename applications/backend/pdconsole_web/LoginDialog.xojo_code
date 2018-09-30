@@ -3,7 +3,7 @@ Begin WebDialog LoginDialog
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   242
+   Height          =   278
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -24,7 +24,7 @@ Begin WebDialog LoginDialog
    Type            =   3
    VerticalCenter  =   0
    Visible         =   True
-   Width           =   368
+   Width           =   392
    ZIndex          =   1
    _DeclareLineRendered=   False
    _HorizontalPercent=   0.0
@@ -53,14 +53,22 @@ Begin WebDialog LoginDialog
       LockTop         =   True
       LockVertical    =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   0
-      Top             =   88
+      Text            =   ""
+      Top             =   108
       VerticalCenter  =   0
       Visible         =   True
       Width           =   223
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebButton login_btb
       AutoDisable     =   False
@@ -71,7 +79,7 @@ Begin WebDialog LoginDialog
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   236
+      Left            =   260
       LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -80,14 +88,21 @@ Begin WebDialog LoginDialog
       LockTop         =   False
       LockVertical    =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   2
-      Top             =   197
+      Top             =   233
       VerticalCenter  =   0
       Visible         =   True
       Width           =   112
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLink postdoc_link
       Cursor          =   0
@@ -97,7 +112,7 @@ Begin WebDialog LoginDialog
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   212
+      Left            =   236
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -107,9 +122,9 @@ Begin WebDialog LoginDialog
       LockVertical    =   False
       Multiline       =   True
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   3
-      Target          =   1
+      Target          =   2
       Text            =   "Powered by postdoc."
       TextAlign       =   3
       Top             =   35
@@ -118,7 +133,14 @@ Begin WebDialog LoginDialog
       Visible         =   True
       Width           =   136
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel pdconsole_web_label
       Cursor          =   1
@@ -147,7 +169,14 @@ Begin WebDialog LoginDialog
       Visible         =   True
       Width           =   204
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel service_label
       Cursor          =   1
@@ -171,12 +200,19 @@ Begin WebDialog LoginDialog
       TabOrder        =   5
       Text            =   "Service"
       TextAlign       =   0
-      Top             =   88
+      Top             =   108
       VerticalCenter  =   0
       Visible         =   True
       Width           =   73
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel username_label
       Cursor          =   1
@@ -200,12 +236,19 @@ Begin WebDialog LoginDialog
       TabOrder        =   5
       Text            =   "User name"
       TextAlign       =   0
-      Top             =   122
+      Top             =   142
       VerticalCenter  =   0
       Visible         =   True
       Width           =   93
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel password_label
       Cursor          =   1
@@ -229,12 +272,19 @@ Begin WebDialog LoginDialog
       TabOrder        =   5
       Text            =   "Password"
       TextAlign       =   0
-      Top             =   156
+      Top             =   176
       VerticalCenter  =   0
       Visible         =   True
       Width           =   93
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebTextField username_field
       AutoCapitalize  =   True
@@ -257,19 +307,27 @@ Begin WebDialog LoginDialog
       LockRight       =   False
       LockTop         =   True
       LockVertical    =   False
+      Password        =   False
       ReadOnly        =   False
       Scope           =   0
       Style           =   "-1"
       TabOrder        =   6
       Text            =   ""
       TextAlign       =   2
-      Top             =   122
+      Top             =   142
       Type            =   0
       VerticalCenter  =   0
       Visible         =   True
       Width           =   223
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebTextField password_field
       AutoCapitalize  =   True
@@ -292,25 +350,33 @@ Begin WebDialog LoginDialog
       LockRight       =   False
       LockTop         =   True
       LockVertical    =   False
+      Password        =   False
       ReadOnly        =   False
       Scope           =   0
       Style           =   "-1"
       TabOrder        =   7
       Text            =   ""
       TextAlign       =   2
-      Top             =   156
+      Top             =   176
       Type            =   1
       VerticalCenter  =   0
       Visible         =   True
       Width           =   223
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel loginMsg_label
       Cursor          =   1
       Enabled         =   True
       HasFocusRing    =   True
-      Height          =   22
+      Height          =   21
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
@@ -328,10 +394,46 @@ Begin WebDialog LoginDialog
       TabOrder        =   8
       Text            =   "Ready to login"
       TextAlign       =   0
-      Top             =   197
+      Top             =   233
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   204
+      Width           =   217
+      ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
+      _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
+   End
+   Begin WebLabel description_label
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   27
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "2131533823"
+      TabOrder        =   9
+      Text            =   "A web-based postdoc system initialization & monitoring GUI"
+      TextAlign       =   2
+      Top             =   69
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   352
       ZIndex          =   1
       _NeedsRendering =   True
    End
@@ -341,9 +443,74 @@ End
 #tag WindowCode
 #tag EndWindowCode
 
+#tag Events services_menu
+	#tag Event
+		Sub Shown()
+		  dim tokenNames(-1) as string
+		  tokenNames = app.getTokensFriendlyNames
+		  
+		  if tokenNames.Ubound < 0 then 
+		    loginMsg_label.Text = "No service tokens"
+		    
+		  else
+		    
+		    for i as Integer = 0 to tokenNames.Ubound
+		      me.AddRow tokenNames(i)
+		      me.RowTag(me.ListCount - 1) = i
+		    next i
+		    
+		  end if
+		  
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub SelectionChanged()
+		  dim tempToken as pdservicetoken = app.getTokenByIDX(me.ListIndex)
+		  
+		  username_field.Text = tempToken.username
+		  if tempToken.username = empty then 
+		    username_field.Enabled = true 
+		  else 
+		    username_field.Enabled = false
+		  end if
+		  
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag Events login_btb
 	#tag Event
 		Sub Action()
+		  dim outcome as pdOutcome
+		  dim token as pdservicetoken
+		  dim idx as Integer = services_menu.ListIndex
+		  
+		  if idx < 0 then 
+		    loginMsg_label.Text = "No service selected"
+		    exit sub
+		  end if
+		  
+		  token = app.getTokenByIDX(idx)
+		  outcome = Session.tryLogin(token , username_field.Text.Trim , password_field.Text.Trim)
+		  
+		  if outcome.ok  = false then 
+		    loginMsg_label.Text = "Login error: click to see" + EndOfLine + outcome.fatalErrorMsg
+		    exit sub
+		  else
+		    loginMsg_label.Text = "Login OK"
+		  end if
+		  
+		  self.Close
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events loginMsg_label
+	#tag Event
+		Sub MouseDown(X As Integer, Y As Integer, Details As REALbasic.MouseEvent)
+		  if me.Text.Contains(EndOfLine) or me.Text.len > 20 then
+		    MsgBox me.Text
+		  end if
 		  
 		End Sub
 	#tag EndEvent

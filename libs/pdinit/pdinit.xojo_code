@@ -38,13 +38,18 @@ Protected Class pdinit
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function initDatabase(byref activeSession as PostgreSQLDatabase , pdSystemName as string , dbFolderRoot as FolderItem , charType as string , collation as string) As pdOutcome
+		Shared Function initDatabase(byref activeSession as PostgreSQLDatabase , pdSystemName as string , dbFolderRoot as FolderItem , charType as string , collation as string , VFSfile as FolderItem) As pdOutcome
 		  // 2nd step of an initialization
 		  // you need to be connected to a service database as a server administrator, eg user postgres
 		  if activeSession = nil then return new pdOutcome(CurrentMethodName + ": No session to a PostgreSQL database")
 		  if pdSystemName.Trim = empty then return new pdOutcome(CurrentMethodName + ": Postdoc system name cannot be empty")
 		  if dbFolderRoot = nil then return new pdOutcome(CurrentMethodName + ": Tablespace root folder path is invalid")
 		  if dbFolderRoot.Exists = false then return new pdOutcome(CurrentMethodName + ": Tablespace root folder does not exist")
+		  
+		  if VFSfile = nil then return  new pdOutcome(CurrentMethodName + ": VFS file path is invalid")
+		  if VFSfile.Exists = false then return new pdOutcome(CurrentMethodName + ": VFS file does not exist")
+		  if VFSfile.IsReadable = false then return new pdOutcome(CurrentMethodName + ": VFS file appears not to be local to the system")
+		  if VFSfile.IsWriteable = false then return new pdOutcome(CurrentMethodName + ": VFS file appears not to be local to the system")
 		  
 		  dim serviceDatabase as string = activeSession.DatabaseName  // will reconnect for dropping the database in case of a rollback
 		  dim tablespaceName as string = pdSystemName + "_tablespace"
@@ -56,7 +61,7 @@ Protected Class pdinit
 		  
 		  dim dbFolderName as string = dbFolder.NativePath.ReplaceAll("\" , "\\")   // this will only work for windows!
 		  
-		  if activeSession.Connect = false then return new pdOutcome(CurrentMethodName + ": Could not open the session to the PostgreSQL database: " + activeSession.ErrorMessage)
+		  //if activeSession.Connect = false then return new pdOutcome(CurrentMethodName + ": Could not open the session to the PostgreSQL database: " + activeSession.ErrorMessage)
 		  
 		  dim statements(-1) as string
 		  dim rollback(-1) as string
@@ -309,7 +314,7 @@ Protected Class pdinit
 		  if activeSession = nil then return new pdOutcome(CurrentMethodName + ": No session to a PostgreSQL database")
 		  if adminPassword.Trim = empty then return new pdOutcome(CurrentMethodName + ": Administrator password cannot be empty")
 		  if backendPassword.Trim = empty then return new pdOutcome(CurrentMethodName + ": Backend password cannot be empty")
-		  if activeSession.Connect = false then return new pdOutcome(CurrentMethodName + ": Could not open the session to the PostgreSQL database: " + activeSession.ErrorMessage)
+		  //if activeSession.Connect = false then return new pdOutcome(CurrentMethodName + ": Could not open the session to the PostgreSQL database: " + activeSession.ErrorMessage)
 		  
 		  dim statements(-1) as string
 		  dim rollback(-1) as string
@@ -368,6 +373,20 @@ Protected Class pdinit
 		  end if
 		  
 		  return new pdOutcome(true)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function verify_database(byref activeSession as PostgreSQLDatabase) As pdOutcome
+		  // verifies if the session database is a postdoc standard database
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Shared Function verify_systemRoles(byref activeSession as PostgreSQLDatabase) As pdOutcome
+		  // verifies if server has postdoc standard login and group roles
 		  
 		End Function
 	#tag EndMethod

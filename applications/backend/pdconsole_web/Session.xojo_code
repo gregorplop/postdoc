@@ -1,8 +1,55 @@
 #tag Class
 Protected Class Session
 Inherits WebSession
+	#tag Method, Flags = &h0
+		Function getDBsession() As PostgreSQLDatabase
+		  Return dbSession
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function getServiceToken() As pdservicetoken
+		  return activeServiceToken
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function tryLogin(serviceToken as pdservicetoken , username as string , password as string) As pdOutcome
+		  if serviceToken = nil then return new pdOutcome("No valid service token")
+		  
+		  dbSession = new PostgreSQLDatabase
+		  dbSession.Host = serviceToken.host
+		  dbSession.Port = serviceToken.port
+		  dbSession.DatabaseName = serviceToken.database
+		  dbSession.UserName = username
+		  dbSession.Password = password
+		  
+		  dbSession.AppName = "pdconsole_web - " + username + "@" + dbSession.DatabaseName
+		  
+		  if dbSession.Connect = false then return new pdOutcome("Login failed: " + EndOfLine + dbSession.ErrorMessage)
+		  
+		  activeServiceToken = serviceToken
+		  activeServiceToken.username = username
+		  activeServiceToken.password = password.toBase64
+		  
+		  MainPage.init
+		  
+		  Return new pdOutcome(true)
+		  
+		  
+		  
+		End Function
+	#tag EndMethod
+
+
 	#tag Property, Flags = &h21
 		Private activeServiceToken As pdservicetoken
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private dbSession As PostgreSQLDatabase
 	#tag EndProperty
 
 
