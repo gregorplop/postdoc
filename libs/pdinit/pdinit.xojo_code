@@ -46,6 +46,7 @@ Protected Class pdinit
 		  if dbFolderRoot = nil then return new pdOutcome(CurrentMethodName + ": Tablespace root folder path is invalid")
 		  if dbFolderRoot.Exists = false then return new pdOutcome(CurrentMethodName + ": Tablespace root folder does not exist")
 		  
+		  
 		  if VFSfile = nil then return  new pdOutcome(CurrentMethodName + ": VFS file path is invalid")
 		  if VFSfile.Exists = false then return new pdOutcome(CurrentMethodName + ": VFS file does not exist")
 		  if VFSfile.IsReadable = false then return new pdOutcome(CurrentMethodName + ": VFS file appears not to be local to the system")

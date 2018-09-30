@@ -43,7 +43,7 @@ Begin WebDialog LoginDialog
       HorizontalCenter=   0
       Index           =   -2147483648
       InitialValue    =   ""
-      Left            =   125
+      Left            =   135
       ListIndex       =   -1
       LockBottom      =   False
       LockedInPosition=   False
@@ -79,7 +79,7 @@ Begin WebDialog LoginDialog
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   260
+      Left            =   246
       LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -90,7 +90,7 @@ Begin WebDialog LoginDialog
       Scope           =   0
       Style           =   "0"
       TabOrder        =   2
-      Top             =   233
+      Top             =   229
       VerticalCenter  =   0
       Visible         =   True
       Width           =   112
@@ -108,11 +108,11 @@ Begin WebDialog LoginDialog
       Cursor          =   0
       Enabled         =   True
       HasFocusRing    =   True
-      Height          =   22
+      Height          =   37
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   236
+      Left            =   272
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -127,11 +127,11 @@ Begin WebDialog LoginDialog
       Target          =   2
       Text            =   "Powered by postdoc."
       TextAlign       =   3
-      Top             =   35
+      Top             =   20
       URL             =   "https://github.com/gregorplop/postdoc"
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   136
+      Width           =   100
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -146,7 +146,7 @@ Begin WebDialog LoginDialog
       Cursor          =   1
       Enabled         =   True
       HasFocusRing    =   True
-      Height          =   37
+      Height          =   45
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
@@ -167,7 +167,7 @@ Begin WebDialog LoginDialog
       Top             =   20
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   204
+      Width           =   249
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -186,7 +186,7 @@ Begin WebDialog LoginDialog
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   20
+      Left            =   34
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -222,7 +222,7 @@ Begin WebDialog LoginDialog
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   20
+      Left            =   34
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -258,7 +258,7 @@ Begin WebDialog LoginDialog
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   20
+      Left            =   34
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -298,7 +298,7 @@ Begin WebDialog LoginDialog
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   125
+      Left            =   135
       LimitText       =   0
       LockBottom      =   False
       LockedInPosition=   False
@@ -341,7 +341,7 @@ Begin WebDialog LoginDialog
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   125
+      Left            =   135
       LimitText       =   0
       LockBottom      =   False
       LockedInPosition=   False
@@ -397,7 +397,7 @@ Begin WebDialog LoginDialog
       Top             =   233
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   217
+      Width           =   204
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -416,7 +416,7 @@ Begin WebDialog LoginDialog
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   20
+      Left            =   0
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -430,12 +430,19 @@ Begin WebDialog LoginDialog
       TabOrder        =   9
       Text            =   "A web-based postdoc system initialization & monitoring GUI"
       TextAlign       =   2
-      Top             =   69
+      Top             =   70
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   352
+      Width           =   392
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
 End
 #tag EndWebPage

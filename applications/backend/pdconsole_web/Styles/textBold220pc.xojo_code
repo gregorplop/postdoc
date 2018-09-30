@@ -1,12 +1,9 @@
 #tag WebStyle
-WebStyle AppletList_style
+WebStyle textBold220pc
 Inherits WebStyle
 	#tag WebStyleStateGroup
-		text-size=120%
-		border-top=1px none B6B6B6FF
-		border-bottom=1px none B6B6B6FF
-		border-left=1px none B6B6B6FF
-		border-right=1px none B6B6B6FF
+		text-size=220%
+		text-decoration=True True false false false
 	#tag EndWebStyleStateGroup
 	#tag WebStyleStateGroup
 	#tag EndWebStyleStateGroup
@@ -14,6 +11,6 @@ Inherits WebStyle
 	#tag EndWebStyleStateGroup
 	#tag WebStyleStateGroup
 	#tag EndWebStyleStateGroup
-End WebStyle AppletList_style
+End WebStyle textBold220pc
 #tag EndWebStyle
 
