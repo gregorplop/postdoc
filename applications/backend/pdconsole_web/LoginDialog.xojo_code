@@ -3,7 +3,7 @@ Begin WebDialog LoginDialog
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   292
+   Height          =   242
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -16,7 +16,7 @@ Begin WebDialog LoginDialog
    LockVertical    =   False
    MinHeight       =   0
    MinWidth        =   0
-   Resizable       =   True
+   Resizable       =   False
    Style           =   "None"
    TabOrder        =   0
    Title           =   "Login"
@@ -24,7 +24,7 @@ Begin WebDialog LoginDialog
    Type            =   3
    VerticalCenter  =   0
    Visible         =   True
-   Width           =   490
+   Width           =   368
    ZIndex          =   1
    _DeclareLineRendered=   False
    _HorizontalPercent=   0.0
@@ -35,12 +35,319 @@ Begin WebDialog LoginDialog
    _OpenEventFired =   False
    _ShownEventFired=   False
    _VerticalPercent=   0.0
+   Begin WebPopupMenu services_menu
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      InitialValue    =   ""
+      Left            =   125
+      ListIndex       =   -1
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   0
+      Top             =   88
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   223
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebButton login_btb
+      AutoDisable     =   False
+      Caption         =   "Login"
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   236
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   False
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   2
+      Top             =   197
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   112
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLink postdoc_link
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   212
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   3
+      Target          =   1
+      Text            =   "Powered by postdoc."
+      TextAlign       =   3
+      Top             =   35
+      URL             =   "https://github.com/gregorplop/postdoc"
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   136
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLabel pdconsole_web_label
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   37
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "1140482047"
+      TabOrder        =   4
+      Text            =   "pdconsole_web"
+      TextAlign       =   1
+      Top             =   20
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   204
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLabel service_label
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "739364863"
+      TabOrder        =   5
+      Text            =   "Service"
+      TextAlign       =   0
+      Top             =   88
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   73
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLabel username_label
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "739364863"
+      TabOrder        =   5
+      Text            =   "User name"
+      TextAlign       =   0
+      Top             =   122
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   93
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLabel password_label
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "739364863"
+      TabOrder        =   5
+      Text            =   "Password"
+      TextAlign       =   0
+      Top             =   156
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   93
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebTextField username_field
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   ""
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   125
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   6
+      Text            =   ""
+      TextAlign       =   2
+      Top             =   122
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   223
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebTextField password_field
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   ""
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   125
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   7
+      Text            =   ""
+      TextAlign       =   2
+      Top             =   156
+      Type            =   1
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   223
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLabel loginMsg_label
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   20
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   False
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   8
+      Text            =   "Ready to login"
+      TextAlign       =   0
+      Top             =   197
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   204
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
 End
 #tag EndWebPage
 
 #tag WindowCode
 #tag EndWindowCode
 
+#tag Events login_btb
+	#tag Event
+		Sub Action()
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Cursor"

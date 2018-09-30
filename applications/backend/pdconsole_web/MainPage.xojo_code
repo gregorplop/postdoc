@@ -40,6 +40,21 @@ End
 #tag EndWebPage
 
 #tag WindowCode
+	#tag Event
+		Sub Open()
+		  myLoginDialog = new LoginDialog
+		  myLoginDialog.Show
+		  
+		  
+		End Sub
+	#tag EndEvent
+
+
+	#tag Property, Flags = &h0
+		myLoginDialog As LoginDialog
+	#tag EndProperty
+
+
 #tag EndWindowCode
 
 #tag ViewBehavior

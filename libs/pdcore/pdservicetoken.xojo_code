@@ -128,6 +128,32 @@ Protected Class pdservicetoken
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Shared Function loadFolderTokens(targetFolder as FolderItem) As pdservicetoken()
+		  // this method will only open unencrypted tokens and will not return any error messages
+		  
+		  dim tokensFolder as FolderItem = appFolder.Child("tokens")
+		  dim output(-1) as pdservicetoken
+		  dim outcome as pdOutcome
+		  
+		  if tokensFolder = nil then return output
+		  if tokensFolder.Exists = False then Return output
+		  
+		  dim tokensFolderCount as Integer = tokensFolder.Count
+		  
+		  for i as integer = 1 to tokensFolderCount
+		    if tokensFolder.Item(i).Extension = "PDST" then
+		      outcome = pdservicetoken.Open(tokensFolder.Item(i))
+		      if outcome.ok then output.Append outcome.returnObject
+		    end if
+		    
+		  next i
+		  
+		  Return output
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Shared Function Open(tokenFile as FolderItem , optional password as string = "") As pdOutcome
 		  // password is exptected to be base64-encoded
 		  // pdservicetoken is expected in pdOutcome.returnObject if pdOutcome.ok
