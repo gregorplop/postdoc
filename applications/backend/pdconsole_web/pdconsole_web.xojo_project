@@ -34,6 +34,7 @@ WebStyle=appName_style;Styles/appName_style.xojo_code;&h45C4A7FF;&h206A0FFF;fals
 WebStyle=textBold_style;Styles/textBold_style.xojo_code;&h5D19EFFF;&h206A0FFF;false
 WebStyle=powered_style;Styles/powered_style.xojo_code;&h3021CFFF;&h206A0FFF;false
 WebView=createRolesWizard;Applets/createRolesWizard.xojo_code;&h246A7FF;&h4D410FFF;false
+WebStyle=text120pc;Styles/text120pc.xojo_code;&h64C02FFF;&h206A0FFF;false
 DefaultWindow=MainPage
 MajorVersion=1
 MinorVersion=0

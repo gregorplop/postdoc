@@ -317,6 +317,10 @@ Protected Class pdinit
 		  if backendPassword.Trim = empty then return new pdOutcome(CurrentMethodName + ": Backend password cannot be empty")
 		  //if activeSession.Connect = false then return new pdOutcome(CurrentMethodName + ": Could not open the session to the PostgreSQL database: " + activeSession.ErrorMessage)
 		  
+		  dim verify as pdOutcome = verify_systemRoles(activeSession)
+		  if verify.ok = false then return new pdOutcome(CurrentMethodName + ": Could not look for existing system roles: " + verify.fatalErrorMsg)
+		  if verify.returnObject.IntegerValue > 0 then Return new pdOutcome(CurrentMethodName + ": " + verify.returnObject.StringValue + " postdoc system roles already exist. Initialization will not proceed")
+		  
 		  dim statements(-1) as string
 		  dim rollback(-1) as string
 		  dim fail as Boolean = false
@@ -388,6 +392,26 @@ Protected Class pdinit
 	#tag Method, Flags = &h0
 		Shared Function verify_systemRoles(byref activeSession as PostgreSQLDatabase) As pdOutcome
 		  // verifies if server has postdoc standard login and group roles
+		  if activeSession = nil then Return new pdOutcome(CurrentMethodName + ": Invalid session")
+		  
+		  dim rs as RecordSet = activeSession.SQLSelect("SELECT rolname FROM pg_catalog.pg_roles")
+		  if activeSession.Error = true then return new pdOutcome(CurrentMethodName + ": Error querying server for roles: " + activeSession.ErrorMessage)
+		  
+		  dim rolesFound as integer = 0
+		  
+		  while not rs.EOF
+		    if rs.IdxField(1).StringValue = "pd_admins" then rolesFound = rolesFound + 1
+		    if rs.IdxField(1).StringValue = "pd_users" then rolesFound = rolesFound + 1
+		    if rs.IdxField(1).StringValue = "pd_backends" then rolesFound = rolesFound + 1
+		    if rs.IdxField(1).StringValue = "pdadmin" then rolesFound = rolesFound + 1
+		    if rs.IdxField(1).StringValue = "pdbackend" then rolesFound = rolesFound + 1
+		    rs.MoveNext
+		  wend
+		  
+		  dim success as new pdOutcome(true)
+		  success.returnObject = rolesFound
+		  
+		  return success
 		  
 		End Function
 	#tag EndMethod

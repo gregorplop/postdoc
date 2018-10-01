@@ -3,7 +3,7 @@ Begin WebDialog createRolesWizard
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   266
+   Height          =   300
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -24,7 +24,7 @@ Begin WebDialog createRolesWizard
    Type            =   2
    VerticalCenter  =   0
    Visible         =   True
-   Width           =   442
+   Width           =   416
    ZIndex          =   1
    _DeclareLineRendered=   False
    _HorizontalPercent=   0.0
@@ -35,6 +35,219 @@ Begin WebDialog createRolesWizard
    _OpenEventFired =   False
    _ShownEventFired=   False
    _VerticalPercent=   0.0
+   Begin WebLabel Label1
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "739364863"
+      TabOrder        =   0
+      Text            =   "Creates the following group roles:"
+      TextAlign       =   0
+      Top             =   20
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   298
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLabel Label2
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   67
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   44
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   1
+      Text            =   "pg_admins - the postdoc administrators\r\npg_backends - backend users\r\npg_users - all users participating in the postdoc system"
+      TextAlign       =   0
+      Top             =   54
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   333
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLabel Label3
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "739364863"
+      TabOrder        =   0
+      Text            =   "Creates the following login roles:"
+      TextAlign       =   0
+      Top             =   133
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   298
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLabel Label4
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   69
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   44
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "pdadmin\r\n\r\npdbackend"
+      TextAlign       =   0
+      Top             =   167
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   94
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebTextField pdadminPassword
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   "password"
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   150
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   2
+      Top             =   167
+      Type            =   1
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   227
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebTextField pdbackendPassword
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   "password"
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   150
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   2
+      Top             =   206
+      Type            =   1
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   227
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebButton createRolesBtn
+      AutoDisable     =   False
+      Caption         =   "Do it !"
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   265
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   4
+      Top             =   255
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   112
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
 End
 #tag EndWebPage
 
@@ -69,6 +282,29 @@ End
 
 #tag EndWindowCode
 
+#tag Events createRolesBtn
+	#tag Event
+		Sub Action()
+		  if me.Caption <> "DONE !" then
+		    
+		    dim tempsession as PostgreSQLDatabase = Session.getDBsession
+		    dim outcome as pdOutcome = pdinit.initSystemUsers(tempsession , pdadminPassword.Text , pdbackendPassword.Text)
+		    
+		    if outcome.ok = true then
+		      me.Caption = "DONE !"
+		      pdbackendPassword.Enabled = false
+		      pdadminPassword.Enabled = false
+		    else
+		      MsgBox outcome.fatalErrorMsg
+		    end if
+		  else
+		    
+		    self.close
+		    
+		  end if
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Cursor"
