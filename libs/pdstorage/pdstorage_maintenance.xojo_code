@@ -16,6 +16,10 @@ Protected Class pdstorage_maintenance
 
 	#tag Method, Flags = &h0
 		Shared Function initVFS(initVFS as pdstorage_vfs) As pdOutcome
+		  // requires:
+		  // DBfile , name , friendlyname , password ,  description
+		  
+		  
 		  if initVFS = nil then return new pdOutcome(CurrentMethodName + ": Initialization VFS object is nul")
 		  
 		  if initVFS.DBfile = nil then Return new pdOutcome(CurrentMethodName + ": Invalid path")

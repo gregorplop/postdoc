@@ -1,9 +1,9 @@
 #tag WebPage
-Begin WebDialog createRolesWizard
+Begin WebDialog newDatabaseWizard
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   300
+   Height          =   322
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -19,12 +19,12 @@ Begin WebDialog createRolesWizard
    Resizable       =   False
    Style           =   "None"
    TabOrder        =   0
-   Title           =   "Create system roles"
+   Title           =   "Create postdoc system"
    Top             =   0
    Type            =   2
    VerticalCenter  =   0
    Visible         =   True
-   Width           =   416
+   Width           =   389
    ZIndex          =   1
    _DeclareLineRendered=   False
    _HorizontalPercent=   0.0
@@ -55,31 +55,136 @@ Begin WebDialog createRolesWizard
       Scope           =   0
       Style           =   "739364863"
       TabOrder        =   0
-      Text            =   "Creates the following group roles:"
+      Text            =   "Database on server"
       TextAlign       =   0
       Top             =   20
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   298
+      Width           =   164
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
-   Begin WebLabel Label2
+   Begin WebLabel Label4
       Cursor          =   1
       Enabled         =   True
       HasFocusRing    =   True
-      Height          =   67
+      Height          =   25
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   44
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Name"
+      TextAlign       =   0
+      Top             =   54
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   58
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField nameField
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   "postdoc system name"
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   "Only lowercase letters, no spaces"
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   175
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   54
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebButton createDatabase
+      AutoDisable     =   False
+      Caption         =   "Do it !"
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   229
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   False
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   4
+      Top             =   277
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   112
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label5
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -90,24 +195,114 @@ Begin WebDialog createRolesWizard
       Multiline       =   True
       Scope           =   0
       Style           =   "1690316799"
-      TabOrder        =   1
-      Text            =   "pg_admins - the postdoc administrators\r\npg_backends - backend users\r\npg_users - all users participating in the postdoc system"
+      TabOrder        =   2
+      Text            =   "Character type"
       TextAlign       =   0
-      Top             =   54
+      Top             =   91
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   333
+      Width           =   113
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
-   Begin WebLabel Label3
+   Begin WebLabel Label6
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Collation"
+      TextAlign       =   0
+      Top             =   128
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   113
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebPopupMenu chartypeMenu
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      InitialValue    =   ""
+      Left            =   175
+      ListIndex       =   -1
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   5
+      Top             =   91
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebPopupMenu collationMenu
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      InitialValue    =   ""
+      Left            =   175
+      ListIndex       =   -1
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   5
+      Top             =   128
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebLabel Label2
       Cursor          =   1
       Enabled         =   True
       HasFocusRing    =   True
@@ -127,31 +322,31 @@ Begin WebDialog createRolesWizard
       Scope           =   0
       Style           =   "739364863"
       TabOrder        =   0
-      Text            =   "Creates the following login roles:"
+      Text            =   "Location on disk"
       TextAlign       =   0
-      Top             =   133
+      Top             =   165
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   298
+      Width           =   143
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
-   Begin WebLabel Label4
+   Begin WebLabel Label7
       Cursor          =   1
       Enabled         =   True
       HasFocusRing    =   True
-      Height          =   69
+      Height          =   73
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   44
+      Left            =   38
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -163,118 +358,36 @@ Begin WebDialog createRolesWizard
       Scope           =   0
       Style           =   "1690316799"
       TabOrder        =   2
-      Text            =   "pdadmin\r\n\r\npdbackend"
+      Text            =   "Root folder for tablespace and storage VFS"
       TextAlign       =   0
-      Top             =   167
+      Top             =   199
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   94
+      Width           =   113
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
-   Begin WebTextField pdadminPassword
+   Begin WebTextField tablespacerootField
       AutoCapitalize  =   True
       AutoComplete    =   True
       AutoCorrect     =   True
-      CueText         =   "password"
+      CueText         =   "existing folder name"
       Cursor          =   0
       Enabled         =   True
       HasFocusRing    =   True
-      Height          =   22
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   150
-      LimitText       =   0
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Password        =   False
-      ReadOnly        =   False
-      Scope           =   0
-      Style           =   "0"
-      TabOrder        =   3
-      Text            =   ""
-      TextAlign       =   2
-      Top             =   167
-      Type            =   1
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   227
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebTextField pdbackendPassword
-      AutoCapitalize  =   True
-      AutoComplete    =   True
-      AutoCorrect     =   True
-      CueText         =   "password"
-      Cursor          =   0
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   22
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   150
-      LimitText       =   0
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Password        =   False
-      ReadOnly        =   False
-      Scope           =   0
-      Style           =   "0"
-      TabOrder        =   3
-      Text            =   ""
-      TextAlign       =   2
-      Top             =   206
-      Type            =   1
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   227
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebButton createRolesBtn
-      AutoDisable     =   False
-      Caption         =   "Do it !"
-      Cursor          =   0
-      Enabled         =   True
       Height          =   25
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   265
+      Left            =   175
+      LimitText       =   0
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -282,22 +395,19 @@ Begin WebDialog createRolesWizard
       LockRight       =   False
       LockTop         =   True
       LockVertical    =   False
+      ReadOnly        =   False
       Scope           =   0
-      Style           =   "-1"
-      TabOrder        =   4
-      Top             =   255
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   199
+      Type            =   0
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   112
+      Width           =   166
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
    End
 End
 #tag EndWebPage
@@ -327,32 +437,48 @@ End
 
 
 	#tag Property, Flags = &h0
-		Shared instances As Integer = 0
+		Shared instances As Integer
 	#tag EndProperty
 
 
 #tag EndWindowCode
 
-#tag Events createRolesBtn
+#tag Events createDatabase
 	#tag Event
 		Sub Action()
 		  if me.Caption <> "DONE !" then
 		    
-		    dim tempsession as PostgreSQLDatabase = Session.getDBsession
-		    dim outcome as pdOutcome = pdinit.initSystemUsers(tempsession , pdadminPassword.Text , pdbackendPassword.Text)
 		    
-		    if outcome.ok = true then
-		      me.Caption = "DONE !"
-		      pdbackendPassword.Enabled = false
-		      pdadminPassword.Enabled = false
-		    else
-		      MsgBox outcome.fatalErrorMsg
-		    end if
+		    
 		  else
 		    
 		    self.close
 		    
 		  end if
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events chartypeMenu
+	#tag Event
+		Sub Shown()
+		  me.AddRow pdinit.pgDefaultCharacterType
+		  me.AddRow "C"
+		  me.AddRow "POSIX"
+		  
+		  me.ListIndex = 0
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events collationMenu
+	#tag Event
+		Sub Shown()
+		  me.AddRow pdinit.pgDefaultCollation
+		  me.AddRow "C"
+		  me.AddRow "POSIX"
+		  
+		  me.ListIndex = 0
+		  
 		End Sub
 	#tag EndEvent
 #tag EndEvents

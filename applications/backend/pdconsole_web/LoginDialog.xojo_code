@@ -3,7 +3,7 @@ Begin WebDialog LoginDialog
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   278
+   Height          =   288
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -17,7 +17,7 @@ Begin WebDialog LoginDialog
    MinHeight       =   0
    MinWidth        =   0
    Resizable       =   False
-   Style           =   "None"
+   Style           =   "0"
    TabOrder        =   0
    Title           =   "Login"
    Top             =   0
@@ -56,7 +56,7 @@ Begin WebDialog LoginDialog
       Style           =   "0"
       TabOrder        =   0
       Text            =   ""
-      Top             =   108
+      Top             =   118
       VerticalCenter  =   0
       Visible         =   True
       Width           =   223
@@ -90,7 +90,7 @@ Begin WebDialog LoginDialog
       Scope           =   0
       Style           =   "0"
       TabOrder        =   2
-      Top             =   229
+      Top             =   239
       VerticalCenter  =   0
       Visible         =   True
       Width           =   112
@@ -108,11 +108,11 @@ Begin WebDialog LoginDialog
       Cursor          =   0
       Enabled         =   True
       HasFocusRing    =   True
-      Height          =   37
+      Height          =   17
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   272
+      Left            =   236
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -122,16 +122,16 @@ Begin WebDialog LoginDialog
       LockVertical    =   False
       Multiline       =   True
       Scope           =   0
-      Style           =   "0"
+      Style           =   "2131533823"
       TabOrder        =   3
       Target          =   2
       Text            =   "Powered by postdoc."
       TextAlign       =   3
-      Top             =   20
+      Top             =   41
       URL             =   "https://github.com/gregorplop/postdoc"
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   100
+      Width           =   122
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -167,7 +167,7 @@ Begin WebDialog LoginDialog
       Top             =   20
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   249
+      Width           =   214
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -200,7 +200,7 @@ Begin WebDialog LoginDialog
       TabOrder        =   5
       Text            =   "Service"
       TextAlign       =   0
-      Top             =   108
+      Top             =   118
       VerticalCenter  =   0
       Visible         =   True
       Width           =   73
@@ -236,7 +236,7 @@ Begin WebDialog LoginDialog
       TabOrder        =   5
       Text            =   "User name"
       TextAlign       =   0
-      Top             =   142
+      Top             =   152
       VerticalCenter  =   0
       Visible         =   True
       Width           =   93
@@ -272,7 +272,7 @@ Begin WebDialog LoginDialog
       TabOrder        =   5
       Text            =   "Password"
       TextAlign       =   0
-      Top             =   176
+      Top             =   186
       VerticalCenter  =   0
       Visible         =   True
       Width           =   93
@@ -314,7 +314,7 @@ Begin WebDialog LoginDialog
       TabOrder        =   6
       Text            =   ""
       TextAlign       =   2
-      Top             =   142
+      Top             =   152
       Type            =   0
       VerticalCenter  =   0
       Visible         =   True
@@ -357,7 +357,7 @@ Begin WebDialog LoginDialog
       TabOrder        =   7
       Text            =   ""
       TextAlign       =   2
-      Top             =   176
+      Top             =   186
       Type            =   1
       VerticalCenter  =   0
       Visible         =   True
@@ -394,7 +394,7 @@ Begin WebDialog LoginDialog
       TabOrder        =   8
       Text            =   "Ready to login"
       TextAlign       =   0
-      Top             =   233
+      Top             =   243
       VerticalCenter  =   0
       Visible         =   True
       Width           =   204
@@ -444,10 +444,38 @@ Begin WebDialog LoginDialog
       _OpenEventFired =   False
       _VerticalPercent=   0.0
    End
+   Begin WebTimer ErrorFlasher
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   32
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   40
+      LockedInPosition=   False
+      Mode            =   1
+      Period          =   50
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   -1
+      Top             =   40
+      VerticalCenter  =   0
+      Width           =   32
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
 End
 #tag EndWebPage
 
 #tag WindowCode
+	#tag Method, Flags = &h0
+		Sub AnimateOnError()
+		  Style = backgroundRed
+		  ErrorFlasher.Reset
+		End Sub
+	#tag EndMethod
+
+
 #tag EndWindowCode
 
 #tag Events services_menu
@@ -494,6 +522,7 @@ End
 		  
 		  if idx < 0 then 
 		    loginMsg_label.Text = "No service selected"
+		    AnimateOnError
 		    exit sub
 		  end if
 		  
@@ -502,6 +531,7 @@ End
 		  
 		  if outcome.ok  = false then 
 		    loginMsg_label.Text = "Login error: click to see" + EndOfLine + outcome.fatalErrorMsg
+		    AnimateOnError
 		    exit sub
 		  else
 		    loginMsg_label.Text = "Login OK"
@@ -518,6 +548,15 @@ End
 		  if me.Text.Contains(EndOfLine) or me.Text.len > 20 then
 		    MsgBox me.Text
 		  end if
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events ErrorFlasher
+	#tag Event
+		Sub Action()
+		  self.Style = noStyle
+		  
 		  
 		End Sub
 	#tag EndEvent

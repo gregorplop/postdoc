@@ -44,7 +44,7 @@ Begin WebPage MainPage
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   0
+      Left            =   20
       LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -57,11 +57,11 @@ Begin WebPage MainPage
       Style           =   "1985513471"
       TabOrder        =   0
       Text            =   "Status footer"
-      TextAlign       =   2
+      TextAlign       =   3
       Top             =   622
       VerticalCenter  =   0
       Visible         =   False
-      Width           =   1092
+      Width           =   1052
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -203,6 +203,14 @@ End
 	#tag EndEvent
 
 
+	#tag Method, Flags = &h21
+		Private Sub addApplet(appletCaption as string , appletCode as string)
+		  AppletsList.AddRow " " + appletCaption
+		  AppletsList.RowTag(AppletsList.LastIndex) = appletCode
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub init()
 		  refreshStateIndicators
@@ -210,6 +218,27 @@ End
 		  AppletsList.Visible = true
 		  StatusFooter_label.Visible = true
 		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub populateAppletsList()
+		  
+		  addApplet("setup postdoc" , "section")
+		  addApplet("create group and login roles" , "SYSROLESINIT")
+		  addApplet("initialize postdoc system" , "PDINIT")
+		  addApplet("create service tokens" , "SERVICETOKENBUILDER")
+		  
+		  
+		  addApplet("archives" , "section")
+		  addApplet("create a new archive" , "NEWARCHIVE")
+		  addApplet("archive overview" , "ARCHIVEOVERVIEW")
+		  addApplet("storage configuration" , "CONFIGSTORAGE")
+		  
+		  
+		  
+		  styleAppletsList
 		  
 		End Sub
 	#tag EndMethod
@@ -235,12 +264,43 @@ End
 		      roleCreator.Left = AppletsList.Left + AppletsList.Width + 20
 		      
 		      roleCreator.Show
+		      
+		    else
+		      MsgBox "This wizard is already open"
+		    end if
+		    
+		  case "PDINIT"
+		    
+		    if newDatabaseWizard.instances < 1 then
+		      dim newDatabaseWizard as new newDatabaseWizard
+		      newDatabaseWizard.Top = postdoc_link.Top + postdoc_link.Height
+		      newDatabaseWizard.Left = AppletsList.Left + AppletsList.Width + 20
+		      
+		      newDatabaseWizard.Show
+		      
 		    else
 		      MsgBox "This wizard is already open"
 		    end if
 		    
 		    
+		    
+		    
 		  end select
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub styleAppletsList()
+		  for i as integer = 0 to AppletsList.RowCount - 1
+		    
+		    if AppletsList.RowTag(i).StringValue = "SECTION" then 
+		      AppletsList.CellStyle(i,0) = textBold_style
+		    end if
+		    
+		    
+		    
+		  next i
+		  
 		End Sub
 	#tag EndMethod
 
@@ -255,34 +315,7 @@ End
 #tag Events AppletsList
 	#tag Event
 		Sub Shown()
-		  me.AddRow " setup postdoc on this server"
-		  me.CellStyle(me.LastIndex,0) = textBold_style
-		  
-		  me.AddRow " create group and login roles"
-		  me.RowTag(me.LastIndex) = "SYSROLESINIT"
-		  
-		  me.AddRow " initialize postdoc system"
-		  me.RowTag(me.LastIndex) = "PDINIT"
-		  
-		  me.AddRow " create service tokens"
-		  me.RowTag(me.LastIndex) = "SERVICETOKENBUILDER"
-		  
-		  
-		  
-		  me.AddRow " setup archives"
-		  me.CellStyle(me.LastIndex,0) = textBold_style
-		  
-		  me.AddRow " create new storage pool"
-		  me.RowTag(me.LastIndex) = "CREATEPOOL"
-		  
-		  me.AddRow " create new archive"
-		  me.RowTag(me.LastIndex) = "CREATEARCHIVE"
-		  
-		End Sub
-	#tag EndEvent
-	#tag Event
-		Sub MouseDown(X As Integer, Y As Integer, Details As REALbasic.MouseEvent)
-		  
+		  populateAppletsList
 		End Sub
 	#tag EndEvent
 	#tag Event
@@ -290,14 +323,7 @@ End
 		  dim row as integer = me.ListIndex
 		  if row < 0 then exit sub
 		  
-		  if me.CellStyle(row,0) = textBold_style then me.Selected(row) = false
-		End Sub
-	#tag EndEvent
-	#tag Event
-		Sub DoubleClick(X As Integer, Y As Integer, Details As REALbasic.MouseEvent)
-		  dim row as integer = me.ListIndex
-		  if row < 0 then exit sub
-		  
+		  me.Selected(row) = false
 		  showApplets(me.RowTag(row).StringValue.Uppercase)
 		  
 		  
