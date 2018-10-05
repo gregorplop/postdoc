@@ -9,6 +9,8 @@ Inherits WebApplication
 		  
 		  if ServiceTokens.Ubound < 0 then print "error: no service tokens found in tokens folder"
 		  
+		  dim newTokenFolder as FolderItem = appFolder.Child("tokens.new")
+		  if newTokenFolder.Exists = false then newTokenFolder.CreateAsFolder
 		  
 		End Sub
 	#tag EndEvent

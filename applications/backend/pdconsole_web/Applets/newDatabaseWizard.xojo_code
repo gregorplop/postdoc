@@ -3,7 +3,7 @@ Begin WebDialog newDatabaseWizard
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   322
+   Height          =   454
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -24,7 +24,7 @@ Begin WebDialog newDatabaseWizard
    Type            =   2
    VerticalCenter  =   0
    Visible         =   True
-   Width           =   389
+   Width           =   377
    ZIndex          =   1
    _DeclareLineRendered=   False
    _HorizontalPercent=   0.0
@@ -62,14 +62,14 @@ Begin WebDialog newDatabaseWizard
       Visible         =   True
       Width           =   164
       ZIndex          =   1
-      _DeclareLineRendered=   "False"
-      _HorizontalPercent=   "0.0"
-      _IsEmbedded     =   "False"
-      _Locked         =   "False"
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   "False"
-      _OpenEventFired =   "False"
-      _VerticalPercent=   "0.0"
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel Label4
       Cursor          =   1
@@ -98,14 +98,14 @@ Begin WebDialog newDatabaseWizard
       Visible         =   True
       Width           =   58
       ZIndex          =   1
-      _DeclareLineRendered=   "False"
-      _HorizontalPercent=   "0.0"
-      _IsEmbedded     =   "False"
-      _Locked         =   "False"
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   "False"
-      _OpenEventFired =   "False"
-      _VerticalPercent=   "0.0"
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebTextField nameField
       AutoCapitalize  =   True
@@ -116,7 +116,7 @@ Begin WebDialog newDatabaseWizard
       Enabled         =   True
       HasFocusRing    =   True
       Height          =   25
-      HelpTag         =   "Only lowercase letters, no spaces"
+      HelpTag         =   "Only lowercase letters, no spaces , no freaky characters !"
       HorizontalCenter=   0
       Index           =   -2147483648
       Left            =   175
@@ -128,6 +128,7 @@ Begin WebDialog newDatabaseWizard
       LockRight       =   False
       LockTop         =   True
       LockVertical    =   False
+      Password        =   False
       ReadOnly        =   False
       Scope           =   0
       Style           =   "-1"
@@ -140,7 +141,14 @@ Begin WebDialog newDatabaseWizard
       Visible         =   True
       Width           =   166
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebButton createDatabase
       AutoDisable     =   False
@@ -162,19 +170,19 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "0"
       TabOrder        =   4
-      Top             =   277
+      Top             =   409
       VerticalCenter  =   0
       Visible         =   True
       Width           =   112
       ZIndex          =   1
-      _DeclareLineRendered=   "False"
-      _HorizontalPercent=   "0.0"
-      _IsEmbedded     =   "False"
-      _Locked         =   "False"
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   "False"
-      _OpenEventFired =   "False"
-      _VerticalPercent=   "0.0"
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel Label5
       Cursor          =   1
@@ -203,14 +211,14 @@ Begin WebDialog newDatabaseWizard
       Visible         =   True
       Width           =   113
       ZIndex          =   1
-      _DeclareLineRendered=   "False"
-      _HorizontalPercent=   "0.0"
-      _IsEmbedded     =   "False"
-      _Locked         =   "False"
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   "False"
-      _OpenEventFired =   "False"
-      _VerticalPercent=   "0.0"
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel Label6
       Cursor          =   1
@@ -239,14 +247,14 @@ Begin WebDialog newDatabaseWizard
       Visible         =   True
       Width           =   113
       ZIndex          =   1
-      _DeclareLineRendered=   "False"
-      _HorizontalPercent=   "0.0"
-      _IsEmbedded     =   "False"
-      _Locked         =   "False"
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   "False"
-      _OpenEventFired =   "False"
-      _VerticalPercent=   "0.0"
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebPopupMenu chartypeMenu
       Cursor          =   0
@@ -268,12 +276,20 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "-1"
       TabOrder        =   5
+      Text            =   ""
       Top             =   91
       VerticalCenter  =   0
       Visible         =   True
       Width           =   166
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebPopupMenu collationMenu
       Cursor          =   0
@@ -295,12 +311,20 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "0"
       TabOrder        =   5
+      Text            =   ""
       Top             =   128
       VerticalCenter  =   0
       Visible         =   True
       Width           =   166
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel Label2
       Cursor          =   1
@@ -329,20 +353,20 @@ Begin WebDialog newDatabaseWizard
       Visible         =   True
       Width           =   143
       ZIndex          =   1
-      _DeclareLineRendered=   "False"
-      _HorizontalPercent=   "0.0"
-      _IsEmbedded     =   "False"
-      _Locked         =   "False"
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   "False"
-      _OpenEventFired =   "False"
-      _VerticalPercent=   "0.0"
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel Label7
       Cursor          =   1
       Enabled         =   True
       HasFocusRing    =   True
-      Height          =   73
+      Height          =   68
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
@@ -365,16 +389,16 @@ Begin WebDialog newDatabaseWizard
       Visible         =   True
       Width           =   113
       ZIndex          =   1
-      _DeclareLineRendered=   "False"
-      _HorizontalPercent=   "0.0"
-      _IsEmbedded     =   "False"
-      _Locked         =   "False"
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   "False"
-      _OpenEventFired =   "False"
-      _VerticalPercent=   "0.0"
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
-   Begin WebTextField tablespacerootField
+   Begin WebTextField rootFolderField
       AutoCapitalize  =   True
       AutoComplete    =   True
       AutoCorrect     =   True
@@ -383,7 +407,7 @@ Begin WebDialog newDatabaseWizard
       Enabled         =   True
       HasFocusRing    =   True
       Height          =   25
-      HelpTag         =   ""
+      HelpTag         =   "Two folders are to be created here:\r\n1. The archive_tablespace folder for postgres db data\r\n2. the archive_storage folder for the storage vfs file\r\n\r\nThis folder should be empty prior to initialization!\r\n"
       HorizontalCenter=   0
       Index           =   -2147483648
       Left            =   175
@@ -395,6 +419,7 @@ Begin WebDialog newDatabaseWizard
       LockRight       =   False
       LockTop         =   True
       LockVertical    =   False
+      Password        =   False
       ReadOnly        =   False
       Scope           =   0
       Style           =   "0"
@@ -403,6 +428,155 @@ Begin WebDialog newDatabaseWizard
       TextAlign       =   0
       Top             =   199
       Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
+      _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
+   End
+   Begin WebLabel Label8
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   48
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "VFS encryption password"
+      TextAlign       =   0
+      Top             =   313
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   113
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label3
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "739364863"
+      TabOrder        =   0
+      Text            =   "Security"
+      TextAlign       =   0
+      Top             =   279
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   143
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField vfsPassword
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   "optional"
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   "Encrypting the VFS is an optional measure for extra security.\r\nIf a password is used, it has to be at least 6 characters and up to 10."
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   175
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   313
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebCheckbox savePasswordCheck
+      Caption         =   "Save to localconf"
+      Cursor          =   1
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   "Save password to server postdoc local configuration file"
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   175
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   6
+      Top             =   350
+      Value           =   False
       VerticalCenter  =   0
       Visible         =   True
       Width           =   166
@@ -446,15 +620,27 @@ End
 #tag Events createDatabase
 	#tag Event
 		Sub Action()
+		  me.Enabled = false
+		  
 		  if me.Caption <> "DONE !" then
 		    
+		    dim tempSession as PostgreSQLDatabase = Session.getDBsession
+		    dim outcome as pdOutcome = pdinit.initPostdocSystem(tempSession , nameField.Text.Trim.Lowercase , chartypeMenu.Text , collationMenu.Text , GetFolderItem(rootFolderField.Text.Trim) , vfsPassword.Text.Trim)
 		    
+		    
+		    if outcome.ok = false then 
+		      MsgBox outcome.fatalErrorMsg
+		    else
+		      me.Caption = "DONE !"
+		    end if
 		    
 		  else
 		    
 		    self.close
 		    
 		  end if
+		  
+		  me.Enabled = true
 		End Sub
 	#tag EndEvent
 #tag EndEvents

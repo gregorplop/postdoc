@@ -512,10 +512,14 @@ End
 		  dim tempToken as pdservicetoken = app.getTokenByIDX(me.ListIndex)
 		  
 		  username_field.Text = tempToken.username
+		  password_field.Text = empty
+		  
 		  if tempToken.username = empty then 
 		    username_field.Enabled = true 
+		    username_field.SetFocus
 		  else 
 		    username_field.Enabled = false
+		    password_field.SetFocus
 		  end if
 		  
 		  

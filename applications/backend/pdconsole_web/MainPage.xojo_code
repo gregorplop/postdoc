@@ -204,16 +204,17 @@ End
 
 
 	#tag Method, Flags = &h21
-		Private Sub addApplet(appletCaption as string , appletCode as string)
+		Private Function addApplet(appletCaption as string , appletCode as string) As integer
 		  AppletsList.AddRow " " + appletCaption
 		  AppletsList.RowTag(AppletsList.LastIndex) = appletCode
-		  
-		End Sub
+		  return AppletsList.LastIndex
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Sub init()
 		  refreshStateIndicators
+		  populateAppletsList
 		  
 		  AppletsList.Visible = true
 		  StatusFooter_label.Visible = true
@@ -224,19 +225,53 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub populateAppletsList()
+		  // we're building this list based on checks we do: we need the db connection for that
+		  dim activeSession as PostgreSQLDatabase = session.getDBsession
+		  dim outcome as pdOutcome
+		  dim postdocInitialized as Boolean = false
+		  dim setupSectionIdx as integer
 		  
-		  addApplet("setup postdoc" , "section")
-		  addApplet("create group and login roles" , "SYSROLESINIT")
-		  addApplet("initialize postdoc system" , "PDINIT")
-		  addApplet("create service tokens" , "SERVICETOKENBUILDER")
-		  
-		  
-		  addApplet("archives" , "section")
-		  addApplet("create a new archive" , "NEWARCHIVE")
-		  addApplet("archive overview" , "ARCHIVEOVERVIEW")
-		  addApplet("storage configuration" , "CONFIGSTORAGE")
-		  
-		  
+		  if activeSession = nil then
+		    call addApplet("database error", "section")
+		    call addApplet("no connection" , empty)
+		    
+		  else
+		    
+		    // setup section
+		    setupSectionIdx = addApplet("setup postdoc on this server" , "section")
+		    
+		    call addApplet("create service tokens" , "SERVICETOKENBUILDER")
+		    
+		    outcome = pdinit.verify_systemRoles(activeSession)
+		    if outcome.ok = true and (activeSession.Host = "127.0.0.1" or activeSession.host = "localhost") then
+		      if outcome.returnObject.IntegerValue = 0 then
+		        call addApplet("create group and login roles" , "SYSROLESINIT")
+		      end if
+		    end if
+		    
+		    outcome = pdinit.verify_database(activeSession)
+		    if outcome.ok = true and (activeSession.Host = "127.0.0.1" or activeSession.host = "localhost") then
+		      if outcome.returnObject.BooleanValue = false then
+		        call addApplet("initialize postdoc system" , "PDINIT")
+		        postdocInitialized = false
+		      else
+		        postdocInitialized = true
+		      end if
+		    end if
+		    
+		    if postdocInitialized = true then AppletsList.cell(setupSectionIdx , 0) = "setup postdoc"
+		    
+		    
+		    if postdocInitialized = true then 
+		      // archives section
+		      call addApplet("archives" , "section")
+		      call addApplet("create a new archive" , "NEWARCHIVE")
+		      call addApplet("archive overview" , "ARCHIVEOVERVIEW")
+		      call addApplet("storage configuration" , "CONFIGSTORAGE")
+		      
+		      
+		    end if
+		  end if
 		  
 		  styleAppletsList
 		  
@@ -313,11 +348,6 @@ End
 #tag EndWindowCode
 
 #tag Events AppletsList
-	#tag Event
-		Sub Shown()
-		  populateAppletsList
-		End Sub
-	#tag EndEvent
 	#tag Event
 		Sub SelectionChanged()
 		  dim row as integer = me.ListIndex

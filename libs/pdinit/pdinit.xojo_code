@@ -9,9 +9,6 @@ Protected Class pdinit
 
 	#tag Method, Flags = &h0
 		Shared Function InitArchive_db(byref activeSession as PostgreSQLDatabase , name as string , friendlyName as string) As pdOutcome
-		  // 3rd step of an initialization
-		  // initDatabase should run it automatically
-		  
 		  if activeSession = nil then return new pdOutcome(CurrentMethodName + ": No session to a PostgreSQL database")
 		  if activeSession.Connect = false then return new pdOutcome(CurrentMethodName + ": Could not open the session to the PostgreSQL database: " + activeSession.ErrorMessage)
 		  
@@ -46,7 +43,7 @@ Protected Class pdinit
 		  if dbFolderRoot = nil then return new pdOutcome(CurrentMethodName + ": Tablespace root folder path is invalid")
 		  if dbFolderRoot.Exists = false then return new pdOutcome(CurrentMethodName + ": Tablespace root folder does not exist")
 		  
-		  
+		  // we do not check whether the vfs file is indeed a pdstorage vfs: we assume it has been verified by calling method
 		  if VFSfile = nil then return  new pdOutcome(CurrentMethodName + ": VFS file path is invalid")
 		  if VFSfile.Exists = false then return new pdOutcome(CurrentMethodName + ": VFS file does not exist")
 		  if VFSfile.IsReadable = false then return new pdOutcome(CurrentMethodName + ": VFS file appears not to be local to the system")
@@ -75,10 +72,10 @@ Protected Class pdinit
 		  statements.Append "CREATE TABLESPACE " + tablespaceName + " OWNER pdadmin LOCATION E'" +dbFolderName + "'"
 		  statements.Append "CREATE DATABASE " + pdSystemName + " WITH ENCODING='UTF8' OWNER=pdadmin LC_COLLATE='" + collation + "' LC_CTYPE='" + charType + "' CONNECTION LIMIT=-1 TABLESPACE=" + tablespaceName
 		  statements.Append "COMMENT ON DATABASE " + pdSystemName + " IS '" + projectURL + "'"
-		  statements.Append "GRANT ALL ON DATABASE postdoc TO GROUP pd_admins"
-		  statements.Append "GRANT ALL ON DATABASE postdoc TO GROUP pd_backends"
-		  statements.Append "GRANT CONNECT ON DATABASE postdoc TO GROUP pd_users"
-		  statements.Append "REVOKE ALL ON DATABASE postdoc FROM public"
+		  statements.Append "GRANT ALL ON DATABASE " + pdSystemName + " TO GROUP pd_admins"
+		  statements.Append "GRANT ALL ON DATABASE " + pdSystemName + " TO GROUP pd_backends"
+		  statements.Append "GRANT CONNECT ON DATABASE " + pdSystemName + " TO GROUP pd_users"
+		  statements.Append "REVOKE ALL ON DATABASE " + pdSystemName + " FROM public"
 		  
 		  
 		  dim failure as new pdOutcome(CurrentMethodName +  ": Failed to create database or system tables")
@@ -99,7 +96,7 @@ Protected Class pdinit
 		    activeSession.Close
 		    activeSession.DatabaseName = pdSystemName
 		    
-		    dim buildTablesOutcome as pdOutcome = InitSystemTables(activeSession)
+		    dim buildTablesOutcome as pdOutcome = InitSystemTables(activeSession , VFSfile.NativePath , pdSystemName)
 		    if buildTablesOutcome.ok = false then
 		      failure.warnings.Append "Error creating system tables"
 		      for i as integer = 0 to buildTablesOutcome.warnings.Ubound
@@ -140,13 +137,59 @@ Protected Class pdinit
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Shared Function initPostdocSystem(byref activeSession as PostgreSQLDatabase , pdSystemName as string , charType as string , collation as string , rootFolder as FolderItem , vfsPassword as string) As pdOutcome
+		  if rootFolder = nil then return new pdOutcome(CurrentMethodName + ": Invalid path to root folder")
+		  if rootFolder.Exists = false then return new pdOutcome(CurrentMethodName + ": Root folder does not exist")
+		  if rootFolder.Directory = False then return new pdOutcome(CurrentMethodName + ": Root folder is not really a folder")
+		  if rootFolder.IsWriteable = false then return new pdOutcome(CurrentMethodName + ": Root folder does not seem to be Writeable (or is a remote resource)")
+		  if rootFolder.IsReadable = false then return new pdOutcome(CurrentMethodName + ": Root folder does not seem to be Readable (or is a remote resource)")
+		  if rootFolder.Count <> 0 then Return new pdOutcome(CurrentMethodName + ": Root folder should be empty!")
+		  
+		  // create the vfs
+		  
+		  dim storageFolder as FolderItem = rootFolder.Child(pdSystemName + "_storage")
+		  storageFolder.CreateAsFolder
+		  if storageFolder.LastErrorCode <> 0 then Return new pdOutcome(CurrentMethodName + ": Could not create storage folder " + storageFolder.NativePath)
+		  
+		  dim vfs as new pdstorage_vfs
+		  
+		  vfs.DBfile = storageFolder.Child(pdSystemName + ".pdvfs")
+		  vfs.name = pdSystemName
+		  vfs.friendlyName = "Storage for " + pdSystemName
+		  vfs.password = vfsPassword.Trim
+		  vfs.description = "This is the object storage VFS for a postdoc system named " + pdSystemName
+		  
+		  dim newVFSoutcome as pdOutcome = pdstorage_maintenance.initVFS(vfs)
+		  
+		  if newVFSoutcome.ok = false then
+		    storageFolder.Delete
+		    return new pdOutcome(CurrentMethodName + ": Error creating postdoc system " + pdSystemName + " : " + newVFSoutcome.fatalErrorMsg)
+		  end if
+		  
+		  // vfs has been created
+		  
+		  dim newDatabaseOutcome as pdOutcome = pdinit.initDatabase(activeSession , pdSystemName , rootFolder , charType , collation , vfs.DBfile)
+		  if newDatabaseOutcome.ok = false then
+		    vfs.DBfile.Delete
+		    storageFolder.Delete
+		    return new pdOutcome(CurrentMethodName + ": Error creating postdoc system " + pdSystemName + " : " + newDatabaseOutcome.fatalErrorMsg + if(newDatabaseOutcome.warnings.Ubound >= 0 , EndOfLine + join(newDatabaseOutcome.warnings , EndOfLine) , empty)) 
+		  end if
+		  
+		  return new pdOutcome(True)
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
-		Private Shared Function InitSystemTables(byref activeSession as PostgreSQLDatabase) As pdOutcome
+		Private Shared Function InitSystemTables(byref activeSession as PostgreSQLDatabase , vfsFilename as string , pdSystemName as string) As pdOutcome
 		  // 3rd step of an initialization
 		  // initDatabase should run it automatically
 		  
 		  if activeSession = nil then return new pdOutcome(CurrentMethodName + ": No session to a PostgreSQL database")
 		  if activeSession.Connect = false then return new pdOutcome(CurrentMethodName + ": Could not open the session to the PostgreSQL database: " + activeSession.ErrorMessage)
+		  if vfsFilename = empty then return new pdOutcome(CurrentMethodName + ": no VFS file supplied")
+		  if pdSystemName = empty then return new pdOutcome(CurrentMethodName + ": no postdoc system name supplied")
 		  
 		  dim statements(-1) as string
 		  
@@ -236,13 +279,15 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.pdgroups TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.pdgroups OWNER TO pdadmin"
 		  
-		  statements.Append "CREATE TABLE  resources.storage (vfs TEXT NOT NULL , pool TEXT PRIMARY KEY , vfspath TEXT NOT NULL)"
+		  statements.Append "CREATE TABLE  resources.storage (vfs TEXT NOT NULL DEFAULT " + pdSystemName.sqlQuote + " , pool TEXT PRIMARY KEY , path TEXT DEFAULT 'irrelevant')"
 		  statements.Append "COMMENT ON TABLE resources.storage IS 'VFS and pool registry: this is where the postdoc system looks for its storage mechanism'"
 		  statements.Append "REVOKE ALL ON TABLE resources.storage FROM public"
 		  statements.Append "GRANT ALL ON TABLE resources.storage TO GROUP pd_admins"
 		  statements.Append "GRANT SELECT ON TABLE resources.storage TO GROUP pd_backends"
 		  statements.Append "GRANT SELECT ON TABLE resources.storage TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.storage OWNER TO pdadmin"
+		  
+		  statements.Append "INSERT INTO resources.storage (pool , path) VALUES ('vfs' , " + vfsFilename.sqlQuote + ")"
 		  
 		  statements.Append "CREATE TABLE resources.archives (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , pool TEXT REFERENCES resources.storage(pool) , options TEXT , fieldnames TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.archives IS 'Archives registry: any archive not listed here is not considered valid. Archives are a postdoc resource'"
@@ -281,6 +326,18 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.accesstokens TO GROUP pd_backends"
 		  statements.Append "GRANT SELECT ON TABLE resources.accesstokens TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.accesstokens OWNER TO pdadmin"
+		  
+		  statements.Append "CREATE TABLE resources.pdcatalog (key TEXT PRIMARY KEY , value0 TEXT)"
+		  statements.Append "COMMENT ON TABLE resources.pdcatalog IS 'This is the system catalog: contains read-only information about the current postdoc system '"
+		  statements.Append "REVOKE ALL ON TABLE resources.pdcatalog FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.pdcatalog TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT , UPDATE ON TABLE resources.pdcatalog TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.pdcatalog TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.pdcatalog OWNER TO pdadmin"
+		  
+		  statements.Append "INSERT INTO resources.pdcatalog VALUES ('pdversion' , " + pdVersion.sqlQuote + ")"
+		  statements.Append "INSERT INTO resources.pdcatalog VALUES ('pdname' , " + pdSystemName.sqlQuote + ")"
+		  
 		  
 		  // datasets
 		  statements.Append "CREATE SCHEMA datasets AUTHORIZATION pdadmin"
@@ -385,7 +442,29 @@ Protected Class pdinit
 	#tag Method, Flags = &h0
 		Shared Function verify_database(byref activeSession as PostgreSQLDatabase) As pdOutcome
 		  // verifies if the session database is a postdoc standard database
+		  if activeSession = nil then Return new pdOutcome(CurrentMethodName + ": Invalid session")
 		  
+		  dim rs as RecordSet = activeSession.SQLSelect("SELECT * FROM resources.pdcatalog WHERE key LIKE 'pd%'")
+		  if activeSession.Error = true then Return new pdOutcome(CurrentMethodName + ": System error while verifying postdoc database : " + activeSession.ErrorMessage)
+		  
+		  dim nameCheck as Boolean = false
+		  dim versionCheck as Boolean = false
+		  
+		  while not rs.EOF
+		    if rs.Field("key").StringValue = "pdversion" and rs.Field("value0").StringValue <> empty then versionCheck = true
+		    if rs.Field("key").StringValue = "pdname" and rs.Field("value0").StringValue = activeSession.DatabaseName then nameCheck = true
+		    rs.MoveNext
+		  wend
+		  
+		  dim success as new pdOutcome(true)
+		  
+		  if nameCheck = true and versionCheck = true then 
+		    success.returnObject = true
+		  else
+		    success.returnObject = false
+		  end if
+		  
+		  return success
 		End Function
 	#tag EndMethod
 
