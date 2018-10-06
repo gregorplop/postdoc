@@ -1,0 +1,40 @@
+#tag MultiImage
+Image logo_334x152
+	#tag ImageRepresentation
+		SaveInfo = APHRcwECAQAAAABbQzpcVXNlcnNcZ2VvcmdlXGdpdGh1Ylxwb3N0ZG9jXGFwcGxpY2F0aW9uc1xiYWNrZW5kXHBkY29uc29sZV93ZWJcR3JhcGhpY3NcbG9nb18zMzR4MTUyLnBuZwMAAAAAAQAEAAAAAAEAAAAAAAAA
+		FullPath = C:\Users\george\github\postdoc\applications\backend\pdconsole_web\Graphics\logo_334x152.png
+		PartialPath = Graphics\logo_334x152.png
+		#tag ImageSpecification
+			Comment = 
+			Device = 31
+			HSize = -1.00
+			Orientation = Any
+			Platform = 15
+			PPI = 72
+			VSize = -1.00
+		#tag EndImageSpecification
+	#tag EndImageRepresentation
+	#tag ImageRepresentation
+		#tag ImageSpecification
+			Comment = 
+			Device = 31
+			HSize = -1.00
+			Orientation = Any
+			Platform = 15
+			PPI = 144
+			VSize = -1.00
+		#tag EndImageSpecification
+	#tag EndImageRepresentation
+	#tag ImageRepresentation
+		#tag ImageSpecification
+			Comment = 
+			Device = 31
+			HSize = -1.00
+			Orientation = Any
+			Platform = 15
+			PPI = 216
+			VSize = -1.00
+		#tag EndImageSpecification
+	#tag EndImageRepresentation
+End Image
+#tag EndMultiImage

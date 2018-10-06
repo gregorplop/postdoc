@@ -3,7 +3,7 @@ Begin WebDialog newDatabaseWizard
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   454
+   Height          =   508
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -48,7 +48,7 @@ Begin WebDialog newDatabaseWizard
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
       Multiline       =   False
@@ -60,7 +60,7 @@ Begin WebDialog newDatabaseWizard
       Top             =   20
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   164
+      Width           =   321
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -170,7 +170,7 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "0"
       TabOrder        =   4
-      Top             =   409
+      Top             =   463
       VerticalCenter  =   0
       Visible         =   True
       Width           =   112
@@ -339,7 +339,7 @@ Begin WebDialog newDatabaseWizard
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
       Multiline       =   False
@@ -351,7 +351,7 @@ Begin WebDialog newDatabaseWizard
       Top             =   165
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   143
+      Width           =   321
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -468,14 +468,14 @@ Begin WebDialog newDatabaseWizard
       Visible         =   True
       Width           =   113
       ZIndex          =   1
-      _DeclareLineRendered=   "False"
-      _HorizontalPercent=   "0.0"
-      _IsEmbedded     =   "False"
-      _Locked         =   "False"
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   "False"
-      _OpenEventFired =   "False"
-      _VerticalPercent=   "0.0"
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebLabel Label3
       Cursor          =   1
@@ -490,28 +490,28 @@ Begin WebDialog newDatabaseWizard
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
       Multiline       =   False
       Scope           =   0
       Style           =   "739364863"
       TabOrder        =   0
-      Text            =   "Security"
+      Text            =   "Object Storage Security"
       TextAlign       =   0
       Top             =   279
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   143
+      Width           =   321
       ZIndex          =   1
-      _DeclareLineRendered=   "False"
-      _HorizontalPercent=   "0.0"
-      _IsEmbedded     =   "False"
-      _Locked         =   "False"
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   "False"
-      _OpenEventFired =   "False"
-      _VerticalPercent=   "0.0"
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebTextField vfsPassword
       AutoCapitalize  =   True
@@ -534,7 +534,7 @@ Begin WebDialog newDatabaseWizard
       LockRight       =   False
       LockTop         =   True
       LockVertical    =   False
-      Password        =   "False"
+      Password        =   False
       ReadOnly        =   False
       Scope           =   0
       Style           =   "0"
@@ -547,17 +547,17 @@ Begin WebDialog newDatabaseWizard
       Visible         =   True
       Width           =   166
       ZIndex          =   1
-      _DeclareLineRendered=   "False"
-      _HorizontalPercent=   "0.0"
-      _IsEmbedded     =   "False"
-      _Locked         =   "False"
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
-      _OfficialControl=   "False"
-      _OpenEventFired =   "False"
-      _VerticalPercent=   "0.0"
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
    Begin WebCheckbox savePasswordCheck
-      Caption         =   "Save to localconf"
+      Caption         =   "Save to server localconf"
       Cursor          =   1
       Enabled         =   True
       Height          =   22
@@ -581,7 +581,120 @@ Begin WebDialog newDatabaseWizard
       Visible         =   True
       Width           =   166
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
+   End
+   Begin WebLabel Label9
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   20
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "739364863"
+      TabOrder        =   0
+      Text            =   "Access on completion"
+      TextAlign       =   0
+      Top             =   384
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   321
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebCheckbox autoCreateTokenCheck
+      Caption         =   "Create access token for user"
+      Cursor          =   1
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   7
+      Top             =   418
+      Value           =   True
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   191
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebTextField accessTokenUserField
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   "<no user>"
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   "If user is specified, connection is only possible through this user name."
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   229
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   "pdadmin"
+      TextAlign       =   0
+      Top             =   415
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   112
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
 End
 #tag EndWebPage
@@ -622,19 +735,32 @@ End
 		Sub Action()
 		  me.Enabled = false
 		  
+		  
+		  
 		  if me.Caption <> "DONE !" then
 		    
+		    dim createOutcome as pdOutcome
+		    dim savepass2localOutcome as pdOutcome
 		    dim tempSession as PostgreSQLDatabase = Session.getDBsession
+		    
 		    dim outcome as pdOutcome = pdinit.initPostdocSystem(tempSession , nameField.Text.Trim.Lowercase , chartypeMenu.Text , collationMenu.Text , GetFolderItem(rootFolderField.Text.Trim) , vfsPassword.Text.Trim)
+		    
 		    
 		    
 		    if outcome.ok = false then 
 		      MsgBox outcome.fatalErrorMsg
 		    else
+		      
+		      if savePasswordCheck.Value = true and  vfsPassword.Text.Trim <> empty then
+		        savepass2localOutcome = pdlocalconf.setpasswd(nameField.Text.Trim.Lowercase , empty  , vfsPassword.Text.Trim)
+		        if savepass2localOutcome.ok = false then MsgBox "Failed to save password to localconf: " + savepass2localOutcome.fatalErrorMsg
+		      end if
+		      
+		      MainPage.init
 		      me.Caption = "DONE !"
 		    end if
 		    
-		  else
+		  else  // closing after successful execution
 		    
 		    self.close
 		    

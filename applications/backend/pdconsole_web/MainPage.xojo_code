@@ -44,7 +44,7 @@ Begin WebPage MainPage
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   20
+      Left            =   298
       LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -61,7 +61,7 @@ Begin WebPage MainPage
       Top             =   622
       VerticalCenter  =   0
       Visible         =   False
-      Width           =   1052
+      Width           =   774
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -116,7 +116,7 @@ Begin WebPage MainPage
       Enabled         =   True
       HasHeading      =   False
       HeaderStyle     =   "0"
-      Height          =   590
+      Height          =   575
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
@@ -155,30 +155,30 @@ Begin WebPage MainPage
       Cursor          =   0
       Enabled         =   True
       HasFocusRing    =   False
-      Height          =   42
+      Height          =   22
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   625
-      LockBottom      =   False
+      Left            =   20
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
-      LockLeft        =   False
-      LockRight       =   True
-      LockTop         =   True
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   False
       LockVertical    =   False
       Multiline       =   True
       Scope           =   0
       Style           =   "807522303"
       TabOrder        =   3
       Target          =   2
-      Text            =   "part of the postdoc edm project"
-      TextAlign       =   3
-      Top             =   91
+      Text            =   "powered by postdoc."
+      TextAlign       =   1
+      Top             =   622
       URL             =   "https://github.com/gregorplop/postdoc"
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   467
+      Width           =   266
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -188,6 +188,36 @@ Begin WebPage MainPage
       _OfficialControl=   False
       _OpenEventFired =   False
       _VerticalPercent=   0.0
+   End
+   Begin WebImageView pdLogo
+      AlignHorizontal =   2
+      AlignVertical   =   2
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   490
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   298
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      Picture         =   1897424895
+      ProtectImage    =   True
+      Scope           =   2
+      Style           =   "-1"
+      TabOrder        =   -1
+      Top             =   105
+      URL             =   ""
+      VerticalCenter  =   0
+      Visible         =   False
+      Width           =   774
+      ZIndex          =   1
+      _NeedsRendering =   True
    End
 End
 #tag EndWebPage
@@ -213,12 +243,12 @@ End
 
 	#tag Method, Flags = &h0
 		Sub init()
-		  refreshStateIndicators
 		  populateAppletsList
+		  refreshStateIndicators
 		  
 		  AppletsList.Visible = true
 		  StatusFooter_label.Visible = true
-		  
+		  pdLogo.Visible = true
 		  
 		End Sub
 	#tag EndMethod
@@ -228,8 +258,9 @@ End
 		  // we're building this list based on checks we do: we need the db connection for that
 		  dim activeSession as PostgreSQLDatabase = session.getDBsession
 		  dim outcome as pdOutcome
-		  dim postdocInitialized as Boolean = false
 		  dim setupSectionIdx as integer
+		  
+		  AppletsList.DeleteAllRows
 		  
 		  if activeSession = nil then
 		    call addApplet("database error", "section")
@@ -237,32 +268,39 @@ End
 		    
 		  else
 		    
+		    dim usersCreated as pdOutcome = pdinit.verify_systemRoles(activeSession)
+		    dim postdocInitialized as pdOutcome = pdinit.verify_database(activeSession)
+		    
+		    
 		    // setup section
 		    setupSectionIdx = addApplet("setup postdoc on this server" , "section")
 		    
+		    if usersCreated.ok = true and (activeSession.Host = "127.0.0.1" or activeSession.host = "localhost") then  // we're managing the local server
+		      if usersCreated.returnObject.IntegerValue = 0 then // users have not been created
+		        call addApplet("create group and login roles" , "SYSROLESINIT")
+		        
+		      else  // we assume users have been properly set up
+		        
+		        if postdocInitialized.ok = true and (activeSession.Host = "127.0.0.1" or activeSession.host = "localhost") then  
+		          isPostdoc = postdocInitialized.returnObject.BooleanValue
+		          if postdocInitialized.returnObject.BooleanValue = false then  // this is not a postdoc database - probably it is the service database
+		            call addApplet("initialize postdoc system" , "PDINIT")
+		          else // this is an initialized postdoc database and we're connected to it
+		            // ... we'll see what to do
+		          end if
+		        else
+		          isPostdoc = false
+		        end if
+		      end if
+		    else
+		      isPostdoc = False  // could not verify
+		    end if
+		    
+		    if isPostdoc = true then AppletsList.cell(setupSectionIdx , 0) = "setup postdoc"
 		    call addApplet("create service tokens" , "SERVICETOKENBUILDER")
 		    
-		    outcome = pdinit.verify_systemRoles(activeSession)
-		    if outcome.ok = true and (activeSession.Host = "127.0.0.1" or activeSession.host = "localhost") then
-		      if outcome.returnObject.IntegerValue = 0 then
-		        call addApplet("create group and login roles" , "SYSROLESINIT")
-		      end if
-		    end if
 		    
-		    outcome = pdinit.verify_database(activeSession)
-		    if outcome.ok = true and (activeSession.Host = "127.0.0.1" or activeSession.host = "localhost") then
-		      if outcome.returnObject.BooleanValue = false then
-		        call addApplet("initialize postdoc system" , "PDINIT")
-		        postdocInitialized = false
-		      else
-		        postdocInitialized = true
-		      end if
-		    end if
-		    
-		    if postdocInitialized = true then AppletsList.cell(setupSectionIdx , 0) = "setup postdoc"
-		    
-		    
-		    if postdocInitialized = true then 
+		    if isPostdoc = true then 
 		      // archives section
 		      call addApplet("archives" , "section")
 		      call addApplet("create a new archive" , "NEWARCHIVE")
@@ -278,11 +316,12 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub refreshStateIndicators()
-		  dim token as pdservicetoken = Session.getServiceToken
-		  me.Title = "pdconsole_web  - " + token.username + "@" + token.database + "@" + token.host
-		  StatusFooter_label.Text = "user " + token.username.Uppercase + " connected to database " + token.database.Uppercase + " on server " + token.host.Uppercase
+	#tag Method, Flags = &h21
+		Private Sub refreshStateIndicators()
+		  dim activeSession as PostgreSQLDatabase = Session.getDBsession
+		  me.Title = "pdconsole_web  - " + activeSession.DatabaseName
+		  StatusFooter_label.Text =  activeSession.UserName + "@" + activeSession.DatabaseName + "@" + activeSession.Host + "@" + str(activeSession.Port)  + "  -  " + if(isPostdoc = true , "postdoc database" , "service database")
+		  
 		  
 		End Sub
 	#tag EndMethod
@@ -295,7 +334,7 @@ End
 		    
 		    if createRolesWizard.instances < 1 then
 		      dim roleCreator as new createRolesWizard
-		      roleCreator.Top = postdoc_link.Top + postdoc_link.Height
+		      roleCreator.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
 		      roleCreator.Left = AppletsList.Left + AppletsList.Width + 20
 		      
 		      roleCreator.Show
@@ -308,7 +347,7 @@ End
 		    
 		    if newDatabaseWizard.instances < 1 then
 		      dim newDatabaseWizard as new newDatabaseWizard
-		      newDatabaseWizard.Top = postdoc_link.Top + postdoc_link.Height
+		      newDatabaseWizard.Top =  AppletsList.Top + AppletsList.RowHeight(0) * 3
 		      newDatabaseWizard.Left = AppletsList.Left + AppletsList.Width + 20
 		      
 		      newDatabaseWizard.Show
@@ -339,6 +378,10 @@ End
 		End Sub
 	#tag EndMethod
 
+
+	#tag Property, Flags = &h21
+		Private isPostdoc As Boolean
+	#tag EndProperty
 
 	#tag Property, Flags = &h0
 		myLoginDialog As LoginDialog

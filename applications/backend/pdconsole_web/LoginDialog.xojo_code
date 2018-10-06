@@ -104,44 +104,6 @@ Begin WebDialog LoginDialog
       _OpenEventFired =   False
       _VerticalPercent=   0.0
    End
-   Begin WebLink postdoc_link
-      Cursor          =   0
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   17
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   236
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   False
-      LockRight       =   True
-      LockTop         =   True
-      LockVertical    =   False
-      Multiline       =   True
-      Scope           =   0
-      Style           =   "2131533823"
-      TabOrder        =   3
-      Target          =   2
-      Text            =   "Powered by postdoc."
-      TextAlign       =   3
-      Top             =   41
-      URL             =   "https://github.com/gregorplop/postdoc"
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   122
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
    Begin WebLabel pdconsole_web_label
       Cursor          =   1
       Enabled         =   True
@@ -163,11 +125,11 @@ Begin WebDialog LoginDialog
       Style           =   "1140482047"
       TabOrder        =   4
       Text            =   "pdconsole_web"
-      TextAlign       =   1
+      TextAlign       =   2
       Top             =   20
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   214
+      Width           =   338
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0

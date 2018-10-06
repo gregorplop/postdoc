@@ -345,10 +345,12 @@ End
 		      me.Caption = "DONE !"
 		      pdbackendPassword.Enabled = false
 		      pdadminPassword.Enabled = false
+		      MainPage.init
 		    else
 		      MsgBox outcome.fatalErrorMsg
 		    end if
-		  else
+		    
+		  else // closing after successful execution
 		    
 		    self.close
 		    

@@ -193,7 +193,7 @@ Protected Class pdinit
 		  
 		  dim statements(-1) as string
 		  
-		  // a minor housekeeping thing first: remove the public schema (if it exists)
+		  // a minor housekeeping thing first: remove the public schema (if it still exists)
 		  statements.Append "DROP SCHEMA public"
 		  
 		  //  storage
@@ -443,8 +443,33 @@ Protected Class pdinit
 		Shared Function verify_database(byref activeSession as PostgreSQLDatabase) As pdOutcome
 		  // verifies if the session database is a postdoc standard database
 		  if activeSession = nil then Return new pdOutcome(CurrentMethodName + ": Invalid session")
+		  dim success as new pdOutcome(true)
+		  dim rs as RecordSet
 		  
-		  dim rs as RecordSet = activeSession.SQLSelect("SELECT * FROM resources.pdcatalog WHERE key LIKE 'pd%'")
+		  success.returnObject = false  // check was successful and result is NO, not a postdoc database
+		  
+		  // first set of checks
+		  rs = activeSession.SQLSelect("SELECT * FROM pg_catalog.pg_tables WHERE tableowner = 'pdadmin' ORDER BY schemaname ASC")
+		  if activeSession.Error = true then Return new pdOutcome(CurrentMethodName + ": System error while verifying postdoc database : " + activeSession.ErrorMessage)
+		  
+		  dim pdcatalogCheck as Boolean = false
+		  dim archivesCheck as Boolean = false
+		  dim accesstokensCheck as Boolean = false
+		  // you get the point
+		  
+		  while not rs.EOF
+		    if rs.Field("schemaname").StringValue = "resources" and rs.Field("tablename").StringValue = "pdcatalog" then pdcatalogCheck = true
+		    if rs.Field("schemaname").StringValue = "resources" and rs.Field("tablename").StringValue = "archives" then archivesCheck = true
+		    if rs.Field("schemaname").StringValue = "resources" and rs.Field("tablename").StringValue = "accesstokens" then accesstokensCheck = true
+		    rs.MoveNext
+		  wend
+		  
+		  if pdcatalogCheck = False then return success
+		  if archivesCheck = False then return success
+		  if accesstokensCheck = False then return success
+		  
+		  // second set of checks
+		  rs = activeSession.SQLSelect("SELECT * FROM resources.pdcatalog WHERE key LIKE 'pd%'")
 		  if activeSession.Error = true then Return new pdOutcome(CurrentMethodName + ": System error while verifying postdoc database : " + activeSession.ErrorMessage)
 		  
 		  dim nameCheck as Boolean = false
@@ -456,14 +481,10 @@ Protected Class pdinit
 		    rs.MoveNext
 		  wend
 		  
-		  dim success as new pdOutcome(true)
+		  if nameCheck = False then return success
+		  if versionCheck = false then return success
 		  
-		  if nameCheck = true and versionCheck = true then 
-		    success.returnObject = true
-		  else
-		    success.returnObject = false
-		  end if
-		  
+		  success.returnObject = true  // all checks passed
 		  return success
 		End Function
 	#tag EndMethod
