@@ -128,11 +128,16 @@ Protected Class pdservicetoken
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function loadFolderTokens(tokensFolder as FolderItem) As pdservicetoken()
+		Shared Function loadFolderTokens(tokensFolder as FolderItem , optional onlyLocal as Boolean = false) As pdservicetoken()
 		  // this method will only open unencrypted tokens and will not return any error messages
+		  // also, can filter local connections only
 		  
 		  dim output(-1) as pdservicetoken
 		  dim outcome as pdOutcome
+		  
+		  dim localhostnames(-1) as String
+		  localhostnames.Append "127.0.0.1"
+		  localhostnames.Append "localhost"
 		  
 		  if tokensFolder  = nil then return output
 		  if tokensFolder .Exists = False then Return output
@@ -143,8 +148,12 @@ Protected Class pdservicetoken
 		    if tokensFolder .Item(i).Extension = "PDST" then
 		      outcome = pdservicetoken.Open(tokensFolder .Item(i))
 		      if outcome.ok then output.Append outcome.returnObject
+		      
+		      if onlyLocal = true then
+		        if localhostnames.IndexOf(output(output.Ubound).host) < 0 then output.Remove(output.Ubound)
+		      end if
+		      
 		    end if
-		    
 		  next i
 		  
 		  Return output

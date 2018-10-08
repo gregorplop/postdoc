@@ -157,7 +157,7 @@ Protected Class pdsession
 	#tag Method, Flags = &h21
 		Private Sub pgsession_ReceivedNotification(sender as PostgreSQLDatabase, Name as string, ID as integer, Extra as String)
 		  // we're expecting messages from 2 channels here:
-		  //  (database name)_PUBLIC  and  (database name)_(pid number)
+		  //  (database name)_public  and  (database name)_(pid number)
 		  
 		  dim publicChannel as String = activeServiceToken.database.Lowercase + "_" + "public"
 		  dim privateChannel as string = activeServiceToken.database.Lowercase + "_" + lastPID
@@ -206,7 +206,7 @@ Protected Class pdsession
 	#tag EndProperty
 
 
-	#tag Constant, Name = pgQueueRefreshInterval, Type = Double, Dynamic = False, Default = \"333", Scope = Public
+	#tag Constant, Name = pgQueueRefreshInterval, Type = Double, Dynamic = False, Default = \"300", Scope = Public
 	#tag EndConstant
 
 

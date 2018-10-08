@@ -1,9 +1,9 @@
 #tag WebPage
-Begin WebDialog newDatabaseWizard
+Begin WebDialog newAccessTokenWizard
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   508
+   Height          =   566
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -19,12 +19,12 @@ Begin WebDialog newDatabaseWizard
    Resizable       =   False
    Style           =   "None"
    TabOrder        =   0
-   Title           =   "Create postdoc system"
+   Title           =   "Create Service Token"
    Top             =   0
    Type            =   2
    VerticalCenter  =   0
    Visible         =   True
-   Width           =   377
+   Width           =   370
    ZIndex          =   1
    _DeclareLineRendered=   False
    _HorizontalPercent=   0.0
@@ -55,12 +55,12 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "739364863"
       TabOrder        =   0
-      Text            =   "Database on server"
+      Text            =   "Server"
       TextAlign       =   0
       Top             =   20
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   321
+      Width           =   307
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -91,12 +91,12 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "1690316799"
       TabOrder        =   2
-      Text            =   "Name"
+      Text            =   "Host"
       TextAlign       =   0
       Top             =   54
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   58
+      Width           =   95
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -107,19 +107,19 @@ Begin WebDialog newDatabaseWizard
       _OpenEventFired =   False
       _VerticalPercent=   0.0
    End
-   Begin WebTextField nameField
+   Begin WebTextField host
       AutoCapitalize  =   True
       AutoComplete    =   True
       AutoCorrect     =   True
-      CueText         =   "postdoc system name"
+      CueText         =   ""
       Cursor          =   0
       Enabled         =   True
       HasFocusRing    =   True
       Height          =   25
-      HelpTag         =   "Only lowercase letters, no spaces , no freaky characters !"
+      HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   175
+      Left            =   160
       LimitText       =   0
       LockBottom      =   False
       LockedInPosition=   False
@@ -131,188 +131,12 @@ Begin WebDialog newDatabaseWizard
       Password        =   False
       ReadOnly        =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   3
       Text            =   ""
       TextAlign       =   0
       Top             =   54
       Type            =   0
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   166
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebButton createDatabase
-      AutoDisable     =   False
-      Caption         =   "Do it !"
-      Cursor          =   0
-      Enabled         =   True
-      Height          =   25
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   229
-      LockBottom      =   True
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   False
-      LockRight       =   True
-      LockTop         =   False
-      LockVertical    =   False
-      Scope           =   0
-      Style           =   "0"
-      TabOrder        =   4
-      Top             =   463
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   112
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebLabel Label5
-      Cursor          =   1
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   25
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   38
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Multiline       =   True
-      Scope           =   0
-      Style           =   "1690316799"
-      TabOrder        =   2
-      Text            =   "Character type"
-      TextAlign       =   0
-      Top             =   91
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   113
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebLabel Label6
-      Cursor          =   1
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   25
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   38
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Multiline       =   True
-      Scope           =   0
-      Style           =   "1690316799"
-      TabOrder        =   2
-      Text            =   "Collation"
-      TextAlign       =   0
-      Top             =   128
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   113
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebPopupMenu chartypeMenu
-      Cursor          =   0
-      Enabled         =   True
-      Height          =   25
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      InitialValue    =   ""
-      Left            =   175
-      ListIndex       =   -1
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Scope           =   0
-      Style           =   "-1"
-      TabOrder        =   5
-      Text            =   ""
-      Top             =   91
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   166
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebPopupMenu collationMenu
-      Cursor          =   0
-      Enabled         =   True
-      Height          =   25
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      InitialValue    =   ""
-      Left            =   175
-      ListIndex       =   -1
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Scope           =   0
-      Style           =   "0"
-      TabOrder        =   5
-      Text            =   ""
-      Top             =   128
       VerticalCenter  =   0
       Visible         =   True
       Width           =   166
@@ -346,127 +170,12 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "739364863"
       TabOrder        =   0
-      Text            =   "Location on disk"
+      Text            =   "Login Credentials"
       TextAlign       =   0
       Top             =   165
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   321
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebLabel Label7
-      Cursor          =   1
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   68
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   38
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Multiline       =   True
-      Scope           =   0
-      Style           =   "1690316799"
-      TabOrder        =   2
-      Text            =   "Root folder for tablespace and storage VFS"
-      TextAlign       =   0
-      Top             =   199
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   113
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebTextField rootFolderField
-      AutoCapitalize  =   True
-      AutoComplete    =   True
-      AutoCorrect     =   True
-      CueText         =   "existing folder name"
-      Cursor          =   0
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   25
-      HelpTag         =   "Two folders are to be created here:\r\n1. The archive_tablespace folder for postgres db data\r\n2. the archive_storage folder for the storage vfs file\r\n\r\nThis folder should be empty prior to initialization!\r\n"
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   175
-      LimitText       =   0
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Password        =   False
-      ReadOnly        =   False
-      Scope           =   0
-      Style           =   "0"
-      TabOrder        =   3
-      Text            =   ""
-      TextAlign       =   0
-      Top             =   199
-      Type            =   0
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   166
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebLabel Label8
-      Cursor          =   1
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   48
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   38
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Multiline       =   True
-      Scope           =   0
-      Style           =   "1690316799"
-      TabOrder        =   2
-      Text            =   "VFS encryption password"
-      TextAlign       =   0
-      Top             =   313
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   113
+      Width           =   307
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -497,12 +206,12 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "739364863"
       TabOrder        =   0
-      Text            =   "Object Storage Security"
+      Text            =   "Identification"
       TextAlign       =   0
-      Top             =   279
+      Top             =   273
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   321
+      Width           =   307
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -513,124 +222,11 @@ Begin WebDialog newDatabaseWizard
       _OpenEventFired =   False
       _VerticalPercent=   0.0
    End
-   Begin WebTextField vfsPassword
-      AutoCapitalize  =   True
-      AutoComplete    =   True
-      AutoCorrect     =   True
-      CueText         =   "optional"
-      Cursor          =   0
+   Begin WebLabel Label5
+      Cursor          =   1
       Enabled         =   True
       HasFocusRing    =   True
       Height          =   25
-      HelpTag         =   "Encrypting the VFS is an optional measure for extra security.\r\nIf a password is used, it has to be at least 6 characters and up to 10."
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   175
-      LimitText       =   0
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Password        =   False
-      ReadOnly        =   False
-      Scope           =   0
-      Style           =   "0"
-      TabOrder        =   3
-      Text            =   ""
-      TextAlign       =   0
-      Top             =   313
-      Type            =   0
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   166
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebCheckbox savePasswordCheck
-      Caption         =   "Save to server localconf"
-      Cursor          =   1
-      Enabled         =   True
-      Height          =   22
-      HelpTag         =   "Save password to server postdoc local configuration file"
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   175
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Scope           =   0
-      Style           =   "-1"
-      TabOrder        =   6
-      Top             =   350
-      Value           =   False
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   166
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebLabel Label9
-      Cursor          =   1
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   22
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   20
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   True
-      LockTop         =   True
-      LockVertical    =   False
-      Multiline       =   False
-      Scope           =   0
-      Style           =   "739364863"
-      TabOrder        =   0
-      Text            =   "Access on completion"
-      TextAlign       =   0
-      Top             =   384
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   321
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebCheckbox autoCreateTokenCheck
-      Caption         =   "Create access token for user"
-      Cursor          =   1
-      Enabled         =   True
-      Height          =   22
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
@@ -642,37 +238,111 @@ Begin WebDialog newDatabaseWizard
       LockRight       =   False
       LockTop         =   True
       LockVertical    =   False
+      Multiline       =   False
       Scope           =   0
-      Style           =   "-1"
-      TabOrder        =   7
-      Top             =   418
-      Value           =   True
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Port"
+      TextAlign       =   0
+      Top             =   91
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   191
+      Width           =   95
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
-   Begin WebTextField accessTokenUserField
+   Begin WebLabel Label6
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   164
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   False
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "2131533823"
+      TabOrder        =   2
+      Text            =   "No SSL support yet"
+      TextAlign       =   3
+      Top             =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   163
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label7
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Database"
+      TextAlign       =   0
+      Top             =   128
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   95
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField port
       AutoCapitalize  =   True
       AutoComplete    =   True
       AutoCorrect     =   True
-      CueText         =   "<no user>"
+      CueText         =   ""
       Cursor          =   0
       Enabled         =   True
       HasFocusRing    =   True
       Height          =   25
-      HelpTag         =   "If user is specified, connection is only possible through this user name."
+      HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   229
+      Left            =   160
       LimitText       =   0
       LockBottom      =   False
       LockedInPosition=   False
@@ -681,32 +351,704 @@ Begin WebDialog newDatabaseWizard
       LockRight       =   False
       LockTop         =   True
       LockVertical    =   False
-      Password        =   False
+      Password        =   "False"
       ReadOnly        =   False
       Scope           =   0
       Style           =   "0"
       TabOrder        =   3
-      Text            =   "pdadmin"
+      Text            =   ""
       TextAlign       =   0
-      Top             =   415
+      Top             =   91
       Type            =   0
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   112
+      Width           =   166
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField databaseToConnect
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   ""
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   160
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   128
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label8
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Username"
+      TextAlign       =   0
+      Top             =   199
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   95
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label9
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Password"
+      TextAlign       =   0
+      Top             =   236
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   95
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField username
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   ""
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   160
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   199
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField password
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   "for autologin (if supported)"
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   160
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   236
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label10
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Name"
+      TextAlign       =   0
+      Top             =   307
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   95
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label11
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Friendly Name"
+      TextAlign       =   0
+      Top             =   344
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   110
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField nameField
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   ""
+      Cursor          =   0
+      Enabled         =   False
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   160
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   307
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField friendlyname
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   ""
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   160
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   344
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label12
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Description"
+      TextAlign       =   0
+      Top             =   381
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   110
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField description
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   ""
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   160
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   381
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label13
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Organization"
+      TextAlign       =   0
+      Top             =   418
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   110
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label14
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Comments"
+      TextAlign       =   0
+      Top             =   455
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   110
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField organization
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   ""
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   160
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   418
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField comments
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   ""
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   160
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   455
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebButton CreateBtn
+      AutoDisable     =   False
+      Caption         =   "Create & Download"
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   160
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   4
+      Top             =   511
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   167
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebTextField tokenPassword
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   "password"
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   38
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   511
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   95
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
 End
 #tag EndWebPage
 
 #tag WindowCode
+	#tag Method, Flags = &h0
+		Sub constructName()
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Sub Constructor()
 		  // Calling the overridden superclass constructor.
@@ -715,11 +1057,9 @@ End
 		  // Constructor() -- From WebDialog
 		  // Constructor() -- From WebControl
 		  // Constructor() -- From WebObject
-		  
-		  instances = instances + 1
-		  
 		  //Super.Constructor
 		  
+		  instances = instances + 1
 		End Sub
 	#tag EndMethod
 
@@ -737,90 +1077,24 @@ End
 
 #tag EndWindowCode
 
-#tag Events createDatabase
+#tag Events host
+	#tag Event
+		Sub TextChanged()
+		  constructName
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events databaseToConnect
+	#tag Event
+		Sub TextChanged()
+		  constructName
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events CreateBtn
 	#tag Event
 		Sub Action()
-		  if me.Caption <> "DONE !" then
-		    
-		    dim createOutcome as pdOutcome
-		    dim savepass2localOutcome as pdOutcome
-		    dim tempSession as PostgreSQLDatabase = Session.getDBsession
-		    
-		    dim outcome as pdOutcome = pdinit.initPostdocSystem(tempSession , nameField.Text.Trim.Lowercase , chartypeMenu.Text , collationMenu.Text , GetFolderItem(rootFolderField.Text.Trim) , vfsPassword.Text.Trim)
-		    
-		    if outcome.ok = false then 
-		      MsgBox outcome.fatalErrorMsg
-		    else
-		      
-		      if savePasswordCheck.Value = true and  vfsPassword.Text.Trim <> empty then
-		        savepass2localOutcome = pdlocalconf.setpasswd(nameField.Text.Trim.Lowercase , empty  , vfsPassword.Text.Trim)
-		        if savepass2localOutcome.ok = false then MsgBox "Failed to save password to localconf: " + savepass2localOutcome.fatalErrorMsg
-		      end if
-		      
-		      
-		      if autoCreateTokenCheck.Value = true then 
-		        dim token as pdservicetoken = pdservicetoken.getNew(empty) // no password
-		        dim tokenFile as FolderItem
-		        
-		        if accessTokenUserField.Text.Trim = empty then // no user defined
-		          tokenFile = appFolder.Child("tokens").Child(nameField.Text.Trim.Lowercase + "@" + "localhost.pdst")
-		        else // user is defined
-		          tokenFile = appFolder.Child("tokens").Child(accessTokenUserField.Text.Trim.Lowercase + "@" + nameField.Text.Trim.Lowercase + "@" + "localhost.pdst")
-		        end if
-		        
-		        if tokenFile.Exists = False then  // we are free to create it
-		          
-		          token.file = tokenFile
-		          token.name = tokenFile.Name.NthField("." , 1)
-		          token.description = token.name
-		          token.database = nameField.Text.Trim.Lowercase
-		          token.friendlyName = token.Name
-		          token.host = "127.0.0.1"
-		          token.organization = "postdoc"
-		          token.port = 5432
-		          token.username = accessTokenUserField.Text.Trim.Lowercase
-		          
-		          dim createTokenOutcome as pdOutcome = token.Create
-		          if createTokenOutcome.ok = false then MsgBox "Auto-created token " + tokenFile.Name + " failed: " + createTokenOutcome.fatalErrorMsg
-		          
-		        else  // just show an error message and do nothing
-		          MsgBox "Auto-created token " + tokenFile.Name + " already exists!"
-		        end if
-		      end if
-		      
-		      MainPage.init
-		      me.Caption = "DONE !"
-		    end if
-		    
-		  else  // closing after successful execution
-		    
-		    self.close
-		    
-		  end if
-		  
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events chartypeMenu
-	#tag Event
-		Sub Shown()
-		  me.AddRow pdinit.pgDefaultCharacterType
-		  me.AddRow "C"
-		  me.AddRow "POSIX"
-		  
-		  me.ListIndex = 0
-		  
-		End Sub
-	#tag EndEvent
-#tag EndEvents
-#tag Events collationMenu
-	#tag Event
-		Sub Shown()
-		  me.AddRow pdinit.pgDefaultCollation
-		  me.AddRow "C"
-		  me.AddRow "POSIX"
-		  
-		  me.ListIndex = 0
 		  
 		End Sub
 	#tag EndEvent

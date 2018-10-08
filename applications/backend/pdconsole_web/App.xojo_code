@@ -5,7 +5,7 @@ Inherits WebApplication
 		Sub Open(args() as String)
 		  Print "pdconsole_web starting..."
 		  
-		  ServiceTokens = pdservicetoken.loadFolderTokens(appFolder.Child("tokens"))
+		  ServiceTokens = pdservicetoken.loadFolderTokens(appFolder.Child("tokens") , true)
 		  
 		  if ServiceTokens.Ubound < 0 then print "error: no service tokens found in tokens folder"
 		  

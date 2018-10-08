@@ -217,7 +217,14 @@ Begin WebPage MainPage
       Visible         =   False
       Width           =   774
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
 End
 #tag EndWebPage
@@ -351,12 +358,21 @@ End
 		      newDatabaseWizard.Left = AppletsList.Left + AppletsList.Width + 20
 		      
 		      newDatabaseWizard.Show
-		      
 		    else
 		      MsgBox "This wizard is already open"
 		    end if
 		    
+		  case "SERVICETOKENBUILDER"
 		    
+		    if newAccessTokenWizard.instances < 1 then
+		      dim newAccessTokenWizard as new newAccessTokenWizard
+		      newAccessTokenWizard.Top =  AppletsList.Top + AppletsList.RowHeight(0) * 3
+		      newAccessTokenWizard.Left = AppletsList.Left + AppletsList.Width + 20
+		      
+		      newAccessTokenWizard.Show
+		    else
+		      MsgBox "This wizard is already open"
+		    end if
 		    
 		    
 		  end select
