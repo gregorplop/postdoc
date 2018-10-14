@@ -441,6 +441,7 @@ End
 #tag WindowCode
 	#tag Method, Flags = &h0
 		Sub AnimateOnError()
+		  password_field.Text = empty
 		  Style = backgroundRed
 		  ErrorFlasher.Reset
 		End Sub

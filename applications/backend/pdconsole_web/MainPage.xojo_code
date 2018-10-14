@@ -40,7 +40,7 @@ Begin WebPage MainPage
       Cursor          =   1
       Enabled         =   True
       HasFocusRing    =   True
-      Height          =   22
+      Height          =   25
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
@@ -58,7 +58,7 @@ Begin WebPage MainPage
       TabOrder        =   0
       Text            =   "Status footer"
       TextAlign       =   3
-      Top             =   622
+      Top             =   619
       VerticalCenter  =   0
       Visible         =   False
       Width           =   774
@@ -109,7 +109,7 @@ Begin WebPage MainPage
       _VerticalPercent=   0.0
    End
    Begin WebListBox AppletsList
-      AlternateRowColor=   &cEDF3FE00
+      AlternateRowColor=   &cFFFFFF00
       ColumnCount     =   1
       ColumnWidths    =   "*"
       Cursor          =   0
@@ -140,7 +140,7 @@ Begin WebPage MainPage
       Top             =   20
       VerticalCenter  =   0
       Visible         =   False
-      Width           =   266
+      Width           =   194
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -155,7 +155,7 @@ Begin WebPage MainPage
       Cursor          =   0
       Enabled         =   True
       HasFocusRing    =   False
-      Height          =   22
+      Height          =   25
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
@@ -174,7 +174,7 @@ Begin WebPage MainPage
       Target          =   2
       Text            =   "powered by postdoc."
       TextAlign       =   1
-      Top             =   622
+      Top             =   619
       URL             =   "https://github.com/gregorplop/postdoc"
       VerticalCenter  =   0
       Visible         =   True
@@ -198,7 +198,7 @@ Begin WebPage MainPage
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   298
+      Left            =   226
       LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -208,14 +208,14 @@ Begin WebPage MainPage
       LockVertical    =   False
       Picture         =   1897424895
       ProtectImage    =   True
-      Scope           =   2
+      Scope           =   0
       Style           =   "-1"
       TabOrder        =   -1
       Top             =   105
       URL             =   ""
       VerticalCenter  =   0
       Visible         =   False
-      Width           =   774
+      Width           =   846
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -364,16 +364,15 @@ End
 		    
 		  case "SERVICETOKENBUILDER"
 		    
-		    if newAccessTokenWizard.instances < 1 then
-		      dim newAccessTokenWizard as new newAccessTokenWizard
-		      newAccessTokenWizard.Top =  AppletsList.Top + AppletsList.RowHeight(0) * 3
-		      newAccessTokenWizard.Left = AppletsList.Left + AppletsList.Width + 20
+		    if newServiceToken.instances < 1 then
+		      dim applet as new newServiceToken
+		      applet.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
+		      applet.Left = AppletsList.Left + AppletsList.Width + 20
 		      
-		      newAccessTokenWizard.Show
+		      applet.Show
 		    else
 		      MsgBox "This wizard is already open"
 		    end if
-		    
 		    
 		  end select
 		End Sub

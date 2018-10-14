@@ -247,6 +247,8 @@ Protected Class pdinit
 		  statements.Append "GRANT USAGE ON SCHEMA resources TO GROUP pd_backends"
 		  statements.Append "GRANT USAGE ON SCHEMA resources TO GROUP pd_users"
 		  
+		  statements.Append "CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA resources"  // used to generate uuid's using gen_random_uuid()
+		  
 		  statements.Append "CREATE TABLE resources.pgusers (name TEXT PRIMARY KEY , friendlyname TEXT , description TEXT , groups TEXT , tokens TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.pgusers IS 'postdoc-related postgres server login roles for configuring rdbms-enforced access restrictions on archives and datasets'"
 		  statements.Append "REVOKE ALL ON TABLE resources.pgusers FROM public"

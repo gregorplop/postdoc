@@ -1,9 +1,9 @@
 #tag WebPage
-Begin WebDialog newAccessTokenWizard
+Begin WebDialog newServiceToken
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   566
+   Height          =   556
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -24,7 +24,7 @@ Begin WebDialog newAccessTokenWizard
    Type            =   2
    VerticalCenter  =   0
    Visible         =   True
-   Width           =   370
+   Width           =   347
    ZIndex          =   1
    _DeclareLineRendered=   False
    _HorizontalPercent=   0.0
@@ -60,16 +60,16 @@ Begin WebDialog newAccessTokenWizard
       Top             =   20
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   307
+      Width           =   170
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
    Begin WebLabel Label4
       Cursor          =   1
@@ -98,14 +98,14 @@ Begin WebDialog newAccessTokenWizard
       Visible         =   True
       Width           =   95
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
    Begin WebTextField host
       AutoCapitalize  =   True
@@ -128,7 +128,7 @@ Begin WebDialog newAccessTokenWizard
       LockRight       =   False
       LockTop         =   True
       LockVertical    =   False
-      Password        =   False
+      Password        =   "False"
       ReadOnly        =   False
       Scope           =   0
       Style           =   "0"
@@ -141,14 +141,14 @@ Begin WebDialog newAccessTokenWizard
       Visible         =   True
       Width           =   166
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
    Begin WebLabel Label2
       Cursor          =   1
@@ -175,16 +175,16 @@ Begin WebDialog newAccessTokenWizard
       Top             =   165
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   307
+      Width           =   170
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
    Begin WebLabel Label3
       Cursor          =   1
@@ -211,16 +211,16 @@ Begin WebDialog newAccessTokenWizard
       Top             =   273
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   307
+      Width           =   170
       ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
    Begin WebLabel Label5
       Cursor          =   1
@@ -650,7 +650,7 @@ Begin WebDialog newAccessTokenWizard
       AutoCapitalize  =   True
       AutoComplete    =   True
       AutoCorrect     =   True
-      CueText         =   ""
+      CueText         =   "auto-created"
       Cursor          =   0
       Enabled         =   False
       HasFocusRing    =   True
@@ -987,14 +987,21 @@ Begin WebDialog newAccessTokenWizard
       LockTop         =   True
       LockVertical    =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   4
       Top             =   511
       VerticalCenter  =   0
       Visible         =   True
       Width           =   167
       ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
    Begin WebTextField tokenPassword
       AutoCapitalize  =   True
@@ -1044,7 +1051,20 @@ End
 
 #tag WindowCode
 	#tag Method, Flags = &h0
-		Sub constructName()
+		Sub buildName()
+		  if databaseToConnect.Text.Trim <> empty and host.Text.Trim <> empty then
+		    
+		    if username.Text = empty then
+		      nameField.Text = databaseToConnect.Text.Trim + "@" + host.Text.Trim
+		    else
+		      nameField.Text = username.Text.Trim + "@" + databaseToConnect.Text.Trim + "@" + host.Text.Trim
+		    end if
+		    
+		    nameField.Text = nameField.Text.ReplaceAll("127.0.0.1" , "localhost").ReplaceAll(" " , empty)
+		    
+		  else
+		    nameField.Text = empty
+		  end if
 		  
 		End Sub
 	#tag EndMethod
@@ -1057,9 +1077,11 @@ End
 		  // Constructor() -- From WebDialog
 		  // Constructor() -- From WebControl
 		  // Constructor() -- From WebObject
+		  
+		  instances  = instances + 1
+		  
 		  //Super.Constructor
 		  
-		  instances = instances + 1
 		End Sub
 	#tag EndMethod
 
@@ -1069,9 +1091,28 @@ End
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Sub DownloadedEvent(sender as WebFile)
+		  newlyCreatedToken.Delete
+		  instances = 0
+		  self.Close
+		  
+		  
+		  
+		End Sub
+	#tag EndMethod
+
 
 	#tag Property, Flags = &h0
-		Shared instances As Integer
+		Shared instances As Integer = 0
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		newlyCreatedToken As FolderItem
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		tokenFile As WebFile
 	#tag EndProperty
 
 
@@ -1080,21 +1121,66 @@ End
 #tag Events host
 	#tag Event
 		Sub TextChanged()
-		  constructName
+		  buildName
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events databaseToConnect
 	#tag Event
 		Sub TextChanged()
-		  constructName
+		  buildName
 		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events username
+	#tag Event
+		Sub TextChanged()
+		  buildName
 		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag Events CreateBtn
 	#tag Event
 		Sub Action()
+		  dim newToken as pdservicetoken = pdservicetoken.getNew(tokenPassword.Text.Trim)
+		  
+		  buildName
+		  if nameField.Text = empty then 
+		    MsgBox "Invalid token name"
+		    exit sub
+		  end if
+		  
+		  newToken.name = nameField.Text.Trim
+		  newToken.file = appFolder.Child("tokens.new").Child(newToken.name + ".pdst")
+		  
+		  if newToken.file = nil then 
+		    MsgBox "Error generating token file: path to token is invalid"
+		    exit sub
+		  end if
+		  
+		  newToken.comments = comments.Text.Trim
+		  newToken.database = databaseToConnect.Text.Trim
+		  newToken.description = description.Text.Trim
+		  newToken.friendlyName = friendlyname.Text.Trim
+		  newToken.host = host.Text.Trim
+		  newToken.organization = organization.Text.Trim
+		  newToken.password = password.Text.Trim
+		  newToken.port = port.Text.Trim.Val
+		  newToken.username = username.Text.Trim
+		  
+		  dim outcome as pdOutcome = newToken.Create
+		  if outcome.ok = False then 
+		    MsgBox "Could not create token: " + EndOfLine + outcome.fatalErrorMsg
+		    exit sub
+		  end if
+		  
+		  newlyCreatedToken = newToken.file
+		  tokenFile = WebFile.Open(newlyCreatedToken)
+		  AddHandler tokenFile.Downloaded , AddressOf DownloadedEvent
+		  tokenFile.ForceDownload = true
+		  
+		  ShowURL(tokenFile.URL)
 		  
 		End Sub
 	#tag EndEvent
