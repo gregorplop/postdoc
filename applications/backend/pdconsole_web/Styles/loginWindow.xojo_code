@@ -1,8 +1,8 @@
 #tag WebStyle
-WebStyle MainPage_style
+WebStyle loginWindow
 Inherits WebStyle
 	#tag WebStyleStateGroup
-		misc-background=solid FFFFFFFF
+		misc-background=gradient radial 0 FFFFFFFF 1 AEAEAEFF
 	#tag EndWebStyleStateGroup
 	#tag WebStyleStateGroup
 	#tag EndWebStyleStateGroup
@@ -10,6 +10,6 @@ Inherits WebStyle
 	#tag EndWebStyleStateGroup
 	#tag WebStyleStateGroup
 	#tag EndWebStyleStateGroup
-End WebStyle MainPage_style
+End WebStyle loginWindow
 #tag EndWebStyle
 

@@ -17,7 +17,7 @@ Begin WebDialog LoginDialog
    MinHeight       =   0
    MinWidth        =   0
    Resizable       =   False
-   Style           =   "0"
+   Style           =   "991219711"
    TabOrder        =   0
    Title           =   "Login"
    Top             =   0

@@ -1,7 +1,7 @@
 #tag Class
 Protected Class pdlocalconf
-	#tag Method, Flags = &h21
-		Private Shared Function check() As FolderItem
+	#tag Method, Flags = &h0
+		Shared Function check() As FolderItem
 		  // looks for the localconf file , returns it as a FolderItem, else returns nil
 		  // typical location is appdata\roaming\postdoc\localconf
 		  
@@ -307,6 +307,7 @@ Protected Class pdlocalconf
 		    return new pdOutcome(CurrentMethodName + ": localconf probably corrupted: " + localconfDB.ErrorMessage)
 		  end if
 		  
+		  
 		  dim query as string = "SELECT COUNT(*) FROM storagepass WHERE "
 		  query = query.Append("vfs = " + vfs.sqlQuote + " AND ")
 		  query = query.Append("pool " + if(pool = empty , "IS NULL" , "= " + pool.sqlQuote))
@@ -324,7 +325,7 @@ Protected Class pdlocalconf
 		    if passwd.Trim <> empty then
 		      query = "UPDATE storagepass SET password = " + passwd.toBase64.sqlQuote + " WHERE "
 		      query = query.Append("vfs = " + vfs.sqlQuote + " AND ")
-		      query = query.Append("pool = " + pool.sqlQuote)
+		      query = query.Append("pool " + if(pool = empty , "IS NULL" , "= " + pool.sqlQuote))
 		    else  // no password supplied - delete the record
 		      query = "DELETE FROM storagepass WHERE "
 		      query = query.Append("vfs = " + vfs.sqlQuote + " AND ")

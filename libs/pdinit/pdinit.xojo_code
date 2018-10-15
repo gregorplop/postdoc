@@ -270,7 +270,7 @@ Protected Class pdinit
 		  
 		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description) VALUES ('pd_admins' , 'postdoc admin group' , 'all admins should be members of this group')"
 		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description) VALUES ('pd_backends' , 'postdoc backend group' , 'all backend users should be members of this group')"
-		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description) VALUES (pd_users' , 'postdoc generic user group' , 'all postdoc users should be members of this group')"
+		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description) VALUES ('pd_users' , 'postdoc generic user group' , 'all postdoc users should be members of this group')"
 		  
 		  statements.Append "CREATE TABLE resources.pdusers (name TEXT PRIMARY KEY , friendlyname TEXT , passwd TEXT , description TEXT , email TEXT , locked BOOLEAN NOT NULL , active BOOLEAN NOT NULL , groups TEXT , tokens TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.pdusers IS 'postdoc session users for configuring framework-enforced access restrictions on resources'"

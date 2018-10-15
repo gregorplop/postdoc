@@ -265,9 +265,9 @@ End
 		  // we're building this list based on checks we do: we need the db connection for that
 		  dim activeSession as PostgreSQLDatabase = session.getDBsession
 		  dim outcome as pdOutcome
-		  dim setupSectionIdx as integer
 		  
 		  AppletsList.DeleteAllRows
+		  isPostdoc = False
 		  
 		  if activeSession = nil then
 		    call addApplet("database error", "section")
@@ -280,34 +280,43 @@ End
 		    
 		    
 		    // setup section
-		    setupSectionIdx = addApplet("setup postdoc on this server" , "section")
 		    
-		    if usersCreated.ok = true and (activeSession.Host = "127.0.0.1" or activeSession.host = "localhost") then  // we're managing the local server
+		    if usersCreated.ok = true and (activeSession.Host = "127.0.0.1" or activeSession.host = "localhost") then  // we're managing the local server and have an answer on whether system users are present
+		      
 		      if usersCreated.returnObject.IntegerValue = 0 then // users have not been created
-		        call addApplet("create group and login roles" , "SYSROLESINIT")
+		        call addApplet("setup postdoc" , "section")
+		        call addApplet("1. create system roles" , "SYSROLESINIT")
 		        
 		      else  // we assume users have been properly set up
 		        
-		        if postdocInitialized.ok = true and (activeSession.Host = "127.0.0.1" or activeSession.host = "localhost") then  
+		        if postdocInitialized.ok = true then  // we have an answer on whether this is a postdoc database
+		          
 		          isPostdoc = postdocInitialized.returnObject.BooleanValue
+		          
 		          if postdocInitialized.returnObject.BooleanValue = false then  // this is not a postdoc database - probably it is the service database
-		            call addApplet("initialize postdoc system" , "PDINIT")
-		          else // this is an initialized postdoc database and we're connected to it
-		            // ... we'll see what to do
+		            call addApplet("setup postdoc" , "section")
+		            call addApplet("2. initialize postdoc" , "PDINIT")
 		          end if
-		        else
+		          
+		        else  // users 
 		          isPostdoc = false
 		        end if
+		        
 		      end if
-		    else
-		      isPostdoc = False  // could not verify
+		      
+		    else  // we're not connected to the local server
+		      isPostdoc = False 
+		      
 		    end if
-		    
-		    if isPostdoc = true then AppletsList.cell(setupSectionIdx , 0) = "setup postdoc"
-		    call addApplet("create service tokens" , "SERVICETOKENBUILDER")
 		    
 		    
 		    if isPostdoc = true then 
+		      
+		      call addApplet("user access" , "section")
+		      call addApplet("create service tokens" , "SERVICETOKENBUILDER")
+		      call addApplet("view active connections" , "VIEWCONNECTIONS")
+		      
+		      
 		      // archives section
 		      call addApplet("archives" , "section")
 		      call addApplet("create a new archive" , "NEWARCHIVE")
@@ -316,6 +325,7 @@ End
 		      
 		      
 		    end if
+		    
 		  end if
 		  
 		  styleAppletsList
@@ -382,6 +392,18 @@ End
 		    else
 		      MsgBox "This wizard is already open"
 		    end if
+		    
+		  case "VIEWCONNECTIONS"
+		    
+		    if ActiveUsersMonitor.instances < 1 then
+		      dim applet as new ActiveUsersMonitor
+		      applet.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
+		      applet.Left = AppletsList.Left + AppletsList.Width + 20
+		      applet.Show
+		    else
+		      MsgBox "This applet is already open"
+		    end if
+		    
 		    
 		    
 		  end select

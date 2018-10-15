@@ -12,6 +12,14 @@ Inherits WebApplication
 		  dim newTokenFolder as FolderItem = appFolder.Child("tokens.new")
 		  if newTokenFolder.Exists = false then newTokenFolder.CreateAsFolder
 		  
+		  
+		  dim localconf as FolderItem = pdlocalconf.check
+		  if localconf = nil then 
+		    dim initoutcome as pdOutcome = pdlocalconf.init
+		    print "Creating localconf: " + if(initoutcome.ok = true , "OK" , initoutcome.fatalErrorMsg)
+		  else
+		    print "Found localconf"
+		  end if
 		End Sub
 	#tag EndEvent
 

@@ -1,9 +1,9 @@
 #tag WebPage
-Begin WebDialog newArchive
+Begin WebDialog ActiveUsersMonitor
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   332
+   Height          =   376
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -16,15 +16,15 @@ Begin WebDialog newArchive
    LockVertical    =   False
    MinHeight       =   0
    MinWidth        =   0
-   Resizable       =   False
+   Resizable       =   True
    Style           =   "None"
    TabOrder        =   0
-   Title           =   "Create New Archive"
+   Title           =   "Active Sessions"
    Top             =   0
    Type            =   2
    VerticalCenter  =   0
    Visible         =   True
-   Width           =   572
+   Width           =   656
    ZIndex          =   1
    _DeclareLineRendered=   False
    _HorizontalPercent=   0.0
@@ -35,30 +35,59 @@ Begin WebDialog newArchive
    _OpenEventFired =   False
    _ShownEventFired=   False
    _VerticalPercent=   0.0
-   Begin WebButton Button1
-      AutoDisable     =   False
-      Caption         =   "Untitled"
+   Begin WebListBox UserList
+      AlternateRowColor=   &cEDF3FE00
+      ColumnCount     =   1
+      ColumnWidths    =   "*"
       Cursor          =   0
       Enabled         =   True
-      Height          =   31
+      HasHeading      =   True
+      HeaderStyle     =   "0"
+      Height          =   356
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   103
-      LockBottom      =   False
+      InitialValue    =   ""
+      Left            =   0
+      ListIndex       =   -1
+      LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
+      MinimumRowHeight=   19
+      Multiline       =   False
+      PrimaryRowColor =   &cFFFFFF00
       Scope           =   0
-      Style           =   "-1"
-      TabOrder        =   0
-      Top             =   94
+      SelectionStyle  =   "0"
+      Style           =   "283168767"
+      TabOrder        =   -1
+      Top             =   0
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   130
+      Width           =   656
+      ZIndex          =   1
+      _NeedsRendering =   True
+   End
+   Begin WebTimer RefreshList
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   32
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   40
+      LockedInPosition=   False
+      Mode            =   0
+      Period          =   1000
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   -1
+      Top             =   40
+      VerticalCenter  =   0
+      Width           =   32
       ZIndex          =   1
       _NeedsRendering =   True
    End
@@ -74,11 +103,8 @@ End
 		  // Constructor() -- From WebDialog
 		  // Constructor() -- From WebControl
 		  // Constructor() -- From WebObject
-		  
-		  instances = instances + 1
-		  
 		  //Super.Constructor
-		  
+		  instances = instances + 1
 		End Sub
 	#tag EndMethod
 
@@ -94,20 +120,12 @@ End
 		Shared instances As Integer
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		pdSessionIDX As Integer
-	#tag EndProperty
-
 
 #tag EndWindowCode
 
-#tag Events Button1
+#tag Events RefreshList
 	#tag Event
 		Sub Action()
-		  dim savepass2localOutcome as pdOutcome
-		  savepass2localOutcome = pdlocalconf.setpasswd("test" , empty  , "testpass")
-		  if savepass2localOutcome.ok = false then MsgBox "Failed to save password to localconf: " + savepass2localOutcome.fatalErrorMsg
-		  
 		  
 		End Sub
 	#tag EndEvent
@@ -234,11 +252,6 @@ End
 		Visible=true
 		Group="ID"
 		Type="String"
-	#tag EndViewProperty
-	#tag ViewProperty
-		Name="pdSessionIDX"
-		Group="Behavior"
-		Type="Integer"
 	#tag EndViewProperty
 	#tag ViewProperty
 		Name="Resizable"
