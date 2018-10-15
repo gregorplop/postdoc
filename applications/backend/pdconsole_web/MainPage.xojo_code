@@ -140,7 +140,7 @@ Begin WebPage MainPage
       Top             =   20
       VerticalCenter  =   0
       Visible         =   False
-      Width           =   194
+      Width           =   228
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -198,7 +198,7 @@ Begin WebPage MainPage
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   226
+      Left            =   260
       LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -215,7 +215,7 @@ Begin WebPage MainPage
       URL             =   ""
       VerticalCenter  =   0
       Visible         =   False
-      Width           =   846
+      Width           =   812
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -356,7 +356,6 @@ End
 		      dim newDatabaseWizard as new newDatabaseWizard
 		      newDatabaseWizard.Top =  AppletsList.Top + AppletsList.RowHeight(0) * 3
 		      newDatabaseWizard.Left = AppletsList.Left + AppletsList.Width + 20
-		      
 		      newDatabaseWizard.Show
 		    else
 		      MsgBox "This wizard is already open"
@@ -368,11 +367,22 @@ End
 		      dim applet as new newServiceToken
 		      applet.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
 		      applet.Left = AppletsList.Left + AppletsList.Width + 20
-		      
 		      applet.Show
 		    else
 		      MsgBox "This wizard is already open"
 		    end if
+		    
+		  case "NEWARCHIVE"
+		    
+		    if newArchive.instances < 1 then
+		      dim applet as new newArchive
+		      applet.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
+		      applet.Left = AppletsList.Left + AppletsList.Width + 20
+		      applet.Show
+		    else
+		      MsgBox "This wizard is already open"
+		    end if
+		    
 		    
 		  end select
 		End Sub

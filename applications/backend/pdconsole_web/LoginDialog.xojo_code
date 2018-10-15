@@ -439,11 +439,39 @@ End
 #tag EndWebPage
 
 #tag WindowCode
-	#tag Method, Flags = &h0
-		Sub AnimateOnError()
+	#tag Method, Flags = &h21
+		Private Sub AnimateOnError()
 		  password_field.Text = empty
 		  Style = backgroundRed
 		  ErrorFlasher.Reset
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub doLogin()
+		  dim outcome as pdOutcome
+		  dim token as pdservicetoken
+		  dim idx as Integer = services_menu.ListIndex
+		  
+		  if idx < 0 then 
+		    loginMsg_label.Text = "No service selected"
+		    AnimateOnError
+		    exit sub
+		  end if
+		  
+		  token = app.getTokenByIDX(idx)
+		  outcome = Session.tryLogin(token , username_field.Text.Trim , password_field.Text.Trim)
+		  
+		  if outcome.ok  = false then 
+		    loginMsg_label.Text = "Login error: click to see" + EndOfLine + outcome.fatalErrorMsg
+		    AnimateOnError
+		    exit sub
+		  else
+		    loginMsg_label.Text = "Login OK"
+		  end if
+		  
+		  me.Close
+		  
 		End Sub
 	#tag EndMethod
 
@@ -492,28 +520,14 @@ End
 #tag Events login_btb
 	#tag Event
 		Sub Action()
-		  dim outcome as pdOutcome
-		  dim token as pdservicetoken
-		  dim idx as Integer = services_menu.ListIndex
-		  
-		  if idx < 0 then 
-		    loginMsg_label.Text = "No service selected"
-		    AnimateOnError
-		    exit sub
-		  end if
-		  
-		  token = app.getTokenByIDX(idx)
-		  outcome = Session.tryLogin(token , username_field.Text.Trim , password_field.Text.Trim)
-		  
-		  if outcome.ok  = false then 
-		    loginMsg_label.Text = "Login error: click to see" + EndOfLine + outcome.fatalErrorMsg
-		    AnimateOnError
-		    exit sub
-		  else
-		    loginMsg_label.Text = "Login OK"
-		  end if
-		  
-		  self.Close
+		  doLogin
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events password_field
+	#tag Event
+		Sub KeyPressed(Details As REALbasic.KeyEvent)
+		  if Details.KeyCode = Details.KeyEnter then doLogin
 		  
 		End Sub
 	#tag EndEvent

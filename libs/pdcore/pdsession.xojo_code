@@ -1,5 +1,13 @@
 #tag Class
 Protected Class pdsession
+	#tag Method, Flags = &h21
+		Private Function approveConnection() As pdOutcome
+		  // verify pguser , pduser exists
+		  // verify application exists
+		  // verify pguser/pduser have the right to connect using this application
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function connect() As pdOutcome
 		  if activeServiceToken = nil then return new pdOutcome(CurrentMethodName + ": Service token is invalid")
@@ -13,14 +21,10 @@ Protected Class pdsession
 		    Return new pdOutcome(CurrentMethodName + ": Error opening postdoc session to " + pgsession.DatabaseName + " : " + pgsession.ErrorMessage)
 		    
 		  else  // connected
-		    connected = true
 		    dim success as new pdOutcome(true)
 		    success.returnObject = pgPID
 		    
-		    if success.returnObject.StringValue = empty then 
-		      connected = false
-		      return new pdOutcome(CurrentMethodName + ": Session seemingly open but failed to get session PID")
-		    end if
+		    if success.returnObject.StringValue = empty then return new pdOutcome(CurrentMethodName + ": Session seemingly open but failed to get session PID")
 		    
 		    postConnectActions.Append "LISTEN " + activeServiceToken.database.Lowercase + "_" + "public"
 		    postConnectActions.Append "LISTEN " + activeServiceToken.database.Lowercase + "_" + success.returnObject.StringValue
@@ -37,6 +41,7 @@ Protected Class pdsession
 		      end if
 		    next i
 		    
+		    connected = true
 		    pgQueuePoll.Mode = timer.ModeMultiple
 		    
 		    return success
@@ -79,7 +84,10 @@ Protected Class pdsession
 		  
 		  AddHandler pgsession.ReceivedNotification , WeakAddressOf pgsession_ReceivedNotification
 		  
-		  pgsession.AppName = appName + " // " + if(pdUsername = empty , pgsession.UserName , pdUsername)
+		  pdapp = appName.Trim
+		  pduser = pdUsername.Trim
+		  
+		  pgsession.AppName = "postdoc//" + appName + "//" + if(pdUsername = empty , pgsession.UserName , pdUsername)
 		  
 		  activeServiceToken = serviceToken
 		  connected = false
@@ -162,7 +170,7 @@ Protected Class pdsession
 		  dim publicChannel as String = activeServiceToken.database.Lowercase + "_" + "public"
 		  dim privateChannel as string = activeServiceToken.database.Lowercase + "_" + lastPID
 		  
-		  System.DebugLog("name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra)
+		  //System.DebugLog("name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra)
 		  
 		End Sub
 	#tag EndMethod
@@ -190,11 +198,19 @@ Protected Class pdsession
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private pgQueuePoll As Timer
+		Private pdapp As string
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
-		Private pgsession As PostgreSQLDatabase
+		Private pduser As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private pgQueuePoll As Timer
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		Protected pgsession As PostgreSQLDatabase
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

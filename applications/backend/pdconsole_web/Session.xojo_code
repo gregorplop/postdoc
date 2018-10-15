@@ -52,6 +52,10 @@ Inherits WebSession
 		Private dbSession As PostgreSQLDatabase
 	#tag EndProperty
 
+	#tag Property, Flags = &h0
+		pdSessionsPool(-1) As pdsession_local
+	#tag EndProperty
+
 
 	#tag Constant, Name = ErrorDialogCancel, Type = String, Dynamic = True, Default = \"Do Not Send", Scope = Public
 	#tag EndConstant

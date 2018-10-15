@@ -35,7 +35,7 @@ Protected Class pdinit
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function initDatabase(byref activeSession as PostgreSQLDatabase , pdSystemName as string , dbFolderRoot as FolderItem , charType as string , collation as string , VFSfile as FolderItem) As pdOutcome
+		Shared Function initDatabase(byref activeSession as PostgreSQLDatabase , pdSystemName as string , dbFolderRoot as FolderItem , charType as string , collation as string , VFSfile as FolderItem , VFSencrypted as Boolean) As pdOutcome
 		  // 2nd step of an initialization
 		  // you need to be connected to a service database as a server administrator, eg user postgres
 		  if activeSession = nil then return new pdOutcome(CurrentMethodName + ": No session to a PostgreSQL database")
@@ -96,7 +96,7 @@ Protected Class pdinit
 		    activeSession.Close
 		    activeSession.DatabaseName = pdSystemName
 		    
-		    dim buildTablesOutcome as pdOutcome = InitSystemTables(activeSession , VFSfile.NativePath , pdSystemName)
+		    dim buildTablesOutcome as pdOutcome = InitSystemTables(activeSession , VFSfile.NativePath , pdSystemName , VFSencrypted)
 		    if buildTablesOutcome.ok = false then
 		      failure.warnings.Append "Error creating system tables"
 		      for i as integer = 0 to buildTablesOutcome.warnings.Ubound
@@ -169,7 +169,7 @@ Protected Class pdinit
 		  
 		  // vfs has been created
 		  
-		  dim newDatabaseOutcome as pdOutcome = pdinit.initDatabase(activeSession , pdSystemName , rootFolder , charType , collation , vfs.DBfile)
+		  dim newDatabaseOutcome as pdOutcome = pdinit.initDatabase(activeSession , pdSystemName , rootFolder , charType , collation , vfs.DBfile , if(vfs.password = empty , False , true))
 		  if newDatabaseOutcome.ok = false then
 		    vfs.DBfile.Delete
 		    storageFolder.Delete
@@ -182,7 +182,7 @@ Protected Class pdinit
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Shared Function InitSystemTables(byref activeSession as PostgreSQLDatabase , vfsFilename as string , pdSystemName as string) As pdOutcome
+		Private Shared Function InitSystemTables(byref activeSession as PostgreSQLDatabase , vfsFilename as string , pdSystemName as string , VFSencrypted as Boolean) As pdOutcome
 		  // 3rd step of an initialization
 		  // initDatabase should run it automatically
 		  
@@ -257,6 +257,9 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.pgusers TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.pgusers OWNER TO pdadmin"
 		  
+		  statements.Append "INSERT INTO resources.pgusers (name , friendlyname , description) VALUES ('pdadmin' , 'postdoc admin' , 'the postdoc default administrator account')"
+		  statements.Append "INSERT INTO resources.pgusers (name , friendlyname , description) VALUES ('pdbackend' , 'postdoc backend' , 'the postdoc default backend process user account')"
+		  
 		  statements.Append "CREATE TABLE resources.pggroups (name TEXT PRIMARY KEY , friendlyname TEXT , description TEXT , tokens TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.pggroups IS 'postdoc-related postgres server group roles for configuring rdbms-enforced access restrictions on archives and datasets'"
 		  statements.Append "REVOKE ALL ON TABLE resources.pggroups FROM public"
@@ -264,6 +267,10 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.pggroups TO GROUP pd_backends"
 		  statements.Append "GRANT SELECT ON TABLE resources.pggroups TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.pggroups OWNER TO pdadmin"
+		  
+		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description) VALUES ('pd_admins' , 'postdoc admin group' , 'all admins should be members of this group')"
+		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description) VALUES ('pd_backends' , 'postdoc backend group' , 'all backend users should be members of this group')"
+		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description) VALUES (pd_users' , 'postdoc generic user group' , 'all postdoc users should be members of this group')"
 		  
 		  statements.Append "CREATE TABLE resources.pdusers (name TEXT PRIMARY KEY , friendlyname TEXT , passwd TEXT , description TEXT , email TEXT , locked BOOLEAN NOT NULL , active BOOLEAN NOT NULL , groups TEXT , tokens TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.pdusers IS 'postdoc session users for configuring framework-enforced access restrictions on resources'"
@@ -281,7 +288,7 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.pdgroups TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.pdgroups OWNER TO pdadmin"
 		  
-		  statements.Append "CREATE TABLE  resources.storage (vfs TEXT NOT NULL DEFAULT " + pdSystemName.sqlQuote + " , pool TEXT PRIMARY KEY , path TEXT DEFAULT 'irrelevant')"
+		  statements.Append "CREATE TABLE  resources.storage (vfs TEXT NOT NULL DEFAULT " + pdSystemName.sqlQuote + " , pool TEXT PRIMARY KEY , path TEXT DEFAULT 'N/A' , encrypted BOOLEAN NOT NULL)"
 		  statements.Append "COMMENT ON TABLE resources.storage IS 'VFS and pool registry: this is where the postdoc system looks for its storage mechanism'"
 		  statements.Append "REVOKE ALL ON TABLE resources.storage FROM public"
 		  statements.Append "GRANT ALL ON TABLE resources.storage TO GROUP pd_admins"
@@ -289,7 +296,7 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.storage TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.storage OWNER TO pdadmin"
 		  
-		  statements.Append "INSERT INTO resources.storage (pool , path) VALUES ('vfs' , " + vfsFilename.sqlQuote + ")"
+		  statements.Append "INSERT INTO resources.storage (pool , path , encrypted) VALUES ('vfs' , " + vfsFilename.sqlQuote + " , " + str(VFSencrypted).Uppercase +  " )"
 		  
 		  statements.Append "CREATE TABLE resources.archives (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , pool TEXT REFERENCES resources.storage(pool) , options TEXT , fieldnames TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.archives IS 'Archives registry: any archive not listed here is not considered valid. Archives are a postdoc resource'"
@@ -483,8 +490,8 @@ Protected Class pdinit
 		    rs.MoveNext
 		  wend
 		  
-		  if nameCheck = False then return success
-		  if versionCheck = false then return success
+		  if nameCheck = False then return success  // not verified
+		  if versionCheck = false then return success  // not verified
 		  
 		  success.returnObject = true  // all checks passed
 		  return success
