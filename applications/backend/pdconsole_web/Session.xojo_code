@@ -2,6 +2,32 @@
 Protected Class Session
 Inherits WebSession
 	#tag Method, Flags = &h0
+		Function getActiveDBbackends() As Dictionary()
+		  dim output(-1) as Dictionary
+		  dim row as new Dictionary
+		  
+		  dim dbdata as RecordSet = dbSession.SQLSelect("SELECT pid , application_name , usename , client_addr FROM pg_stat_activity")
+		  
+		  if dbSession.Error = true then
+		    row.Value("error") = dbSession.ErrorMessage
+		    output.Append row
+		    return output
+		  end if
+		  
+		  while not dbdata.EOF
+		    row = new Dictionary
+		    for i as integer = 1 to dbdata.FieldCount
+		      row.Value(dbdata.IdxField(i).Name) = dbdata.IdxField(i).StringValue
+		    next i
+		    output.Append row
+		    dbdata.MoveNext
+		  wend
+		  
+		  Return output
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function getDBsession() As PostgreSQLDatabase
 		  Return dbSession
 		  

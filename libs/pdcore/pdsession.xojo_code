@@ -87,7 +87,7 @@ Protected Class pdsession
 		  pdapp = appName.Trim
 		  pduser = pdUsername.Trim
 		  
-		  pgsession.AppName = "postdoc//" + appName + "//" + if(pdUsername = empty , pgsession.UserName , pdUsername)
+		  pgsession.AppName =  "pd//" + appName.Lowercase + "//" + if(pdUsername = empty , pgsession.UserName , pdUsername)
 		  
 		  activeServiceToken = serviceToken
 		  connected = false
