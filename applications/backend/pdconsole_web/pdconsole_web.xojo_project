@@ -49,6 +49,7 @@ WebStyle=loginWindow;Styles/loginWindow.xojo_code;&h3B14CFFF;&h206A0FFF;false
 WebView=ActiveUsersMonitor;Applets/ActiveUsersMonitor.xojo_code;&h4E3E7FF;&h4D410FFF;false
 WebStyle=usersList_style;Styles/usersList_style.xojo_code;&h10E0CFFF;&h206A0FFF;false
 WebStyle=userListHeaderBackground_style;Styles/userListHeaderBackground_style.xojo_code;&h77887FFF;&h206A0FFF;false
+WebStyle=hostnameLabel;Styles/hostnameLabel.xojo_code;&h44BB3FFF;&h206A0FFF;false
 DefaultWindow=MainPage
 MajorVersion=1
 MinorVersion=0

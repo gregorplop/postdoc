@@ -1152,7 +1152,7 @@ End
 		  end if
 		  
 		  newToken.name = nameField.Text.Trim
-		  newToken.file = appFolder.Child("tokens.new").Child(newToken.name + ".pdst")
+		  newToken.file = appFolder.Child("temp").Child(newToken.name + ".pdst")
 		  
 		  if newToken.file = nil then 
 		    MsgBox "Error generating token file: path to token is invalid"

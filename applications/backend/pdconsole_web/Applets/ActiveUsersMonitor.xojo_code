@@ -134,7 +134,14 @@ Begin WebDialog ActiveUsersMonitor
       Visible         =   True
       Width           =   616
       ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
       _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
    End
 End
 #tag EndWebPage
@@ -176,6 +183,8 @@ End
 		    Return
 		  end if
 		  
+		  dim selectionIDX as Integer = UserList.ListIndex
+		  
 		  UserList.DeleteAllRows
 		  for i as integer = 0 to content.Ubound
 		    row(0) = str(i+1)
@@ -185,6 +194,8 @@ End
 		    row(4) = content(i).Value("client_addr").StringValue
 		    UserList.AddRow row
 		  next i
+		  
+		  if selectionIDX >= 0 and selectionIDX <= UserList.RowCount - 1 then UserList.ListIndex = selectionIDX
 		End Sub
 	#tag EndMethod
 

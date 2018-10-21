@@ -3,7 +3,7 @@ Begin WebDialog LoginDialog
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   288
+   Height          =   374
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -39,11 +39,11 @@ Begin WebDialog LoginDialog
       Cursor          =   0
       Enabled         =   True
       Height          =   22
-      HelpTag         =   ""
+      HelpTag         =   "Service tokens found on the TOKENS folder of pdconsole_web"
       HorizontalCenter=   0
       Index           =   -2147483648
       InitialValue    =   ""
-      Left            =   135
+      Left            =   169
       ListIndex       =   -1
       LockBottom      =   False
       LockedInPosition=   False
@@ -56,10 +56,10 @@ Begin WebDialog LoginDialog
       Style           =   "0"
       TabOrder        =   0
       Text            =   ""
-      Top             =   118
+      Top             =   124
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   223
+      Width           =   189
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -79,7 +79,7 @@ Begin WebDialog LoginDialog
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   246
+      Left            =   259
       LockBottom      =   True
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -90,10 +90,10 @@ Begin WebDialog LoginDialog
       Scope           =   0
       Style           =   "0"
       TabOrder        =   2
-      Top             =   239
+      Top             =   325
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   112
+      Width           =   99
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -162,10 +162,10 @@ Begin WebDialog LoginDialog
       TabOrder        =   5
       Text            =   "Service"
       TextAlign       =   0
-      Top             =   118
+      Top             =   124
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   73
+      Width           =   93
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -198,7 +198,7 @@ Begin WebDialog LoginDialog
       TabOrder        =   5
       Text            =   "User name"
       TextAlign       =   0
-      Top             =   152
+      Top             =   158
       VerticalCenter  =   0
       Visible         =   True
       Width           =   93
@@ -234,7 +234,7 @@ Begin WebDialog LoginDialog
       TabOrder        =   5
       Text            =   "Password"
       TextAlign       =   0
-      Top             =   186
+      Top             =   192
       VerticalCenter  =   0
       Visible         =   True
       Width           =   93
@@ -249,9 +249,9 @@ Begin WebDialog LoginDialog
       _VerticalPercent=   0.0
    End
    Begin WebTextField username_field
-      AutoCapitalize  =   True
-      AutoComplete    =   True
-      AutoCorrect     =   True
+      AutoCapitalize  =   False
+      AutoComplete    =   False
+      AutoCorrect     =   False
       CueText         =   ""
       Cursor          =   0
       Enabled         =   True
@@ -266,7 +266,7 @@ Begin WebDialog LoginDialog
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
       Password        =   False
@@ -276,7 +276,7 @@ Begin WebDialog LoginDialog
       TabOrder        =   6
       Text            =   ""
       TextAlign       =   2
-      Top             =   152
+      Top             =   158
       Type            =   0
       VerticalCenter  =   0
       Visible         =   True
@@ -292,9 +292,9 @@ Begin WebDialog LoginDialog
       _VerticalPercent=   0.0
    End
    Begin WebTextField password_field
-      AutoCapitalize  =   True
-      AutoComplete    =   True
-      AutoCorrect     =   True
+      AutoCapitalize  =   False
+      AutoComplete    =   False
+      AutoCorrect     =   False
       CueText         =   ""
       Cursor          =   0
       Enabled         =   True
@@ -309,7 +309,7 @@ Begin WebDialog LoginDialog
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
       Password        =   False
@@ -319,7 +319,7 @@ Begin WebDialog LoginDialog
       TabOrder        =   7
       Text            =   ""
       TextAlign       =   2
-      Top             =   186
+      Top             =   192
       Type            =   1
       VerticalCenter  =   0
       Visible         =   True
@@ -347,7 +347,7 @@ Begin WebDialog LoginDialog
       LockedInPosition=   False
       LockHorizontal  =   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   False
       LockVertical    =   False
       Multiline       =   True
@@ -356,10 +356,10 @@ Begin WebDialog LoginDialog
       TabOrder        =   8
       Text            =   "Ready to login"
       TextAlign       =   0
-      Top             =   243
+      Top             =   329
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   204
+      Width           =   227
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -435,6 +435,144 @@ Begin WebDialog LoginDialog
       _OpenEventFired =   False
       _VerticalPercent=   0.0
    End
+   Begin WebButton ServiceBtn
+      AutoDisable     =   False
+      Caption         =   "+"
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   "Create and download a service token. You'll have to manually place it into the TOKENS folder of pdconsole_web"
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   135
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   10
+      Top             =   124
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   30
+      ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
+      _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
+   End
+   Begin WebLabel runningOn_label
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   34
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "739364863"
+      TabOrder        =   5
+      Text            =   "Running on"
+      TextAlign       =   0
+      Top             =   264
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   93
+      ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
+      _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
+   End
+   Begin WebSeparator Separator1
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   2
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   34
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "-1"
+      TabOrder        =   -1
+      Top             =   237
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   324
+      ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
+      _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
+   End
+   Begin WebLabel hostname_label1
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   135
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "1153122303"
+      TabOrder        =   5
+      Text            =   ""
+      TextAlign       =   2
+      Top             =   264
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   223
+      ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
+      _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
+   End
 End
 #tag EndWebPage
 
@@ -459,7 +597,7 @@ End
 		    exit sub
 		  end if
 		  
-		  token = app.getTokenByIDX(idx)
+		  token = session.getTokenByIDX(idx)
 		  outcome = Session.tryLogin(token , username_field.Text.Trim , password_field.Text.Trim)
 		  
 		  if outcome.ok  = false then 
@@ -468,6 +606,7 @@ End
 		    exit sub
 		  else
 		    loginMsg_label.Text = "Login OK"
+		    Session.clearServiceTokens
 		  end if
 		  
 		  me.Close
@@ -482,7 +621,7 @@ End
 	#tag Event
 		Sub Shown()
 		  dim tokenNames(-1) as string
-		  tokenNames = app.getTokensFriendlyNames
+		  tokenNames = Session.getTokensFriendlyNames
 		  
 		  if tokenNames.Ubound < 0 then 
 		    loginMsg_label.Text = "No service tokens"
@@ -500,7 +639,7 @@ End
 	#tag EndEvent
 	#tag Event
 		Sub SelectionChanged()
-		  dim tempToken as pdservicetoken = app.getTokenByIDX(me.ListIndex)
+		  dim tempToken as pdservicetoken = session.getTokenByIDX(me.ListIndex)
 		  
 		  username_field.Text = tempToken.username
 		  password_field.Text = empty
@@ -548,6 +687,26 @@ End
 		  self.Style = noStyle
 		  
 		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events ServiceBtn
+	#tag Event
+		Sub Action()
+		  if newServiceToken.instances < 1 then
+		    dim applet as new newServiceToken
+		    applet.Top = 100
+		    applet.Left = 100
+		    applet.Show
+		  end if
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events hostname_label1
+	#tag Event
+		Sub Shown()
+		  me.Text = getHostname
 		End Sub
 	#tag EndEvent
 #tag EndEvents

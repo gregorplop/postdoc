@@ -158,6 +158,23 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function getHostname() As string
+		  #If TargetWin32 then
+		    
+		    return System.environmentvariable("COMPUTERNAME").uppercase
+		    
+		  #elseif TargetLinux then
+		    
+		    dim hostname as new Shell
+		    hostname.Mode = 0
+		    hostname.Execute("hostname")
+		    return hostname.ReadAll.Uppercase
+		    
+		  #endif
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function getNonEmptyElements(inputStringArray() as string) As integer()
 		  dim output(-1) as integer
 		  dim ArraySize as Integer = inputStringArray.Ubound

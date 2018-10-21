@@ -1,12 +1,37 @@
 #tag Class
 Protected Class Session
 Inherits WebSession
+	#tag Event
+		Sub Open()
+		  ServiceTokens = pdservicetoken.loadFolderTokens(appFolder.Child("tokens") , true)
+		  
+		End Sub
+	#tag EndEvent
+
+
+	#tag Method, Flags = &h0
+		Sub clearServiceTokens()
+		  ReDim ServiceTokens(-1)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function ConsoleRunningOnDBserver() As Boolean
+		  if dbSession = nil then return false
+		  if dbSession.Host = "127.0.0.1" or dbSession.Host = "localhost" then return true
+		  
+		  return false
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function getActiveDBbackends() As Dictionary()
 		  dim output(-1) as Dictionary
 		  dim row as new Dictionary
 		  
-		  dim dbdata as RecordSet = dbSession.SQLSelect("SELECT pid , application_name , usename , client_addr FROM pg_stat_activity")
+		  dim dbdata as RecordSet = dbSession.SQLSelect("SELECT c.pid , c.application_name , c.usename , c.client_addr FROM pg_stat_activity c INNER JOIN resources.pgusers u ON c.usename = u.name")
 		  
 		  if dbSession.Error = true then
 		    row.Value("error") = dbSession.ErrorMessage
@@ -42,6 +67,30 @@ Inherits WebSession
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function getTokenByIDX(IDX as integer) As pdservicetoken
+		  if IDX > ServiceTokens.Ubound then return nil
+		  if IDX < 0 then return nil
+		  
+		  return ServiceTokens(IDX)
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function getTokensFriendlyNames() As string()
+		  dim output(-1) as string
+		  
+		  for i as integer = 0 to ServiceTokens.Ubound
+		    output.Append ServiceTokens(i).friendlyName
+		  next i
+		  
+		  return output
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function tryLogin(serviceToken as pdservicetoken , username as string , password as string) As pdOutcome
 		  if serviceToken = nil then return new pdOutcome("No valid service token")
 		  
@@ -52,7 +101,7 @@ Inherits WebSession
 		  dbSession.UserName = username
 		  dbSession.Password = password
 		  
-		  dbSession.AppName = "pdconsole_web - " + username + "@" + dbSession.DatabaseName
+		  dbSession.AppName = "pd//pdconsole_web//" + username 
 		  
 		  if dbSession.Connect = false then return new pdOutcome("Login failed: " + EndOfLine + dbSession.ErrorMessage)
 		  
@@ -80,6 +129,10 @@ Inherits WebSession
 
 	#tag Property, Flags = &h0
 		pdSessionsPool(-1) As pdsession_local
+	#tag EndProperty
+
+	#tag Property, Flags = &h21
+		Private ServiceTokens(-1) As pdservicetoken
 	#tag EndProperty
 
 

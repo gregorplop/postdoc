@@ -1,8 +1,10 @@
 #tag WebStyle
-WebStyle loginWindow
+WebStyle hostnameLabel
 Inherits WebStyle
 	#tag WebStyleStateGroup
-		misc-background=gradient radial 0 FFFFFFFF 1 4445AEFF
+		text-size=120%
+		shadow-box=3px 0px 8px 0000007F
+		text-decoration=True false false false false
 	#tag EndWebStyleStateGroup
 	#tag WebStyleStateGroup
 	#tag EndWebStyleStateGroup
@@ -10,6 +12,6 @@ Inherits WebStyle
 	#tag EndWebStyleStateGroup
 	#tag WebStyleStateGroup
 	#tag EndWebStyleStateGroup
-End WebStyle loginWindow
+End WebStyle hostnameLabel
 #tag EndWebStyle
 

@@ -269,6 +269,9 @@ End
 		  AppletsList.DeleteAllRows
 		  isPostdoc = False
 		  
+		  call addApplet("running on " + getHostname.Uppercase , "section")
+		  call addApplet(empty , "section")
+		  
 		  if activeSession = nil then
 		    call addApplet("database error", "section")
 		    call addApplet("no connection" , empty)
@@ -281,7 +284,7 @@ End
 		    
 		    // setup section
 		    
-		    if usersCreated.ok = true and (activeSession.Host = "127.0.0.1" or activeSession.host = "localhost") then  // we're managing the local server and have an answer on whether system users are present
+		    if usersCreated.ok = true  then  // we have an answer on whether system users are present
 		      
 		      if usersCreated.returnObject.IntegerValue = 0 then // users have not been created
 		        call addApplet("setup postdoc" , "section")
@@ -315,7 +318,6 @@ End
 		      call addApplet("user access" , "section")
 		      call addApplet("create service tokens" , "SERVICETOKENBUILDER")
 		      call addApplet("view active connections" , "VIEWCONNECTIONS")
-		      
 		      
 		      // archives section
 		      call addApplet("archives" , "section")

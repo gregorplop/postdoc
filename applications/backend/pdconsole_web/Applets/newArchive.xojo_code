@@ -35,16 +35,130 @@ Begin WebDialog newArchive
    _OpenEventFired =   False
    _ShownEventFired=   False
    _VerticalPercent=   0.0
-   Begin WebButton Button1
-      AutoDisable     =   False
-      Caption         =   "Untitled"
-      Cursor          =   0
+   Begin WebLabel Label8
+      Cursor          =   1
       Enabled         =   True
-      Height          =   31
+      HasFocusRing    =   True
+      Height          =   48
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   103
+      Left            =   63
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   True
+      Scope           =   0
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "VFS encryption password"
+      TextAlign       =   0
+      Top             =   116
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   113
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebLabel Label3
+      Cursor          =   1
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   22
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   45
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      Multiline       =   False
+      Scope           =   0
+      Style           =   "739364863"
+      TabOrder        =   0
+      Text            =   "Object Storage Security"
+      TextAlign       =   0
+      Top             =   82
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   321
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebTextField vfsPassword
+      AutoCapitalize  =   True
+      AutoComplete    =   True
+      AutoCorrect     =   True
+      CueText         =   "optional"
+      Cursor          =   0
+      Enabled         =   True
+      HasFocusRing    =   True
+      Height          =   25
+      HelpTag         =   "Encrypting the VFS is an optional measure for extra security.\r\nIf a password is used, it has to be at least 6 characters and up to 10."
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   200
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   True
+      LockVertical    =   False
+      Password        =   "False"
+      ReadOnly        =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   3
+      Text            =   ""
+      TextAlign       =   0
+      Top             =   116
+      Type            =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   166
+      ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
+      _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
+   End
+   Begin WebCheckbox savePasswordCheck
+      Caption         =   "Save to server localconf"
+      Cursor          =   1
+      Enabled         =   True
+      Height          =   22
+      HelpTag         =   "Save password to server postdoc local configuration file"
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   200
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -53,14 +167,22 @@ Begin WebDialog newArchive
       LockTop         =   True
       LockVertical    =   False
       Scope           =   0
-      Style           =   "-1"
-      TabOrder        =   0
-      Top             =   94
+      Style           =   "0"
+      TabOrder        =   6
+      Top             =   153
+      Value           =   False
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   130
+      Width           =   166
       ZIndex          =   1
+      _DeclareLineRendered=   "False"
+      _HorizontalPercent=   "0.0"
+      _IsEmbedded     =   "False"
+      _Locked         =   "False"
       _NeedsRendering =   True
+      _OfficialControl=   "False"
+      _OpenEventFired =   "False"
+      _VerticalPercent=   "0.0"
    End
 End
 #tag EndWebPage
@@ -101,17 +223,6 @@ End
 
 #tag EndWindowCode
 
-#tag Events Button1
-	#tag Event
-		Sub Action()
-		  dim savepass2localOutcome as pdOutcome
-		  savepass2localOutcome = pdlocalconf.setpasswd("test" , empty  , "testpass")
-		  if savepass2localOutcome.ok = false then MsgBox "Failed to save password to localconf: " + savepass2localOutcome.fatalErrorMsg
-		  
-		  
-		End Sub
-	#tag EndEvent
-#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Cursor"

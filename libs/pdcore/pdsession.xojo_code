@@ -21,6 +21,7 @@ Protected Class pdsession
 		    Return new pdOutcome(CurrentMethodName + ": Error opening postdoc session to " + pgsession.DatabaseName + " : " + pgsession.ErrorMessage)
 		    
 		  else  // connected
+		    connected = true
 		    dim success as new pdOutcome(true)
 		    success.returnObject = pgPID
 		    
@@ -41,7 +42,7 @@ Protected Class pdsession
 		      end if
 		    next i
 		    
-		    connected = true
+		    ServiceVerifyPeriod = pdServiceVerifyPeriod
 		    pgQueuePoll.Mode = timer.ModeMultiple
 		    
 		    return success
@@ -79,10 +80,10 @@ Protected Class pdsession
 		    pgsession.Password = outsideCredentials.Right.StringValue
 		  else
 		    pgsession.UserName = serviceToken.username
-		    pgsession.Password = serviceToken.password.fromBase64
+		    pgsession.Password = serviceToken.password
 		  end if
 		  
-		  AddHandler pgsession.ReceivedNotification , WeakAddressOf pgsession_ReceivedNotification
+		  AddHandler pgsession.ReceivedNotification , WeakAddressOf pgQueueHandler
 		  
 		  pdapp = appName.Trim
 		  pduser = pdUsername.Trim
@@ -144,26 +145,7 @@ Protected Class pdsession
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub pgQueuePoll_Action(sender as Timer)
-		  pgsession.CheckForNotifications
-		  
-		  ServiceCheckCounter = ServiceCheckCounter + 1
-		  if ServiceCheckCounter = 200 then // this deterines the service verify period
-		    ServiceCheckCounter = 0
-		    if pgPID = empty then
-		      
-		      pgQueuePoll.Mode = timer.ModeOff
-		      connected = False
-		      RaiseEvent ServiceDisconnected
-		      
-		    end if
-		  end if
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
-		Private Sub pgsession_ReceivedNotification(sender as PostgreSQLDatabase, Name as string, ID as integer, Extra as String)
+		Private Sub pgQueueHandler(sender as PostgreSQLDatabase, Name as string, ID as integer, Extra as String)
 		  // we're expecting messages from 2 channels here:
 		  //  (database name)_public  and  (database name)_(pid number)
 		  
@@ -171,6 +153,30 @@ Protected Class pdsession
 		  dim privateChannel as string = activeServiceToken.database.Lowercase + "_" + lastPID
 		  
 		  //System.DebugLog("name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra)
+		  Print "pdsession: " + "name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub pgQueuePoll_Action(sender as Timer)
+		  pgsession.CheckForNotifications
+		  
+		  ServiceCheckCounter = ServiceCheckCounter + 1
+		  if ServiceCheckCounter = ServiceVerifyPeriod then
+		    ServiceCheckCounter = 0
+		    if pgPID = empty then
+		      pgQueuePoll.Mode = timer.ModeOff
+		      connected = False
+		      RaiseEvent ServiceDisconnected
+		    end if
+		  end if
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Sub validateApp()
 		  
 		End Sub
 	#tag EndMethod
@@ -185,28 +191,28 @@ Protected Class pdsession
 	#tag EndHook
 
 
-	#tag Property, Flags = &h21
-		Private activeServiceToken As pdservicetoken
+	#tag Property, Flags = &h0
+		activeServiceToken As pdservicetoken
 	#tag EndProperty
 
-	#tag Property, Flags = &h21
-		Private connected As Boolean = false
+	#tag Property, Flags = &h1
+		Protected connected As Boolean = false
 	#tag EndProperty
 
-	#tag Property, Flags = &h21
-		Private lastPID As string
+	#tag Property, Flags = &h1
+		Protected lastPID As string
 	#tag EndProperty
 
-	#tag Property, Flags = &h21
-		Private pdapp As string
+	#tag Property, Flags = &h1
+		Protected pdapp As string
 	#tag EndProperty
 
-	#tag Property, Flags = &h21
-		Private pduser As String
+	#tag Property, Flags = &h1
+		Protected pduser As String
 	#tag EndProperty
 
-	#tag Property, Flags = &h21
-		Private pgQueuePoll As Timer
+	#tag Property, Flags = &h1
+		Protected pgQueuePoll As Timer
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
@@ -217,10 +223,17 @@ Protected Class pdsession
 		Private ServiceCheckCounter As Integer = 0
 	#tag EndProperty
 
-	#tag Property, Flags = &h21
-		Private transactionActive As Boolean = false
+	#tag Property, Flags = &h1
+		Protected ServiceVerifyPeriod As Integer
 	#tag EndProperty
 
+	#tag Property, Flags = &h1
+		Protected transactionActive As Boolean = false
+	#tag EndProperty
+
+
+	#tag Constant, Name = pdServiceVerifyPeriod, Type = Double, Dynamic = False, Default = \"200", Scope = Public
+	#tag EndConstant
 
 	#tag Constant, Name = pgQueueRefreshInterval, Type = Double, Dynamic = False, Default = \"300", Scope = Public
 	#tag EndConstant

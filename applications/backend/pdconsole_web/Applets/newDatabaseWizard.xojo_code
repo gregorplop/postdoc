@@ -3,7 +3,7 @@ Begin WebDialog newDatabaseWizard
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   508
+   Height          =   366
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -19,7 +19,7 @@ Begin WebDialog newDatabaseWizard
    Resizable       =   False
    Style           =   "None"
    TabOrder        =   0
-   Title           =   "Create postdoc system"
+   Title           =   "Create postdoc database"
    Top             =   0
    Type            =   2
    VerticalCenter  =   0
@@ -55,7 +55,7 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "739364863"
       TabOrder        =   0
-      Text            =   "Database on server"
+      Text            =   "Database on postgres server"
       TextAlign       =   0
       Top             =   20
       VerticalCenter  =   0
@@ -170,7 +170,7 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "0"
       TabOrder        =   4
-      Top             =   463
+      Top             =   321
       VerticalCenter  =   0
       Visible         =   True
       Width           =   112
@@ -346,7 +346,7 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "739364863"
       TabOrder        =   0
-      Text            =   "Location on disk"
+      Text            =   "Location on server disk"
       TextAlign       =   0
       Top             =   165
       VerticalCenter  =   0
@@ -366,86 +366,7 @@ Begin WebDialog newDatabaseWizard
       Cursor          =   1
       Enabled         =   True
       HasFocusRing    =   True
-      Height          =   68
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   38
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Multiline       =   True
-      Scope           =   0
-      Style           =   "1690316799"
-      TabOrder        =   2
-      Text            =   "Root folder for tablespace and storage VFS"
-      TextAlign       =   0
-      Top             =   199
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   113
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebTextField rootFolderField
-      AutoCapitalize  =   True
-      AutoComplete    =   True
-      AutoCorrect     =   True
-      CueText         =   "existing folder name"
-      Cursor          =   0
-      Enabled         =   True
-      HasFocusRing    =   True
       Height          =   25
-      HelpTag         =   "Two folders are to be created here:\r\n1. The archive_tablespace folder for postgres db data\r\n2. the archive_storage folder for the storage vfs file\r\n\r\nThis folder should be empty prior to initialization!\r\n"
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   175
-      LimitText       =   0
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Password        =   False
-      ReadOnly        =   False
-      Scope           =   0
-      Style           =   "0"
-      TabOrder        =   3
-      Text            =   ""
-      TextAlign       =   0
-      Top             =   199
-      Type            =   0
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   166
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebLabel Label8
-      Cursor          =   1
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   48
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648
@@ -455,54 +376,18 @@ Begin WebDialog newDatabaseWizard
       LockHorizontal  =   False
       LockLeft        =   True
       LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Multiline       =   True
-      Scope           =   0
-      Style           =   "1690316799"
-      TabOrder        =   2
-      Text            =   "VFS encryption password"
-      TextAlign       =   0
-      Top             =   313
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   113
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebLabel Label3
-      Cursor          =   1
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   22
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   20
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   True
       LockTop         =   True
       LockVertical    =   False
       Multiline       =   False
       Scope           =   0
-      Style           =   "739364863"
-      TabOrder        =   0
-      Text            =   "Object Storage Security"
+      Style           =   "1690316799"
+      TabOrder        =   2
+      Text            =   "Tablespace folder"
       TextAlign       =   0
-      Top             =   279
+      Top             =   199
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   321
+      Width           =   134
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -513,16 +398,16 @@ Begin WebDialog newDatabaseWizard
       _OpenEventFired =   False
       _VerticalPercent=   0.0
    End
-   Begin WebTextField vfsPassword
+   Begin WebTextField tablespaceFolderField
       AutoCapitalize  =   True
       AutoComplete    =   True
       AutoCorrect     =   True
-      CueText         =   "optional"
+      CueText         =   "folder should exist"
       Cursor          =   0
       Enabled         =   True
       HasFocusRing    =   True
       Height          =   25
-      HelpTag         =   "Encrypting the VFS is an optional measure for extra security.\r\nIf a password is used, it has to be at least 6 characters and up to 10."
+      HelpTag         =   "The postdoc database resides on a separate tablespace. This is its path on the server."
       HorizontalCenter=   0
       Index           =   -2147483648
       Left            =   175
@@ -541,42 +426,8 @@ Begin WebDialog newDatabaseWizard
       TabOrder        =   3
       Text            =   ""
       TextAlign       =   0
-      Top             =   313
+      Top             =   199
       Type            =   0
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   166
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebCheckbox savePasswordCheck
-      Caption         =   "Save to server localconf"
-      Cursor          =   1
-      Enabled         =   True
-      Height          =   22
-      HelpTag         =   "Save password to server postdoc local configuration file"
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   175
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Scope           =   0
-      Style           =   "-1"
-      TabOrder        =   6
-      Top             =   350
-      Value           =   False
       VerticalCenter  =   0
       Visible         =   True
       Width           =   166
@@ -612,7 +463,7 @@ Begin WebDialog newDatabaseWizard
       TabOrder        =   0
       Text            =   "Access on completion"
       TextAlign       =   0
-      Top             =   384
+      Top             =   236
       VerticalCenter  =   0
       Visible         =   True
       Width           =   321
@@ -645,7 +496,7 @@ Begin WebDialog newDatabaseWizard
       Scope           =   0
       Style           =   "-1"
       TabOrder        =   7
-      Top             =   418
+      Top             =   270
       Value           =   True
       VerticalCenter  =   0
       Visible         =   True
@@ -688,7 +539,7 @@ Begin WebDialog newDatabaseWizard
       TabOrder        =   3
       Text            =   "pdadmin"
       TextAlign       =   0
-      Top             =   415
+      Top             =   267
       Type            =   0
       VerticalCenter  =   0
       Visible         =   True
@@ -746,16 +597,13 @@ End
 		    dim savepass2localOutcome as pdOutcome
 		    dim tempSession as PostgreSQLDatabase = Session.getDBsession
 		    
-		    dim outcome as pdOutcome = pdinit.initPostdocSystem(tempSession , nameField.Text.Trim.Lowercase , chartypeMenu.Text , collationMenu.Text , GetFolderItem(rootFolderField.Text.Trim) , vfsPassword.Text.Trim)
+		    dim outcome as pdOutcome = pdinit.initDatabase(tempSession , nameField.Text.Trim.Lowercase , tablespaceFolderField.Text.Trim , chartypeMenu.Text , collationMenu.Text)
 		    
-		    if outcome.ok = false then 
-		      MsgBox outcome.fatalErrorMsg
-		    else
+		    if outcome.ok = false then // database init failed
 		      
-		      if savePasswordCheck.Value = true and  vfsPassword.Text.Trim <> empty then
-		        savepass2localOutcome = pdlocalconf.setpasswd(nameField.Text.Trim.Lowercase , empty  , vfsPassword.Text.Trim)
-		        if savepass2localOutcome.ok = false then MsgBox "Failed to save password to localconf: " + savepass2localOutcome.fatalErrorMsg
-		      end if
+		      MsgBox outcome.fatalErrorMsg + EndOfLine + Join(outcome.warnings , EndOfLine)
+		      
+		    else  // database init went ok
 		      
 		      
 		      if autoCreateTokenCheck.Value = true then 
@@ -775,10 +623,11 @@ End
 		          token.description = token.name
 		          token.database = nameField.Text.Trim.Lowercase
 		          token.friendlyName = token.Name
-		          token.host = "127.0.0.1"
+		          token.host = tempSession.Host
 		          token.organization = "postdoc"
-		          token.port = 5432
+		          token.port = tempSession.Port
 		          token.username = accessTokenUserField.Text.Trim.Lowercase
+		          token.comments = "Autocreated by pdconsole_web after database initialization"
 		          
 		          dim createTokenOutcome as pdOutcome = token.Create
 		          if createTokenOutcome.ok = false then MsgBox "Auto-created token " + tokenFile.Name + " failed: " + createTokenOutcome.fatalErrorMsg

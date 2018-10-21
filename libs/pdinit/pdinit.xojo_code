@@ -35,31 +35,14 @@ Protected Class pdinit
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Shared Function initDatabase(byref activeSession as PostgreSQLDatabase , pdSystemName as string , dbFolderRoot as FolderItem , charType as string , collation as string , VFSfile as FolderItem , VFSencrypted as Boolean) As pdOutcome
-		  // 2nd step of an initialization
+		Shared Function initDatabase(byref activeSession as PostgreSQLDatabase , pdSystemName as string , tablespaceFolder as string , charType as string , collation as string) As pdOutcome
 		  // you need to be connected to a service database as a server administrator, eg user postgres
 		  if activeSession = nil then return new pdOutcome(CurrentMethodName + ": No session to a PostgreSQL database")
 		  if pdSystemName.Trim = empty then return new pdOutcome(CurrentMethodName + ": Postdoc system name cannot be empty")
-		  if dbFolderRoot = nil then return new pdOutcome(CurrentMethodName + ": Tablespace root folder path is invalid")
-		  if dbFolderRoot.Exists = false then return new pdOutcome(CurrentMethodName + ": Tablespace root folder does not exist")
-		  
-		  // we do not check whether the vfs file is indeed a pdstorage vfs: we assume it has been verified by calling method
-		  if VFSfile = nil then return  new pdOutcome(CurrentMethodName + ": VFS file path is invalid")
-		  if VFSfile.Exists = false then return new pdOutcome(CurrentMethodName + ": VFS file does not exist")
-		  if VFSfile.IsReadable = false then return new pdOutcome(CurrentMethodName + ": VFS file appears not to be local to the system")
-		  if VFSfile.IsWriteable = false then return new pdOutcome(CurrentMethodName + ": VFS file appears not to be local to the system")
 		  
 		  dim serviceDatabase as string = activeSession.DatabaseName  // will reconnect for dropping the database in case of a rollback
-		  dim tablespaceName as string = pdSystemName + "_tablespace"
-		  dim dbFolder as FolderItem = dbFolderRoot.Child(tablespaceName)
-		  if dbFolder.Exists = true then return new pdOutcome(CurrentMethodName + ": Tablespace folder " + dbFolder.NativePath + " already exists")
-		  
-		  dbFolder.CreateAsFolder
-		  if dbFolder.LastErrorCode <> 0 then return new pdOutcome(CurrentMethodName + ": Could not create " + dbFolder.NativePath)
-		  
-		  dim dbFolderName as string = dbFolder.NativePath.ReplaceAll("\" , "\\")   // this will only work for windows!
-		  
-		  //if activeSession.Connect = false then return new pdOutcome(CurrentMethodName + ": Could not open the session to the PostgreSQL database: " + activeSession.ErrorMessage)
+		  dim tablespaceFolder_formatted as string = tablespaceFolder.ReplaceAll("\" , "\\")   // this will only work under windows?
+		  dim tablespaceName as String = pdSystemName.Trim.Lowercase + "_tablespace"
 		  
 		  dim statements(-1) as string
 		  dim rollback(-1) as string
@@ -69,7 +52,7 @@ Protected Class pdinit
 		  if charType = empty then charType = pgDefaultCharacterType
 		  if collation = empty then collation = pgDefaultCharacterType
 		  
-		  statements.Append "CREATE TABLESPACE " + tablespaceName + " OWNER pdadmin LOCATION E'" +dbFolderName + "'"
+		  statements.Append "CREATE TABLESPACE " + tablespaceName + " OWNER pdadmin LOCATION E'" +tablespaceFolder_formatted + "'"
 		  statements.Append "CREATE DATABASE " + pdSystemName + " WITH ENCODING='UTF8' OWNER=pdadmin LC_COLLATE='" + collation + "' LC_CTYPE='" + charType + "' CONNECTION LIMIT=-1 TABLESPACE=" + tablespaceName
 		  statements.Append "COMMENT ON DATABASE " + pdSystemName + " IS '" + projectURL + "'"
 		  statements.Append "GRANT ALL ON DATABASE " + pdSystemName + " TO GROUP pd_admins"
@@ -96,7 +79,7 @@ Protected Class pdinit
 		    activeSession.Close
 		    activeSession.DatabaseName = pdSystemName
 		    
-		    dim buildTablesOutcome as pdOutcome = InitSystemTables(activeSession , VFSfile.NativePath , pdSystemName , VFSencrypted)
+		    dim buildTablesOutcome as pdOutcome = InitSystemTables(activeSession , pdSystemName)
 		    if buildTablesOutcome.ok = false then
 		      failure.warnings.Append "Error creating system tables"
 		      for i as integer = 0 to buildTablesOutcome.warnings.Ubound
@@ -125,8 +108,7 @@ Protected Class pdinit
 		        rollbackOK = false
 		      end if
 		    next i
-		    app.SleepCurrentThread(200)
-		    dbFolder.Delete  // try deleting the folder if empty
+		    
 		    failure.fatalErrorMsg = failure.fatalErrorMsg.Append(if(rollbackOK = true , ": Rollback SUCCESS" , ": Rollback FAIL"))
 		    Return failure
 		  end if
@@ -137,58 +119,13 @@ Protected Class pdinit
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Shared Function initPostdocSystem(byref activeSession as PostgreSQLDatabase , pdSystemName as string , charType as string , collation as string , rootFolder as FolderItem , vfsPassword as string) As pdOutcome
-		  if rootFolder = nil then return new pdOutcome(CurrentMethodName + ": Invalid path to root folder")
-		  if rootFolder.Exists = false then return new pdOutcome(CurrentMethodName + ": Root folder does not exist")
-		  if rootFolder.Directory = False then return new pdOutcome(CurrentMethodName + ": Root folder is not really a folder")
-		  if rootFolder.IsWriteable = false then return new pdOutcome(CurrentMethodName + ": Root folder does not seem to be Writeable (or is a remote resource)")
-		  if rootFolder.IsReadable = false then return new pdOutcome(CurrentMethodName + ": Root folder does not seem to be Readable (or is a remote resource)")
-		  if rootFolder.Count <> 0 then Return new pdOutcome(CurrentMethodName + ": Root folder should be empty!")
-		  
-		  // create the vfs
-		  
-		  dim storageFolder as FolderItem = rootFolder.Child(pdSystemName + "_storage")
-		  storageFolder.CreateAsFolder
-		  if storageFolder.LastErrorCode <> 0 then Return new pdOutcome(CurrentMethodName + ": Could not create storage folder " + storageFolder.NativePath)
-		  
-		  dim vfs as new pdstorage_vfs
-		  
-		  vfs.DBfile = storageFolder.Child(pdSystemName + ".pdvfs")
-		  vfs.name = pdSystemName
-		  vfs.friendlyName = "Storage for " + pdSystemName
-		  vfs.password = vfsPassword.Trim
-		  vfs.description = "This is the object storage VFS for a postdoc system named " + pdSystemName
-		  
-		  dim newVFSoutcome as pdOutcome = pdstorage_maintenance.initVFS(vfs)
-		  
-		  if newVFSoutcome.ok = false then
-		    storageFolder.Delete
-		    return new pdOutcome(CurrentMethodName + ": Error creating postdoc system " + pdSystemName + " : " + newVFSoutcome.fatalErrorMsg)
-		  end if
-		  
-		  // vfs has been created
-		  
-		  dim newDatabaseOutcome as pdOutcome = pdinit.initDatabase(activeSession , pdSystemName , rootFolder , charType , collation , vfs.DBfile , if(vfs.password = empty , False , true))
-		  if newDatabaseOutcome.ok = false then
-		    vfs.DBfile.Delete
-		    storageFolder.Delete
-		    return new pdOutcome(CurrentMethodName + ": Error creating postdoc system " + pdSystemName + " : " + newDatabaseOutcome.fatalErrorMsg + if(newDatabaseOutcome.warnings.Ubound >= 0 , EndOfLine + join(newDatabaseOutcome.warnings , EndOfLine) , empty)) 
-		  end if
-		  
-		  return new pdOutcome(True)
-		  
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h21
-		Private Shared Function InitSystemTables(byref activeSession as PostgreSQLDatabase , vfsFilename as string , pdSystemName as string , VFSencrypted as Boolean) As pdOutcome
+		Private Shared Function InitSystemTables(byref activeSession as PostgreSQLDatabase , pdSystemName as string) As pdOutcome
 		  // 3rd step of an initialization
 		  // initDatabase should run it automatically
 		  
 		  if activeSession = nil then return new pdOutcome(CurrentMethodName + ": No session to a PostgreSQL database")
 		  if activeSession.Connect = false then return new pdOutcome(CurrentMethodName + ": Could not open the session to the PostgreSQL database: " + activeSession.ErrorMessage)
-		  if vfsFilename = empty then return new pdOutcome(CurrentMethodName + ": no VFS file supplied")
 		  if pdSystemName = empty then return new pdOutcome(CurrentMethodName + ": no postdoc system name supplied")
 		  
 		  dim statements(-1) as string
@@ -288,17 +225,15 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.pdgroups TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.pdgroups OWNER TO pdadmin"
 		  
-		  statements.Append "CREATE TABLE  resources.storage (vfs TEXT NOT NULL DEFAULT " + pdSystemName.sqlQuote + " , pool TEXT PRIMARY KEY , path TEXT DEFAULT 'N/A' , encrypted BOOLEAN NOT NULL)"
-		  statements.Append "COMMENT ON TABLE resources.storage IS 'VFS and pool registry: this is where the postdoc system looks for its storage mechanism'"
-		  statements.Append "REVOKE ALL ON TABLE resources.storage FROM public"
-		  statements.Append "GRANT ALL ON TABLE resources.storage TO GROUP pd_admins"
-		  statements.Append "GRANT SELECT ON TABLE resources.storage TO GROUP pd_backends"
-		  statements.Append "GRANT SELECT ON TABLE resources.storage TO GROUP pd_users"
-		  statements.Append "ALTER TABLE resources.storage OWNER TO pdadmin"
+		  statements.Append "CREATE TABLE  resources.controllers (host TEXT PRIMARY KEY , vfs_path TEXT , vfs_encrypted BOOLEAN NOT NULL , master BOOLEAN NOT NULL)"
+		  statements.Append "COMMENT ON TABLE resources.controllers IS 'Storage controllers registry: Distributed storage facility servers'"
+		  statements.Append "REVOKE ALL ON TABLE resources.controllers FROM public"
+		  statements.Append "GRANT ALL ON TABLE resources.controllers TO GROUP pd_admins"
+		  statements.Append "GRANT SELECT ON TABLE resources.controllers TO GROUP pd_backends"
+		  statements.Append "GRANT SELECT ON TABLE resources.controllers TO GROUP pd_users"
+		  statements.Append "ALTER TABLE resources.controllers OWNER TO pdadmin"
 		  
-		  statements.Append "INSERT INTO resources.storage (pool , path , encrypted) VALUES ('vfs' , " + vfsFilename.sqlQuote + " , " + str(VFSencrypted).Uppercase +  " )"
-		  
-		  statements.Append "CREATE TABLE resources.archives (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , pool TEXT REFERENCES resources.storage(pool) , options TEXT , fieldnames TEXT , syslog TEXT)"
+		  statements.Append "CREATE TABLE resources.archives (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , storage TEXT REFERENCES resources.controllers(host) , options TEXT , fieldnames TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.archives IS 'Archives registry: any archive not listed here is not considered valid. Archives are a postdoc resource'"
 		  statements.Append "REVOKE ALL ON TABLE resources.archives FROM public"
 		  statements.Append "GRANT ALL ON TABLE resources.archives TO GROUP pd_admins"
