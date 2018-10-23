@@ -34,6 +34,22 @@ Inherits pdsession
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Sub pgQueueHandler(sender as PostgreSQLDatabase, Name as string, ID as integer, Extra as String)
+		  // we're expecting messages from 2 channels here:
+		  //  (database name)_public  and  (database name)_(pid number)
+		  
+		  dim publicChannel as String = activeServiceToken.database.Lowercase + "_" + "public"
+		  dim privateChannel as string = activeServiceToken.database.Lowercase + "_" + lastPID
+		  dim serviceChannel as String = activeServiceToken.database.Lowercase + "_" + "service"
+		  
+		  //System.DebugLog("name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra)
+		  Print "pdsession: " + "name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra
+		  
+		  print Object(me).whatClass
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Sub validateHost()
 		  

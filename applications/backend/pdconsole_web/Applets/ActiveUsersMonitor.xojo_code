@@ -94,7 +94,7 @@ Begin WebDialog ActiveUsersMonitor
       Mode            =   0
       Period          =   2000
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   -1
       VerticalCenter  =   0
       ZIndex          =   1
@@ -125,7 +125,7 @@ Begin WebDialog ActiveUsersMonitor
       LockVertical    =   False
       Multiline       =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   0
       Text            =   "Only showing postdoc sessions , refresh time is 2 seconds."
       TextAlign       =   0

@@ -131,7 +131,7 @@ Begin WebDialog newDatabaseWizard
       Password        =   False
       ReadOnly        =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   3
       Text            =   ""
       TextAlign       =   0
@@ -274,7 +274,7 @@ Begin WebDialog newDatabaseWizard
       LockTop         =   True
       LockVertical    =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   5
       Text            =   ""
       Top             =   91
@@ -494,7 +494,7 @@ Begin WebDialog newDatabaseWizard
       LockTop         =   True
       LockVertical    =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   7
       Top             =   270
       Value           =   True

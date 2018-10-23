@@ -2,6 +2,14 @@
 Protected Class Session
 Inherits WebSession
 	#tag Event
+		Sub Close()
+		  System.DebugLog("session close event")
+		  forceCleanup
+		  
+		End Sub
+	#tag EndEvent
+
+	#tag Event
 		Sub Open()
 		  ServiceTokens = pdservicetoken.loadFolderTokens(appFolder.Child("tokens") , true)
 		  
@@ -24,6 +32,16 @@ Inherits WebSession
 		  return false
 		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub forceCleanup()
+		  if IsNull(dbSession) = False then dbSession.Close
+		  dbSession = nil
+		  activeServiceToken = nil
+		  ServiceTokens = nil
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -125,10 +143,6 @@ Inherits WebSession
 
 	#tag Property, Flags = &h21
 		Private dbSession As PostgreSQLDatabase
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		pdSessionsPool(-1) As pdsession_local
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

@@ -109,6 +109,23 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function fromString(extends resourceType as String) As ResourceTypes
+		  select case resourceType
+		  case "APPLICATION"
+		    Return ResourceTypes.Application
+		  Case "DATASET"
+		    Return resourceTypes.Dataset
+		  Case "ARCHIVE"
+		    Return resourceTypes.Archive
+		  Else
+		    Return resourceTypes.Invalid
+		  end select
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function getGUIappArguments() As string()
 		  dim arguments(-1) as string
 		  dim processCL as String = System.commandline
@@ -313,6 +330,31 @@ Protected Module pdcoreLib
 	#tag Method, Flags = &h0
 		Function toBase64(extends input as string) As string
 		  return EncodeBase64(input , 0)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function toString(extends resourceType as ResourceTypes) As string
+		  select case resourceType
+		  case resourceTypes.Archive
+		    Return "ARCHIVE"
+		  case resourceTypes.Application
+		    Return "APPLICATION"
+		  case resourceTypes.Dataset
+		    Return "DATASET"
+		  else
+		    Return empty
+		  end select
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function whatClass(extends specimen as Object) As string
+		  Dim classtype As Introspection.TypeInfo =Introspection.GetType(specimen)
+		  Return classtype.FullName
 		  
 		End Function
 	#tag EndMethod
@@ -576,6 +618,14 @@ Protected Module pdcoreLib
 
 	#tag Constant, Name = projectURL, Type = String, Dynamic = False, Default = \"https://github.com/gregorplop/postdoc", Scope = Public
 	#tag EndConstant
+
+
+	#tag Enum, Name = ResourceTypes, Type = Integer, Flags = &h0
+		Archive
+		  Dataset
+		  Application
+		Invalid
+	#tag EndEnum
 
 
 	#tag ViewBehavior

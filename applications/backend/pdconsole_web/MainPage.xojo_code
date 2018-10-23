@@ -209,7 +209,7 @@ Begin WebPage MainPage
       Picture         =   1897424895
       ProtectImage    =   True
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   -1
       Top             =   105
       URL             =   ""
@@ -315,20 +315,30 @@ End
 		    
 		    if isPostdoc = true then 
 		      
-		      call addApplet("user access" , "section")
-		      call addApplet("create service tokens" , "SERVICETOKENBUILDER")
-		      call addApplet("view active connections" , "VIEWCONNECTIONS")
+		      call addApplet("access" , "section")
+		      call addApplet("create service token" , "SERVICETOKENBUILDER")
+		      call addApplet("users" , "USERS_MGR")
+		      call addApplet("user groups" , "GROUPS_MGR")
+		      call addApplet("access tokens" , "ACCESSTOKEN_MGR")
+		      call addApplet("active connections" , "VIEWCONNECTIONS")
 		      
-		      // archives section
-		      call addApplet("archives" , "section")
-		      call addApplet("create a new archive" , "NEWARCHIVE")
-		      call addApplet("archive overview" , "ARCHIVEOVERVIEW")
-		      call addApplet("storage configuration" , "CONFIGSTORAGE")
+		      call addApplet("resources" , "section")
+		      call addApplet("controllers" , "CONTROLLER_MGR")
+		      call addApplet("applications" , "APP_MGR")
+		      call addApplet("archives" , "ARCHIVE_MGR")
+		      call addApplet("storage pools" , "POOLS_MGR")
+		      call addApplet("datasets" , "DATASET_MGR")
+		      
+		      
+		      
 		      
 		      
 		    end if
 		    
 		  end if
+		  
+		  call addApplet(empty , "section")
+		  call addApplet("logout" , "section")
 		  
 		  styleAppletsList
 		  
@@ -445,9 +455,15 @@ End
 		  dim row as integer = me.ListIndex
 		  if row < 0 then exit sub
 		  
-		  me.Selected(row) = false
-		  showApplets(me.RowTag(row).StringValue.Uppercase)
+		  System.DebugLog(me.Cell(row,0))
 		  
+		  if me.Cell(row,0).Trim = "logout" then 
+		    Session.forceCleanup
+		    Session.Quit
+		  else
+		    me.Selected(row) = false
+		    showApplets(me.RowTag(row).StringValue.Uppercase)
+		  end if
 		  
 		End Sub
 	#tag EndEvent

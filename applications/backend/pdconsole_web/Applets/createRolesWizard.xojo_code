@@ -283,7 +283,7 @@ Begin WebDialog createRolesWizard
       LockTop         =   True
       LockVertical    =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   4
       Top             =   255
       VerticalCenter  =   0

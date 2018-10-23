@@ -186,7 +186,7 @@ Protected Class pdinit
 		  
 		  statements.Append "CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA resources"  // used to generate uuid's using gen_random_uuid()
 		  
-		  statements.Append "CREATE TABLE resources.pgusers (name TEXT PRIMARY KEY , friendlyname TEXT , description TEXT , groups TEXT , tokens TEXT , syslog TEXT)"
+		  statements.Append "CREATE TABLE resources.pgusers (name TEXT PRIMARY KEY , friendlyname TEXT , description TEXT , tokens TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.pgusers IS 'postdoc-related postgres server login roles for configuring rdbms-enforced access restrictions on archives and datasets'"
 		  statements.Append "REVOKE ALL ON TABLE resources.pgusers FROM public"
 		  statements.Append "GRANT ALL ON TABLE resources.pgusers TO GROUP pd_admins"
@@ -195,7 +195,7 @@ Protected Class pdinit
 		  statements.Append "ALTER TABLE resources.pgusers OWNER TO pdadmin"
 		  
 		  statements.Append "INSERT INTO resources.pgusers (name , friendlyname , description) VALUES ('pdadmin' , 'postdoc admin' , 'the postdoc default administrator account')"
-		  statements.Append "INSERT INTO resources.pgusers (name , friendlyname , description) VALUES ('pdbackend' , 'postdoc backend' , 'the postdoc default backend process user account')"
+		  statements.Append "INSERT INTO resources.pgusers (name , friendlyname , description , tokens) VALUES ('pdbackend' , 'postdoc backend' , 'the postdoc default backend process user account' , 'runPdConroller')"
 		  
 		  statements.Append "CREATE TABLE resources.pggroups (name TEXT PRIMARY KEY , friendlyname TEXT , description TEXT , tokens TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.pggroups IS 'postdoc-related postgres server group roles for configuring rdbms-enforced access restrictions on archives and datasets'"
@@ -225,7 +225,7 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.pdgroups TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.pdgroups OWNER TO pdadmin"
 		  
-		  statements.Append "CREATE TABLE  resources.controllers (host TEXT PRIMARY KEY , vfs_path TEXT , vfs_encrypted BOOLEAN NOT NULL , master BOOLEAN NOT NULL)"
+		  statements.Append "CREATE TABLE  resources.controllers (host TEXT PRIMARY KEY , vfs_path TEXT , vfs_encrypted BOOLEAN NOT NULL , master BOOLEAN NOT NULL , description TEXT NOT NULL , location TEXT , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.controllers IS 'Storage controllers registry: Distributed storage facility servers'"
 		  statements.Append "REVOKE ALL ON TABLE resources.controllers FROM public"
 		  statements.Append "GRANT ALL ON TABLE resources.controllers TO GROUP pd_admins"
@@ -257,19 +257,23 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.applications TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.applications OWNER TO pdadmin"
 		  
+		  statements.Append "INSERT INTO resources.applications (name , friendlyname , description , active) VALUES ('PDCONTROLLER' , 'pdController' , 'the postdoc backend' , true)"
+		  
 		  statements.Append "CREATE TYPE resources.resourcetypes AS ENUM ('ARCHIVE' , 'DATASET' , 'APPLICATION')"
 		  statements.Append "ALTER TYPE resources.resourcetypes OWNER TO pdadmin"
 		  statements.Append "COMMENT ON TYPE resources.resourcetypes IS 'Enumerates all possible resource types within a postdoc system'"
 		  statements.Append "REVOKE ALL ON TYPE resources.resourcetypes FROM public"
 		  statements.Append "GRANT USAGE ON TYPE resources.resourcetypes TO GROUP pd_users"
 		  
-		  statements.Append "CREATE TABLE resources.accesstokens (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , active BOOLEAN NOT NULL , resourcetype resources.resourcetypes NOT NULL , resourcename TEXT NOT NULL , createnew BOOLEAN NOT NULL , read BOOLEAN NOT NULL , update BOOLEAN NOT NULL , delete BOOLEAN NOT NULL , execute BOOLEAN NOT NULL , features TEXT , content BOOLEAN NOT NULL , syslog TEXT)"
+		  statements.Append "CREATE TABLE resources.accesstokens (name TEXT PRIMARY KEY , friendlyname TEXT NOT NULL , description TEXT , active BOOLEAN NOT NULL , resourcetype resources.resourcetypes NOT NULL , resourcename TEXT NOT NULL , createnew BOOLEAN NOT NULL DEFAULT FALSE , read BOOLEAN NOT NULL DEFAULT FALSE , update BOOLEAN NOT NULL DEFAULT FALSE , delete BOOLEAN NOT NULL DEFAULT FALSE , execute BOOLEAN NOT NULL DEFAULT FALSE , features TEXT , content BOOLEAN NOT NULL DEFAULT FALSE , syslog TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.accesstokens IS 'This is the access tokens registry: An access token is a piece of information that ascribes specific access properties to a resource. Whoever carries the token, inherits these access properties on that resource. Token carriers can be users and groups.'"
 		  statements.Append "REVOKE ALL ON TABLE resources.accesstokens FROM public"
 		  statements.Append "GRANT ALL ON TABLE resources.accesstokens TO GROUP pd_admins"
 		  statements.Append "GRANT SELECT ON TABLE resources.accesstokens TO GROUP pd_backends"
 		  statements.Append "GRANT SELECT ON TABLE resources.accesstokens TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.accesstokens OWNER TO pdadmin"
+		  
+		  statements.Append "INSERT INTO resources.accesstokens (name , friendlyname , description , active , resourcetype , resourcename , execute) VALUES ('runPdConroller' , 'Allow execute pdcontroller' , 'Allows for pdcontroller local execution' , true , 'APPLICATION' , 'PDCONTROLLER' , true)"
 		  
 		  statements.Append "CREATE TABLE resources.pdcatalog (key TEXT PRIMARY KEY , value0 TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.pdcatalog IS 'This is the system catalog: contains read-only information about the current postdoc system '"
