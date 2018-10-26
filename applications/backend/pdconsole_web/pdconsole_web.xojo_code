@@ -1,5 +1,5 @@
 #tag Class
-Protected Class App
+Protected Class pdconsole_web
 Inherits WebApplication
 	#tag Event
 		Sub Open(args() as String)

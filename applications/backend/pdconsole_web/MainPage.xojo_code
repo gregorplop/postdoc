@@ -231,6 +231,13 @@ End
 
 #tag WindowCode
 	#tag Event
+		Sub Close()
+		  System.DebugLog("MainPage close event")
+		  
+		End Sub
+	#tag EndEvent
+
+	#tag Event
 		Sub Open()
 		  myLoginDialog = new LoginDialog
 		  myLoginDialog.Show

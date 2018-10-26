@@ -40,6 +40,8 @@ Inherits ServiceApplication
 		  if outcome.ok = false then quitFormal("Error connecting to " + token.host + " : " + outcome.fatalErrorMsg , 4)
 		  
 		  
+		  
+		  
 		  do
 		    
 		    DoEvents

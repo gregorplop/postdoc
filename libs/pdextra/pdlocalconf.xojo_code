@@ -72,9 +72,9 @@ Protected Class pdlocalconf
 		  // connected to localconf
 		  
 		  dim query as string = "SELECT * FROM localconf WHERE "
-		  query = query.Append("service = " + service.sqlQuote + " AND ")
-		  query = query.Append("section = " + section.sqlQuote + " AND ")
-		  query = query.Append("key = " + key.sqlQuote)
+		  query.Append("service = " + service.sqlQuote + " AND ")
+		  query.Append("section = " + section.sqlQuote + " AND ")
+		  query.Append("key = " + key.sqlQuote)
 		  
 		  dim rs as RecordSet = localconfDB.SQLSelect(query)
 		  if localconfDB.Error = true then return new pdOutcome(CurrentMethodName + ": Error getting conf data : " + localconfDB.ErrorMessage)
@@ -128,8 +128,8 @@ Protected Class pdlocalconf
 		  // connected to localconf
 		  
 		  dim query as string = "SELECT password FROM storagepass WHERE "
-		  query = query.Append("vfs = " + vfs.sqlQuote + " AND ")
-		  query = query.Append("pool " + if(pool = empty , "IS NULL" , "= '" + pool + "'"))
+		  query.Append("vfs = " + vfs.sqlQuote + " AND ")
+		  query.Append("pool " + if(pool = empty , "IS NULL" , "= '" + pool + "'"))
 		  
 		  dim rs as RecordSet = localconfDB.SQLSelect(query)
 		  if localconfDB.Error = true then return new pdOutcome(CurrentMethodName + ": Error getting passwd data : " + localconfDB.ErrorMessage)
@@ -241,9 +241,9 @@ Protected Class pdlocalconf
 		  end if
 		  
 		  dim query as string = "SELECT COUNT(*) FROM localconf WHERE "
-		  query = query.Append("service = " + service.sqlQuote + " AND ")
-		  query = query.Append("section = " + section.sqlQuote + " AND ")
-		  query = query.Append("key = " + key.sqlQuote)
+		  query.Append("service = " + service.sqlQuote + " AND ")
+		  query.Append("section = " + section.sqlQuote + " AND ")
+		  query.Append("key = " + key.sqlQuote)
 		  
 		  dim rs as RecordSet = localconfDB.SQLSelect(query)
 		  if localconfDB.Error = true then return new pdOutcome(CurrentMethodName + ": Error surveying conf data : " + localconfDB.ErrorMessage)
@@ -256,16 +256,16 @@ Protected Class pdlocalconf
 		  select case rs.IdxField(1).IntegerValue
 		  case 0 // insert
 		    query = "INSERT INTO localconf (service , section , key , "
-		    query = query.Append(Join(valueFields , " , ") + ") ")
-		    query = query.Append("VALUES ( " + service.sqlQuote + " , " + section.sqlQuote + " , " + key.sqlQuote + " , " + join(values.sqlQuote , " , ") + ")")
+		    query.Append(Join(valueFields , " , ") + ") ")
+		    query.Append("VALUES ( " + service.sqlQuote + " , " + section.sqlQuote + " , " + key.sqlQuote + " , " + join(values.sqlQuote , " , ") + ")")
 		  case 1 // update
 		    for i as Integer = 0 to valueFields.Ubound
 		      valueFields(i) = "value" + str(i) + " = " + values(i).sqlQuote
 		    next i
 		    query = "UPDATE localconf SET " + join(valueFields , " , ") + " WHERE "
-		    query = query.Append("service = " + service.sqlQuote + " AND ")
-		    query = query.Append("section = " + section.sqlQuote + " AND ")
-		    query = query.Append("key = " + key.sqlQuote)
+		    query.Append("service = " + service.sqlQuote + " AND ")
+		    query.Append("section = " + section.sqlQuote + " AND ")
+		    query.Append("key = " + key.sqlQuote)
 		    
 		  else // invalid
 		    return new pdOutcome(CurrentMethodName + ": Multiple entries for service/section/key combination: file probably tampered with")
@@ -309,8 +309,8 @@ Protected Class pdlocalconf
 		  
 		  
 		  dim query as string = "SELECT COUNT(*) FROM storagepass WHERE "
-		  query = query.Append("vfs = " + vfs.sqlQuote + " AND ")
-		  query = query.Append("pool " + if(pool = empty , "IS NULL" , "= " + pool.sqlQuote))
+		  query.Append("vfs = " + vfs.sqlQuote + " AND ")
+		  query.Append("pool " + if(pool = empty , "IS NULL" , "= " + pool.sqlQuote))
 		  
 		  dim rs as RecordSet = localconfDB.SQLSelect(query)
 		  if localconfDB.Error = true then return new pdOutcome(CurrentMethodName + ": Error surveying passwd data : " + localconfDB.ErrorMessage)
@@ -319,17 +319,17 @@ Protected Class pdlocalconf
 		  case 0 // insert
 		    if passwd.Trim = empty then return new pdOutcome(true) // empty password for a pool that doesn't exist - do nothing
 		    query = "INSERT INTO storagepass (vfs , pool , password) "
-		    query = query.Append("VALUES ( " + vfs.sqlQuote + " , " + pool.sqlQuote + " , " + passwd.toBase64.sqlQuote + ")")
+		    query.Append("VALUES ( " + vfs.sqlQuote + " , " + pool.sqlQuote + " , " + passwd.toBase64.sqlQuote + ")")
 		    
 		  case 1 // update
 		    if passwd.Trim <> empty then
 		      query = "UPDATE storagepass SET password = " + passwd.toBase64.sqlQuote + " WHERE "
-		      query = query.Append("vfs = " + vfs.sqlQuote + " AND ")
-		      query = query.Append("pool " + if(pool = empty , "IS NULL" , "= " + pool.sqlQuote))
+		      query.Append("vfs = " + vfs.sqlQuote + " AND ")
+		      query.Append("pool " + if(pool = empty , "IS NULL" , "= " + pool.sqlQuote))
 		    else  // no password supplied - delete the record
 		      query = "DELETE FROM storagepass WHERE "
-		      query = query.Append("vfs = " + vfs.sqlQuote + " AND ")
-		      query = query.Append("pool " + if(pool = empty , "IS NULL" , "= " + pool.sqlQuote))
+		      query.Append("vfs = " + vfs.sqlQuote + " AND ")
+		      query.Append("pool " + if(pool = empty , "IS NULL" , "= " + pool.sqlQuote))
 		    end if
 		    
 		  else // invalid

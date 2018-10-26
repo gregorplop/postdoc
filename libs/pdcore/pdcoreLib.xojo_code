@@ -1,10 +1,27 @@
 #tag Module
 Protected Module pdcoreLib
 	#tag Method, Flags = &h0
-		Function Append(extends target as String , source as string) As string
-		  return target + source
+		Sub Append(extends  byref target as String, toAdd as string)
+		  target = target + toAdd
 		  
-		End Function
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Append_ifNotExists(extends  byref targetArray() as string, toAdd() as string)
+		  for i as integer = 0 to toAdd.Ubound
+		    if targetArray.IndexOf(toAdd(i)) < 0 then targetArray.Append toAdd(0)
+		  next i
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub Append_ifNotExists(extends  byref targetArray() as string, toAdd as string)
+		  if targetArray.IndexOf(toAdd) < 0 then targetArray.Append toAdd
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -224,6 +241,22 @@ Protected Module pdcoreLib
 		  return salt
 		  
 		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function mergeArrays(array1() as string, array2() as string) As string()
+		  dim output(-1) as string
+		  
+		  for i as integer = 0 to array1.Ubound
+		    output.Append array1(i)
+		  next i
+		  
+		  for i as Integer = 0 to array2.Ubound
+		    if output.IndexOf(array2(i)) < 0 then array1.Append array2(i)
+		  next i
+		  
+		  return output
 		End Function
 	#tag EndMethod
 
@@ -624,7 +657,8 @@ Protected Module pdcoreLib
 		Archive
 		  Dataset
 		  Application
-		Invalid
+		  Invalid
+		Any
 	#tag EndEnum
 
 
