@@ -8,6 +8,13 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Append(extends target as String, toAdd as string) As String
+		  return target + toAdd
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub Append_ifNotExists(extends  byref targetArray() as string, toAdd() as string)
 		  for i as integer = 0 to toAdd.Ubound
 		    if targetArray.IndexOf(toAdd(i)) < 0 then targetArray.Append toAdd(0)

@@ -1050,6 +1050,15 @@ End
 #tag EndWebPage
 
 #tag WindowCode
+	#tag Event
+		Sub Dismissed()
+		  MainPage.appletCreateServiceToken = nil
+		  
+		  
+		End Sub
+	#tag EndEvent
+
+
 	#tag Method, Flags = &h0
 		Sub buildName()
 		  if databaseToConnect.Text.Trim <> empty and host.Text.Trim <> empty then
@@ -1070,31 +1079,8 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor()
-		  // Calling the overridden superclass constructor.
-		  // Note that this may need modifications if there are multiple constructor choices.
-		  // Possible constructor calls:
-		  // Constructor() -- From WebDialog
-		  // Constructor() -- From WebControl
-		  // Constructor() -- From WebObject
-		  
-		  instances  = instances + 1
-		  
-		  //Super.Constructor
-		  
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Destructor()
-		  instances = instances - 1
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Sub DownloadedEvent(sender as WebFile)
 		  newlyCreatedToken.Delete
-		  instances = 0
 		  self.Close
 		  
 		  
@@ -1102,10 +1088,6 @@ End
 		End Sub
 	#tag EndMethod
 
-
-	#tag Property, Flags = &h0
-		Shared instances As Integer = 0
-	#tag EndProperty
 
 	#tag Property, Flags = &h0
 		newlyCreatedToken As FolderItem

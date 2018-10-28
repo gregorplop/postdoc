@@ -252,7 +252,46 @@ End
 		  AppletsList.AddRow " " + appletCaption
 		  AppletsList.RowTag(AppletsList.LastIndex) = appletCode
 		  return AppletsList.LastIndex
+		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Sub appletInitiator(className as string)
+		  select case className
+		    
+		  case "newServiceToken"
+		    if not IsNull(appletCreateServiceToken) then return
+		    appletCreateServiceToken = new newServiceToken
+		    appletCreateServiceToken.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
+		    appletCreateServiceToken.Left = AppletsList.Left + AppletsList.Width + 20
+		    appletCreateServiceToken.Show
+		  case "newDatabaseWizard"
+		    if not IsNull(appletCreateDatabase) then return
+		    appletCreateDatabase = new newDatabaseWizard
+		    appletCreateDatabase.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
+		    appletCreateDatabase.Left = AppletsList.Left + AppletsList.Width + 20
+		    appletCreateDatabase.Show
+		  case "newArchive"
+		    if not IsNull(appletCreateArchive) then return
+		    appletCreateArchive = new newArchive
+		    appletCreateArchive.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
+		    appletCreateArchive.Left = AppletsList.Left + AppletsList.Width + 20
+		    appletCreateArchive.Show
+		  case "ActiveUsersMonitor"
+		    if not IsNull(appletUserMonitor) then return
+		    appletUserMonitor = new ActiveUsersMonitor
+		    appletUserMonitor.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
+		    appletUserMonitor.Left = AppletsList.Left + AppletsList.Width + 20
+		    appletUserMonitor.Show
+		  case "createRolesWizard"
+		    if not IsNull(appletCreateRoles) then return
+		    appletCreateRoles = new createRolesWizard
+		    appletCreateRoles.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
+		    appletCreateRoles.Left = AppletsList.Left + AppletsList.Width + 20
+		    appletCreateRoles.Show
+		  end select
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -264,6 +303,7 @@ End
 		  StatusFooter_label.Visible = true
 		  pdLogo.Visible = true
 		  
+		  myLoginDialog = nil
 		End Sub
 	#tag EndMethod
 
@@ -327,7 +367,7 @@ End
 		      call addApplet("users" , "USERS_MGR")
 		      call addApplet("user groups" , "GROUPS_MGR")
 		      call addApplet("access tokens" , "ACCESSTOKEN_MGR")
-		      call addApplet("active connections" , "VIEWCONNECTIONS")
+		      call addApplet("active sessions" , "VIEWCONNECTIONS")
 		      
 		      call addApplet("resources" , "section")
 		      call addApplet("controllers" , "CONTROLLER_MGR")
@@ -335,9 +375,6 @@ End
 		      call addApplet("archives" , "ARCHIVE_MGR")
 		      call addApplet("storage pools" , "POOLS_MGR")
 		      call addApplet("datasets" , "DATASET_MGR")
-		      
-		      
-		      
 		      
 		      
 		    end if
@@ -362,69 +399,19 @@ End
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Sub showApplets(appletName as string)
+	#tag Method, Flags = &h21
+		Private Sub showApplets(appletName as string)
 		  select case appletName
-		    
 		  case "SYSROLESINIT"
-		    
-		    if createRolesWizard.instances < 1 then
-		      dim roleCreator as new createRolesWizard
-		      roleCreator.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
-		      roleCreator.Left = AppletsList.Left + AppletsList.Width + 20
-		      
-		      roleCreator.Show
-		      
-		    else
-		      MsgBox "This wizard is already open"
-		    end if
-		    
+		    appletInitiator("createRolesWizard")
 		  case "PDINIT"
-		    
-		    if newDatabaseWizard.instances < 1 then
-		      dim newDatabaseWizard as new newDatabaseWizard
-		      newDatabaseWizard.Top =  AppletsList.Top + AppletsList.RowHeight(0) * 3
-		      newDatabaseWizard.Left = AppletsList.Left + AppletsList.Width + 20
-		      newDatabaseWizard.Show
-		    else
-		      MsgBox "This wizard is already open"
-		    end if
-		    
+		    appletInitiator("newDatabaseWizard")
 		  case "SERVICETOKENBUILDER"
-		    
-		    if newServiceToken.instances < 1 then
-		      dim applet as new newServiceToken
-		      applet.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
-		      applet.Left = AppletsList.Left + AppletsList.Width + 20
-		      applet.Show
-		    else
-		      MsgBox "This wizard is already open"
-		    end if
-		    
+		    appletInitiator("newServiceToken")
 		  case "NEWARCHIVE"
-		    
-		    if newArchive.instances < 1 then
-		      dim applet as new newArchive
-		      applet.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
-		      applet.Left = AppletsList.Left + AppletsList.Width + 20
-		      applet.Show
-		    else
-		      MsgBox "This wizard is already open"
-		    end if
-		    
+		    appletInitiator("newArchive")
 		  case "VIEWCONNECTIONS"
-		    
-		    if ActiveUsersMonitor.instances < 1 then
-		      dim applet as new ActiveUsersMonitor
-		      applet.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
-		      applet.Left = AppletsList.Left + AppletsList.Width + 20
-		      applet.Show
-		    else
-		      MsgBox "This applet is already open"
-		    end if
-		    
-		    
-		    
+		    appletInitiator("ActiveUsersMonitor")
 		  end select
 		End Sub
 	#tag EndMethod
@@ -445,6 +432,26 @@ End
 	#tag EndMethod
 
 
+	#tag Property, Flags = &h0
+		appletCreateArchive As newArchive
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		appletCreateDatabase As newDatabaseWizard
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		appletCreateRoles As createRolesWizard
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		appletCreateServiceToken As newServiceToken
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		appletUserMonitor As ActiveUsersMonitor
+	#tag EndProperty
+
 	#tag Property, Flags = &h21
 		Private isPostdoc As Boolean
 	#tag EndProperty
@@ -461,8 +468,6 @@ End
 		Sub SelectionChanged()
 		  dim row as integer = me.ListIndex
 		  if row < 0 then exit sub
-		  
-		  System.DebugLog(me.Cell(row,0))
 		  
 		  if me.Cell(row,0).Trim = "logout" then 
 		    Session.forceCleanup

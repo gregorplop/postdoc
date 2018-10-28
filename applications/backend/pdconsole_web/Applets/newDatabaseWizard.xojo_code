@@ -558,32 +558,12 @@ End
 #tag EndWebPage
 
 #tag WindowCode
-	#tag Method, Flags = &h0
-		Sub Constructor()
-		  // Calling the overridden superclass constructor.
-		  // Note that this may need modifications if there are multiple constructor choices.
-		  // Possible constructor calls:
-		  // Constructor() -- From WebDialog
-		  // Constructor() -- From WebControl
-		  // Constructor() -- From WebObject
-		  
-		  instances = instances + 1
-		  
-		  //Super.Constructor
+	#tag Event
+		Sub Dismissed()
+		  MainPage.appletCreateDatabase = nil
 		  
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Destructor()
-		  instances = instances - 1
-		End Sub
-	#tag EndMethod
-
-
-	#tag Property, Flags = &h0
-		Shared instances As Integer
-	#tag EndProperty
+	#tag EndEvent
 
 
 #tag EndWindowCode

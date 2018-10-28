@@ -43,7 +43,7 @@ Begin WebDialog LoginDialog
       HorizontalCenter=   0
       Index           =   -2147483648
       InitialValue    =   ""
-      Left            =   169
+      Left            =   135
       ListIndex       =   -1
       LockBottom      =   False
       LockedInPosition=   False
@@ -59,7 +59,7 @@ Begin WebDialog LoginDialog
       Top             =   124
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   189
+      Width           =   223
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -88,7 +88,7 @@ Begin WebDialog LoginDialog
       LockTop         =   False
       LockVertical    =   False
       Scope           =   0
-      Style           =   "0"
+      Style           =   "543873023"
       TabOrder        =   2
       Top             =   325
       VerticalCenter  =   0
@@ -272,7 +272,7 @@ Begin WebDialog LoginDialog
       Password        =   False
       ReadOnly        =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   6
       Text            =   ""
       TextAlign       =   2
@@ -315,7 +315,7 @@ Begin WebDialog LoginDialog
       Password        =   False
       ReadOnly        =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   7
       Text            =   ""
       TextAlign       =   2
@@ -352,7 +352,7 @@ Begin WebDialog LoginDialog
       LockVertical    =   False
       Multiline       =   True
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   8
       Text            =   "Ready to login"
       TextAlign       =   0
@@ -390,7 +390,7 @@ Begin WebDialog LoginDialog
       Scope           =   0
       Style           =   "2131533823"
       TabOrder        =   9
-      Text            =   "A web-based postdoc system initialization & monitoring GUI"
+      Text            =   "A web-based postdoc system administration GUI"
       TextAlign       =   2
       Top             =   70
       VerticalCenter  =   0
@@ -422,7 +422,7 @@ Begin WebDialog LoginDialog
       Mode            =   1
       Period          =   50
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   -1
       VerticalCenter  =   0
       ZIndex          =   1
@@ -437,14 +437,14 @@ Begin WebDialog LoginDialog
    End
    Begin WebButton ServiceBtn
       AutoDisable     =   False
-      Caption         =   "+"
+      Caption         =   ""
       Cursor          =   0
       Enabled         =   True
       Height          =   22
       HelpTag         =   "Create and download a service token. You'll have to manually place it into the TOKENS folder of pdconsole_web"
       HorizontalCenter=   0
       Index           =   -2147483648
-      Left            =   135
+      Left            =   101
       LockBottom      =   False
       LockedInPosition=   False
       LockHorizontal  =   False
@@ -453,12 +453,12 @@ Begin WebDialog LoginDialog
       LockTop         =   True
       LockVertical    =   False
       Scope           =   0
-      Style           =   "0"
+      Style           =   "1280366591"
       TabOrder        =   10
       Top             =   124
       VerticalCenter  =   0
       Visible         =   True
-      Width           =   30
+      Width           =   22
       ZIndex          =   1
       _DeclareLineRendered=   False
       _HorizontalPercent=   0.0
@@ -521,7 +521,7 @@ Begin WebDialog LoginDialog
       LockTop         =   True
       LockVertical    =   False
       Scope           =   0
-      Style           =   "-1"
+      Style           =   "0"
       TabOrder        =   -1
       Top             =   237
       VerticalCenter  =   0
@@ -587,6 +587,11 @@ End
 
 	#tag Method, Flags = &h21
 		Private Sub doLogin()
+		  if IsNull(tokenBuilder) = False then 
+		    tokenBuilder.Close
+		    tokenBuilder = nil
+		  end if
+		  
 		  dim outcome as pdOutcome
 		  dim token as pdservicetoken
 		  dim idx as Integer = services_menu.ListIndex
@@ -613,6 +618,11 @@ End
 		  
 		End Sub
 	#tag EndMethod
+
+
+	#tag Property, Flags = &h0
+		tokenBuilder As newServiceToken
+	#tag EndProperty
 
 
 #tag EndWindowCode
@@ -693,11 +703,11 @@ End
 #tag Events ServiceBtn
 	#tag Event
 		Sub Action()
-		  if newServiceToken.instances < 1 then
-		    dim applet as new newServiceToken
-		    applet.Top = 100
-		    applet.Left = 100
-		    applet.Show
+		  if tokenBuilder = nil then
+		    tokenBuilder = new newServiceToken
+		    tokenBuilder.Top = 100
+		    tokenBuilder.Left = 100
+		    tokenBuilder.Show
 		  end if
 		  
 		End Sub

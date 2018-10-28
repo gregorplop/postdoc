@@ -94,17 +94,20 @@ Protected Class pdaccesstoken
 		#tag ViewProperty
 			Name="active"
 			Group="Behavior"
+			InitialValue="false"
 			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="description"
 			Group="Behavior"
 			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="friendlyname"
 			Group="Behavior"
 			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="applyToContent"
@@ -115,41 +118,56 @@ Protected Class pdaccesstoken
 			Name="resourcename"
 			Group="Behavior"
 			Type="string"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="resourcetype"
 			Group="Behavior"
 			Type="ResourceTypes"
+			EditorType="Enum"
+			#tag EnumValues
+				"0 - Archive"
+				"1 - Dataset"
+				"2 - Application"
+				"3 - Invalid"
+				"4 - Any"
+			#tag EndEnumValues
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="right_Create"
 			Group="Behavior"
+			InitialValue="false"
 			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="right_Delete"
 			Group="Behavior"
+			InitialValue="false"
 			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="right_Execute"
 			Group="Behavior"
+			InitialValue="false"
 			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="right_Read"
 			Group="Behavior"
+			InitialValue="false"
 			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="right_Update"
 			Group="Behavior"
+			InitialValue="false"
 			Type="Boolean"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="sysLog"
 			Group="Behavior"
 			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

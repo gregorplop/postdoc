@@ -3,12 +3,17 @@ Protected Class pdsession_controller
 Inherits pdsession
 	#tag Method, Flags = &h0
 		Function connect() As pdOutcome
-		  dim outcome as pdOutcome = Super.connect
-		  if outcome.ok = False then return outcome
+		  dim SuperOutcome as pdOutcome = Super.connect
+		  if SuperOutcome.ok = False then return SuperOutcome
 		  
-		  // dim 
-		  // dim data as RecordSet = pgsession.SQLSelect("
-		  
+		  dim outcome as pdOutcome = validateController
+		  if outcome.ok = false then
+		    pgSessionClose
+		    return new pdOutcome(CurrentMethodName + ": Error validating controller: " + outcome.fatalErrorMsg)
+		  elseif outcome.returnObject.BooleanValue = false then 
+		    pgSessionClose
+		    return new pdOutcome(CurrentMethodName + ": Controller not validated")
+		  end if
 		  
 		  dim postConnectActions(-1) as string  // extra actions for backend initialization
 		  postConnectActions.Append "LISTEN " + activeServiceToken.database.Lowercase + "_" + "service"
@@ -18,8 +23,7 @@ Inherits pdsession
 		    pgsession.SQLExecute(postConnectActions(i))
 		    if pgsession.Error = true then 
 		      dim fail as new pdOutcome(CurrentMethodName + ": Error initializing new postdoc session: " + pgsession.ErrorMessage)
-		      pgsession.Close
-		      connected = false
+		      pgSessionClose
 		      return fail
 		    end if
 		  next i
@@ -27,10 +31,7 @@ Inherits pdsession
 		  pgQueuePoll.Period = Round(pgQueueRefreshInterval / 2)
 		  ServiceVerifyPeriod = ServiceVerifyPeriod * 2
 		  
-		  //RemoveHandler pgsession.ReceivedNotification , WeakAddressOf pgsession_ReceivedNotification
-		  //AddHandler pgsession.ReceivedNotification , WeakAddressOf pgsession_ReceivedNotification
-		  
-		  return outcome
+		  return SuperOutcome
 		End Function
 	#tag EndMethod
 
@@ -50,10 +51,13 @@ Inherits pdsession
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Private Sub validateHost()
+	#tag Method, Flags = &h1
+		Protected Function validateController() As pdOutcome
+		  dim success as new pdOutcome(true)
+		  success.returnObject = true
+		  return success
 		  
-		End Sub
+		End Function
 	#tag EndMethod
 
 

@@ -50,47 +50,66 @@ Protected Class pdsession
 		  if pgsession.AppName.Trim = empty then return new pdOutcome(CurrentMethodName + ": postdoc application name not defined")
 		  
 		  dim postConnectActions(-1) as string
+		  dim outcome as pdOutcome
 		  
-		  if pgsession.Connect = False then  // error connecting
-		    
-		    Return new pdOutcome(CurrentMethodName + ": Error opening postdoc session to " + pgsession.DatabaseName + " : " + pgsession.ErrorMessage)
-		    
-		  else  // connected
-		    connected = true
-		    dim success as new pdOutcome(true)
-		    success.returnObject = pgPID
-		    
-		    if success.returnObject.StringValue = empty then return new pdOutcome(CurrentMethodName + ": Session seemingly open but failed to get session PID")
-		    
-		    postConnectActions.Append "LISTEN " + activeServiceToken.database.Lowercase + "_" + "public"
-		    postConnectActions.Append "LISTEN " + activeServiceToken.database.Lowercase + "_" + success.returnObject.StringValue
-		    // more if needed
-		    
-		    for i as integer = 0 to postConnectActions.Ubound
-		      pgsession.SQLExecute(postConnectActions(i))
-		      System.DebugLog(postConnectActions(i))
-		      if pgsession.Error = true then 
-		        dim fail as new pdOutcome(CurrentMethodName + ": Error initializing new postdoc session: " + pgsession.ErrorMessage)
-		        pgsession.Close
-		        connected = false
-		        return fail
-		      end if
-		    next i
-		    
-		    ServiceVerifyPeriod = pdServiceVerifyPeriod
-		    pgQueuePoll.Mode = timer.ModeMultiple
-		    
-		    return success
-		    
+		  // connect failed
+		  if pgsession.Connect = False then  Return new pdOutcome(CurrentMethodName + ": Error opening postdoc session to " + pgsession.DatabaseName + " : " + pgsession.ErrorMessage)
+		  
+		  // connect success
+		  connected = true
+		  dim success as new pdOutcome(true)
+		  success.returnObject = pgPID
+		  
+		  if success.returnObject.StringValue = empty then   // could not get a valid pid , fail
+		    pgSessionClose
+		    return new pdOutcome(CurrentMethodName + ": Session seemingly open but failed to get session PID")
 		  end if
+		  
+		  outcome = validateApp // validate the app
+		  if outcome.ok = false then
+		    pgSessionClose
+		    return new pdOutcome(CurrentMethodName + ": Error validating application: " + outcome.fatalErrorMsg)
+		  elseif outcome.returnObject.BooleanValue = false then 
+		    pgSessionClose
+		    return new pdOutcome(CurrentMethodName + ": Connected user cannot execute this application")
+		  end if
+		  
+		  outcome = validatePDuser  // validate the postdoc user
+		  if outcome.ok = false then
+		    pgSessionClose
+		    return new pdOutcome(CurrentMethodName + ": Error validating postdoc user: " + outcome.fatalErrorMsg)
+		  elseif outcome.returnObject.BooleanValue = false then 
+		    pgSessionClose
+		    return new pdOutcome(CurrentMethodName + ": Postdoc user not validated")
+		  end if
+		  
+		  // everything is validated
+		  
+		  postConnectActions.Append "LISTEN " + activeServiceToken.database.Lowercase + "_" + "public"
+		  postConnectActions.Append "LISTEN " + activeServiceToken.database.Lowercase + "_" + success.returnObject.StringValue
+		  
+		  for i as integer = 0 to postConnectActions.Ubound
+		    pgsession.SQLExecute(postConnectActions(i))
+		    if pgsession.Error = true then 
+		      dim fail as new pdOutcome(CurrentMethodName + ": Error initializing new postdoc session: " + pgsession.ErrorMessage)
+		      pgSessionClose
+		      return fail
+		    end if
+		  next i
+		  
+		  ServiceVerifyPeriod = pdServiceVerifyPeriod
+		  pgQueuePoll.Mode = timer.ModeMultiple
+		  
+		  return success
+		  
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub Constructor(serviceToken as pdservicetoken, appName as string, optional pdUsername as string = empty)
+		Sub Constructor(serviceToken as pdservicetoken, appName as string, optional pdUsername as string = empty, optional pdPassword as string = empty)
 		  // the developer needs to set the app name
-		  // also, if applicable, the pdUsername is required
+		  // also, if applicable, the pdUsername is required. It can be followed by the pdusername password: it has to be pgMD5hash encoded
 		  
 		  if serviceToken = nil then exit sub
 		  
@@ -122,90 +141,14 @@ Protected Class pdsession
 		  
 		  pdapp = appName.Trim
 		  pduser = pdUsername.Trim
+		  pduser_password = pdPassword.Trim  // it has to be pgMD5hash encoded
 		  
 		  pgsession.AppName =  "pd//" + appName.Lowercase + "//" + if(pdUsername = empty , pgsession.UserName , pdUsername)
 		  
 		  activeServiceToken = serviceToken
 		  connected = false
 		  
-		  
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h1
-		Protected Function getAccessTokens(ResourceType as ResourceTypes, optional forActiveUser as Boolean = true) As pdOutcome
-		  if isConnected = false then return new pdOutcome(CurrentMethodName + ": Session not connected")
-		  if inTransaction = true then return new pdOutcome(CurrentMethodName + ": Could not get access tokens at this point: Session in transaction" , 2)
-		  dim output(-1) as pdaccesstoken
-		  dim token as pdaccesstoken
-		  dim data as RecordSet
-		  
-		  dim tokenNames(-1) as string
-		  dim query as String = "SELECT * FROM resources.accesstokens WHERE active = TRUE "
-		  
-		  if ResourceType <> ResourceTypes.Any or forActiveUser = true then query.Append("WHERE ")
-		  
-		  if forActiveUser = true then // gather token names for user and groups the user participates in
-		    
-		    if pduser <> empty then  // we ought to check pduser also
-		      
-		    end if
-		    
-		    
-		    
-		    
-		  end if
-		  
-		  
-		  if ResourceType = ResourceTypes.Any and forActiveUser = False then  // just get them all
-		    query.Append("ORDER BY resourcetype ASC")
-		  ElseIf ResourceType <> ResourceTypes.Any and forActiveUser = false then //get them all for this type
-		    query.Append("AND resourcetype = " + ResourceType.toString.sqlQuote)
-		  ElseIf ResourceType = ResourceTypes.Any and forActiveUser = true  then // get all tokens for active user
-		    
-		  ElseIf ResourceType <> ResourceTypes.Any and forActiveUser = true then // get all tokens for this type of resource for active user
-		    
-		  end if
-		  
-		  
-		  data = pgsession.SQLSelect(query)
-		  if pgsession.Error = true then return new pdOutcome(CurrentMethodName + ": Error querying for access tokens: " + pgsession.ErrorMessage.pgErrorSingleLine)
-		  
-		  while not data.EOF
-		    token = new pdaccesstoken
-		    
-		    token.name = data.Field("name").StringValue
-		    token.friendlyname = data.Field("friendlyname").StringValue
-		    token.description = data.Field("description").StringValue
-		    token.active = data.Field("active").BooleanValue
-		    token.resourcetype = data.Field("resourcetype").StringValue.fromString
-		    token.resourcename = data.Field("resourcename").StringValue
-		    token.right_Create =  data.Field("createnew").BooleanValue
-		    token.right_Read = data.Field("read").BooleanValue
-		    token.right_Update = data.Field("update").BooleanValue
-		    token.right_Delete = data.Field("delete").BooleanValue
-		    token.right_Execute = data.Field("execute").BooleanValue
-		    token.right_Features = data.Field("features").StringValue.Split(",")
-		    token.applyToContent = data.Field("content").BooleanValue
-		    token.sysLog = data.Field("syslog").StringValue
-		    
-		    output.Append token
-		    data.MoveNext
-		  wend
-		  
-		  dim success as new pdOutcome(true)
-		  success.returnObject = output
-		  Return success
-		  
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h1
-		Protected Function getRightsOnResource(resourcetype as ResourceTypes, resourceName as string) As pdOutcome
-		  // for the current pduser/pguser
-		  
-		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -228,14 +171,18 @@ Protected Class pdsession
 		  if isConnected = false then return new pdOutcome(CurrentMethodName + ": Session not connected")
 		  if inTransaction = true then return new pdOutcome(CurrentMethodName + ": Operation aborted: Session in transaction" , 2)
 		  
-		  dim query as string = "SELECT groups FROM resources.pdusers WHERE name = "
-		  query.Append(pdUser.sqlQuote)
+		  dim output(-1) as string
 		  
-		  dim data as RecordSet = pgsession.SQLSelect(query)
-		  if pgsession.Error = true then Return new pdOutcome(CurrentMethodName + ": Database error: " + pgsession.ErrorMessage)
-		  if data.RecordCount <> 1 then return new pdOutcome(CurrentMethodName + ": User not found")
+		  if pdUser <> empty then
+		    dim query as string = "SELECT groups FROM resources.pdusers WHERE name = "
+		    query.Append(pdUser.sqlQuote)
+		    
+		    dim data as RecordSet = pgsession.SQLSelect(query)
+		    if pgsession.Error = true then Return new pdOutcome(CurrentMethodName + ": Database error: " + pgsession.ErrorMessage)
+		    if data.RecordCount <> 1 then return new pdOutcome(CurrentMethodName + ": User not found")
+		    output = data.IdxField(1).StringValue.Split(",")
+		  end if
 		  
-		  dim output(-1) as string = data.IdxField(1).StringValue.Split(",")
 		  dim success as new pdOutcome(true)
 		  success.returnObject = output
 		  
@@ -288,6 +235,7 @@ Protected Class pdsession
 	#tag Method, Flags = &h0
 		Function pgPID() As string
 		  if connected = false or pgsession = nil then return empty
+		  
 		  dim data as RecordSet = pgsession.SQLSelect("SELECT pg_backend_pid()")
 		  if pgsession.Error = true then
 		    return empty
@@ -330,6 +278,41 @@ Protected Class pdsession
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Sub pgSessionClose()
+		  pgQueuePoll.Mode = timer.ModeOff
+		  connected = false
+		  transactionActive = false
+		  pgsession.Close
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function rightsOnResource(resourcetype as ResourceTypes, resourceName as string) As pdOutcome
+		  // for the current pduser/pguser
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function validateApp() As pdOutcome
+		  dim success as new pdOutcome(true)
+		  success.returnObject = true
+		  return success
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function validatePDuser() As pdOutcome
+		  dim success as new pdOutcome(true)
+		  success.returnObject = true
+		  return success
+		  
+		End Function
+	#tag EndMethod
+
 
 	#tag Hook, Flags = &h0
 		Event serviceCredentialsRequest(serviceName as string , serviceFriendlyname as string) As pair
@@ -358,6 +341,10 @@ Protected Class pdsession
 
 	#tag Property, Flags = &h1
 		Protected pduser As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		pduser_password As string
 	#tag EndProperty
 
 	#tag Property, Flags = &h1

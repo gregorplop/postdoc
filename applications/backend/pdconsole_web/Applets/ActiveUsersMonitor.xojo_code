@@ -147,25 +147,13 @@ End
 #tag EndWebPage
 
 #tag WindowCode
-	#tag Method, Flags = &h0
-		Sub Constructor()
-		  // Calling the overridden superclass constructor.
-		  // Note that this may need modifications if there are multiple constructor choices.
-		  // Possible constructor calls:
-		  // Constructor() -- From WebDialog
-		  // Constructor() -- From WebControl
-		  // Constructor() -- From WebObject
-		  //Super.Constructor
-		  instances = instances + 1
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Sub Destructor()
-		  instances = instances - 1
+	#tag Event
+		Sub Dismissed()
+		  MainPage.appletUserMonitor = nil
 		  
 		End Sub
-	#tag EndMethod
+	#tag EndEvent
+
 
 	#tag Method, Flags = &h0
 		Sub RefreshList(content() as Dictionary)
@@ -198,11 +186,6 @@ End
 		  if selectionIDX >= 0 and selectionIDX <= UserList.RowCount - 1 then UserList.ListIndex = selectionIDX
 		End Sub
 	#tag EndMethod
-
-
-	#tag Property, Flags = &h0
-		Shared instances As Integer
-	#tag EndProperty
 
 
 #tag EndWindowCode
