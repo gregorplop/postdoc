@@ -394,7 +394,7 @@ Protected Module pdcoreLib
 	#tag Method, Flags = &h0
 		Function whatClass(extends specimen as Object) As string
 		  Dim classtype As Introspection.TypeInfo =Introspection.GetType(specimen)
-		  Return classtype.FullName
+		  Return classtype.Name
 		  
 		End Function
 	#tag EndMethod
@@ -666,6 +666,12 @@ Protected Module pdcoreLib
 		  Application
 		  Invalid
 		Any
+	#tag EndEnum
+
+	#tag Enum, Name = TriState, Type = Integer, Flags = &h0
+		Yes
+		  No
+		DoesntMatter
 	#tag EndEnum
 
 

@@ -28,31 +28,33 @@ Inherits pdsession
 		    end if
 		  next i
 		  
-		  pgQueuePoll.Period = Round(pgQueueRefreshInterval / 2)
-		  ServiceVerifyPeriod = ServiceVerifyPeriod * 2
+		  pgQueuePoll.Period = Round(pgQueueRefreshInterval / 2)  // refreshes twice as fast
+		  ServiceVerifyPeriod = pdServiceVerifyPeriod * 2 // ...but period has to be the same
 		  
 		  return SuperOutcome
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function isMasterController() As Boolean
+		  Return master
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h1
 		Protected Sub pgQueueHandler(sender as PostgreSQLDatabase, Name as string, ID as integer, Extra as String)
-		  // we're expecting messages from 2 channels here:
-		  //  (database name)_public  and  (database name)_(pid number)
-		  
-		  dim publicChannel as String = activeServiceToken.database.Lowercase + "_" + "public"
-		  dim privateChannel as string = activeServiceToken.database.Lowercase + "_" + lastPID
-		  dim serviceChannel as String = activeServiceToken.database.Lowercase + "_" + "service"
 		  
 		  //System.DebugLog("name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra)
 		  Print "pdsession: " + "name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra
-		  
 		  print Object(me).whatClass
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Function validateController() As pdOutcome
+	#tag Method, Flags = &h21
+		Private Function validateController() As pdOutcome
+		  // to be implemented
+		  
 		  dim success as new pdOutcome(true)
 		  success.returnObject = true
 		  return success
@@ -61,7 +63,18 @@ Inherits pdsession
 	#tag EndMethod
 
 
+	#tag Property, Flags = &h1
+		Protected master As Boolean = false
+	#tag EndProperty
+
+
 	#tag ViewBehavior
+		#tag ViewProperty
+			Name="pduser_password"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
 		#tag ViewProperty
 			Name="Index"
 			Visible=true

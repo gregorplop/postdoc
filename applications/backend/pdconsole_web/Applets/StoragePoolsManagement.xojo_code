@@ -1,9 +1,9 @@
 #tag WebPage
-Begin WebDialog newArchive
+Begin WebDialog StoragePoolsManagement
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   332
+   Height          =   300
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -16,15 +16,15 @@ Begin WebDialog newArchive
    LockVertical    =   False
    MinHeight       =   0
    MinWidth        =   0
-   Resizable       =   False
+   Resizable       =   True
    Style           =   "None"
    TabOrder        =   0
-   Title           =   "Create New Archive"
+   Title           =   "Storage Pools"
    Top             =   0
    Type            =   2
    VerticalCenter  =   0
    Visible         =   True
-   Width           =   572
+   Width           =   300
    ZIndex          =   1
    _DeclareLineRendered=   False
    _HorizontalPercent=   0.0
@@ -35,172 +35,10 @@ Begin WebDialog newArchive
    _OpenEventFired =   False
    _ShownEventFired=   False
    _VerticalPercent=   0.0
-   Begin WebLabel Label8
-      Cursor          =   1
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   48
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   63
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Multiline       =   True
-      Scope           =   0
-      Style           =   "1690316799"
-      TabOrder        =   2
-      Text            =   "VFS encryption password"
-      TextAlign       =   0
-      Top             =   116
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   113
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebLabel Label3
-      Cursor          =   1
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   22
-      HelpTag         =   ""
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   45
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   True
-      LockTop         =   True
-      LockVertical    =   False
-      Multiline       =   False
-      Scope           =   0
-      Style           =   "739364863"
-      TabOrder        =   0
-      Text            =   "Object Storage Security"
-      TextAlign       =   0
-      Top             =   82
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   321
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebTextField vfsPassword
-      AutoCapitalize  =   True
-      AutoComplete    =   True
-      AutoCorrect     =   True
-      CueText         =   "optional"
-      Cursor          =   0
-      Enabled         =   True
-      HasFocusRing    =   True
-      Height          =   25
-      HelpTag         =   "Encrypting the VFS is an optional measure for extra security.\r\nIf a password is used, it has to be at least 6 characters and up to 10."
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   200
-      LimitText       =   0
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Password        =   False
-      ReadOnly        =   False
-      Scope           =   0
-      Style           =   "0"
-      TabOrder        =   3
-      Text            =   ""
-      TextAlign       =   0
-      Top             =   116
-      Type            =   0
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   166
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
-   Begin WebCheckbox savePasswordCheck
-      Caption         =   "Save to server localconf"
-      Cursor          =   1
-      Enabled         =   True
-      Height          =   22
-      HelpTag         =   "Save password to server postdoc local configuration file"
-      HorizontalCenter=   0
-      Index           =   -2147483648
-      Left            =   200
-      LockBottom      =   False
-      LockedInPosition=   False
-      LockHorizontal  =   False
-      LockLeft        =   True
-      LockRight       =   False
-      LockTop         =   True
-      LockVertical    =   False
-      Scope           =   0
-      Style           =   "0"
-      TabOrder        =   6
-      Top             =   153
-      Value           =   False
-      VerticalCenter  =   0
-      Visible         =   True
-      Width           =   166
-      ZIndex          =   1
-      _DeclareLineRendered=   False
-      _HorizontalPercent=   0.0
-      _IsEmbedded     =   False
-      _Locked         =   False
-      _NeedsRendering =   True
-      _OfficialControl=   False
-      _OpenEventFired =   False
-      _VerticalPercent=   0.0
-   End
 End
 #tag EndWebPage
 
 #tag WindowCode
-	#tag Event
-		Sub Dismissed()
-		  MainPage.appletCreateArchive = nil
-		  
-		End Sub
-	#tag EndEvent
-
-
-	#tag Property, Flags = &h0
-		pdSessionIDX As Integer
-	#tag EndProperty
-
-
 #tag EndWindowCode
 
 #tag ViewBehavior
@@ -246,7 +84,7 @@ End
 	#tag ViewProperty
 		Name="Height"
 		Visible=true
-		Group="Behavior"
+		Group="Position"
 		InitialValue="300"
 		Type="Integer"
 	#tag EndViewProperty
@@ -327,11 +165,6 @@ End
 		Type="String"
 	#tag EndViewProperty
 	#tag ViewProperty
-		Name="pdSessionIDX"
-		Group="Behavior"
-		Type="Integer"
-	#tag EndViewProperty
-	#tag ViewProperty
 		Name="Resizable"
 		Visible=true
 		Group="Behavior"
@@ -368,7 +201,7 @@ End
 		Name="Type"
 		Visible=true
 		Group="Behavior"
-		InitialValue="1"
+		InitialValue="2"
 		Type="Integer"
 		EditorType="Enum"
 		#tag EnumValues
@@ -391,7 +224,7 @@ End
 	#tag ViewProperty
 		Name="Width"
 		Visible=true
-		Group="Behavior"
+		Group="Position"
 		InitialValue="300"
 		Type="Integer"
 	#tag EndViewProperty

@@ -36,11 +36,12 @@ Protected Class pdsession
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Function approveConnection() As pdOutcome
-		  // verify pguser , pduser exists
-		  // verify application exists
-		  // verify pguser/pduser have the right to connect using this application
-		End Function
+		Private Sub buildChannelNames()
+		  channel_public = activeServiceToken.database.Lowercase + "_" + "public"
+		  channel_private = activeServiceToken.database.Lowercase + "_" + lastPID
+		  channel_service = activeServiceToken.database.Lowercase + "_" + "service"
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -48,6 +49,7 @@ Protected Class pdsession
 		  if activeServiceToken = nil then return new pdOutcome(CurrentMethodName + ": Service token is invalid")
 		  if pgsession = nil then return new pdOutcome(CurrentMethodName + ": Session has not been initialized properly")
 		  if pgsession.AppName.Trim = empty then return new pdOutcome(CurrentMethodName + ": postdoc application name not defined")
+		  if pdapp = empty then return new pdOutcome(CurrentMethodName + ": Application name cannot be empty")
 		  
 		  dim postConnectActions(-1) as string
 		  dim outcome as pdOutcome
@@ -65,7 +67,7 @@ Protected Class pdsession
 		    return new pdOutcome(CurrentMethodName + ": Session seemingly open but failed to get session PID")
 		  end if
 		  
-		  outcome = validateApp // validate the app
+		  outcome = validateSession // validate the session
 		  if outcome.ok = false then
 		    pgSessionClose
 		    return new pdOutcome(CurrentMethodName + ": Error validating application: " + outcome.fatalErrorMsg)
@@ -96,6 +98,8 @@ Protected Class pdsession
 		      return fail
 		    end if
 		  next i
+		  
+		  buildChannelNames
 		  
 		  ServiceVerifyPeriod = pdServiceVerifyPeriod
 		  pgQueuePoll.Mode = timer.ModeMultiple
@@ -250,12 +254,6 @@ Protected Class pdsession
 
 	#tag Method, Flags = &h1
 		Protected Sub pgQueueHandler(sender as PostgreSQLDatabase, Name as string, ID as integer, Extra as String)
-		  // we're expecting messages from 2 channels here:
-		  //  (database name)_public  and  (database name)_(pid number)
-		  
-		  dim publicChannel as String = activeServiceToken.database.Lowercase + "_" + "public"
-		  dim privateChannel as string = activeServiceToken.database.Lowercase + "_" + lastPID
-		  
 		  
 		End Sub
 	#tag EndMethod
@@ -289,14 +287,16 @@ Protected Class pdsession
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function rightsOnResource(resourcetype as ResourceTypes, resourceName as string) As pdOutcome
-		  // for the current pduser/pguser
+		Protected Function rightsOnResource(resourcetype as ResourceTypes, resourceName as string, optional alsoContent as TriState = TriState.DoesntMatter) As pdOutcome
+		  // pdOutcome.returnObject is an ORed pdaccesstoken
 		  
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Function validateApp() As pdOutcome
+	#tag Method, Flags = &h21
+		Private Function validatePDuser() As pdOutcome
+		  // to be implemented
+		  
 		  dim success as new pdOutcome(true)
 		  success.returnObject = true
 		  return success
@@ -304,8 +304,10 @@ Protected Class pdsession
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Function validatePDuser() As pdOutcome
+	#tag Method, Flags = &h21
+		Private Function validateSession() As pdOutcome
+		  // to be implemented
+		  
 		  dim success as new pdOutcome(true)
 		  success.returnObject = true
 		  return success
@@ -323,8 +325,20 @@ Protected Class pdsession
 	#tag EndHook
 
 
-	#tag Property, Flags = &h0
-		activeServiceToken As pdservicetoken
+	#tag Property, Flags = &h1
+		Protected activeServiceToken As pdservicetoken
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		Protected channel_private As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		Protected channel_public As string
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		Protected channel_service As string
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
@@ -343,8 +357,8 @@ Protected Class pdsession
 		Protected pduser As String
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		pduser_password As string
+	#tag Property, Flags = &h1
+		Protected pduser_password As string
 	#tag EndProperty
 
 	#tag Property, Flags = &h1

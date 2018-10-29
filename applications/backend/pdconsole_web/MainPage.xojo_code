@@ -257,40 +257,41 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub appletInitiator(className as string)
+		Private Sub appletInitiator(className as String)
+		  if isAppletOpen(className) = true then return
+		  dim AppletAdded as Boolean = true
+		  
 		  select case className
 		    
-		  case "newServiceToken"
-		    if not IsNull(appletCreateServiceToken) then return
-		    appletCreateServiceToken = new newServiceToken
-		    appletCreateServiceToken.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
-		    appletCreateServiceToken.Left = AppletsList.Left + AppletsList.Width + 20
-		    appletCreateServiceToken.Show
-		  case "newDatabaseWizard"
-		    if not IsNull(appletCreateDatabase) then return
-		    appletCreateDatabase = new newDatabaseWizard
-		    appletCreateDatabase.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
-		    appletCreateDatabase.Left = AppletsList.Left + AppletsList.Width + 20
-		    appletCreateDatabase.Show
-		  case "newArchive"
-		    if not IsNull(appletCreateArchive) then return
-		    appletCreateArchive = new newArchive
-		    appletCreateArchive.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
-		    appletCreateArchive.Left = AppletsList.Left + AppletsList.Width + 20
-		    appletCreateArchive.Show
-		  case "ActiveUsersMonitor"
-		    if not IsNull(appletUserMonitor) then return
-		    appletUserMonitor = new ActiveUsersMonitor
-		    appletUserMonitor.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
-		    appletUserMonitor.Left = AppletsList.Left + AppletsList.Width + 20
-		    appletUserMonitor.Show
 		  case "createRolesWizard"
-		    if not IsNull(appletCreateRoles) then return
-		    appletCreateRoles = new createRolesWizard
-		    appletCreateRoles.Top = AppletsList.Top + AppletsList.RowHeight(0) * 3
-		    appletCreateRoles.Left = AppletsList.Left + AppletsList.Width + 20
-		    appletCreateRoles.Show
+		    applets.Append new createRolesWizard
+		  case "newDatabaseWizard"
+		    applets.Append new newDatabaseWizard
+		  case "newServiceToken"
+		    applets.Append new newServiceToken
+		  case "ActiveUsersMonitor"
+		    Applets.Append new ActiveUsersMonitor
+		  case "ControllerManagement"
+		    applets.Append new ControllerManagement
+		    
+		  else
+		    AppletAdded = False
 		  end select
+		  
+		  if AppletAdded then applets(applets.Ubound).AppletShow(AppletsList.Left + AppletsList.Width + 20 , AppletsList.Top + AppletsList.RowHeight(0) * 3)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub cleanupApplet(className as String)
+		  for i as Integer = 0 to Applets.Ubound
+		    if Applets(i).AppletType = className then
+		      Applets(i) = nil
+		      Applets.Remove(i)
+		    end if
+		  next i
+		  
 		End Sub
 	#tag EndMethod
 
@@ -305,6 +306,17 @@ End
 		  
 		  myLoginDialog = nil
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h21
+		Private Function isAppletOpen(AppletType as string) As Boolean
+		  for i as integer = 0 to Applets.Ubound
+		    if applets(i).AppletType =AppletType then Return true
+		  next i
+		  
+		  return false
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
@@ -335,7 +347,7 @@ End
 		      
 		      if usersCreated.returnObject.IntegerValue = 0 then // users have not been created
 		        call addApplet("setup postdoc" , "section")
-		        call addApplet("1. create system roles" , "SYSROLESINIT")
+		        call addApplet("1. create system roles" , "createRolesWizard")
 		        
 		      else  // we assume users have been properly set up
 		        
@@ -345,7 +357,7 @@ End
 		          
 		          if postdocInitialized.returnObject.BooleanValue = false then  // this is not a postdoc database - probably it is the service database
 		            call addApplet("setup postdoc" , "section")
-		            call addApplet("2. initialize postdoc" , "PDINIT")
+		            call addApplet("2. initialize postdoc" , "newDatabaseWizard")
 		          end if
 		          
 		        else  // users 
@@ -363,18 +375,18 @@ End
 		    if isPostdoc = true then 
 		      
 		      call addApplet("access" , "section")
-		      call addApplet("create service token" , "SERVICETOKENBUILDER")
-		      call addApplet("users" , "USERS_MGR")
-		      call addApplet("user groups" , "GROUPS_MGR")
-		      call addApplet("access tokens" , "ACCESSTOKEN_MGR")
-		      call addApplet("active sessions" , "VIEWCONNECTIONS")
+		      call addApplet("users" , "UserManagement")
+		      call addApplet("user groups" , "GroupManagement")
+		      call addApplet("access tokens" , "AccessTokenManagement")
+		      call addApplet("active sessions" , "ActiveUsersMonitor")
+		      call addApplet("create service token" , "newServiceToken")
 		      
 		      call addApplet("resources" , "section")
-		      call addApplet("controllers" , "CONTROLLER_MGR")
-		      call addApplet("applications" , "APP_MGR")
-		      call addApplet("archives" , "ARCHIVE_MGR")
-		      call addApplet("storage pools" , "POOLS_MGR")
-		      call addApplet("datasets" , "DATASET_MGR")
+		      call addApplet("controllers" , "ControllerManagement")
+		      call addApplet("applications" , "ApplicationManagement")
+		      call addApplet("archives" , "ArchiveManagement")
+		      call addApplet("storage pools" , "StoragePoolsManagement")
+		      call addApplet("datasets" , "DatasetManagement")
 		      
 		      
 		    end if
@@ -400,23 +412,6 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
-		Private Sub showApplets(appletName as string)
-		  select case appletName
-		  case "SYSROLESINIT"
-		    appletInitiator("createRolesWizard")
-		  case "PDINIT"
-		    appletInitiator("newDatabaseWizard")
-		  case "SERVICETOKENBUILDER"
-		    appletInitiator("newServiceToken")
-		  case "NEWARCHIVE"
-		    appletInitiator("newArchive")
-		  case "VIEWCONNECTIONS"
-		    appletInitiator("ActiveUsersMonitor")
-		  end select
-		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h21
 		Private Sub styleAppletsList()
 		  for i as integer = 0 to AppletsList.RowCount - 1
 		    
@@ -433,23 +428,7 @@ End
 
 
 	#tag Property, Flags = &h0
-		appletCreateArchive As newArchive
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		appletCreateDatabase As newDatabaseWizard
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		appletCreateRoles As createRolesWizard
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		appletCreateServiceToken As newServiceToken
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
-		appletUserMonitor As ActiveUsersMonitor
+		Applets(-1) As AppletInterface
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -474,7 +453,7 @@ End
 		    Session.Quit
 		  else
 		    me.Selected(row) = false
-		    showApplets(me.RowTag(row).StringValue.Uppercase)
+		    appletInitiator(me.RowTag(row).StringValue.Uppercase)
 		  end if
 		  
 		End Sub

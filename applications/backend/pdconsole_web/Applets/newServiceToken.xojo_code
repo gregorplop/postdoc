@@ -1,5 +1,5 @@
 #tag WebPage
-Begin WebDialog newServiceToken
+Begin WebDialog newServiceToken Implements AppletInterface
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
@@ -1052,12 +1052,55 @@ End
 #tag WindowCode
 	#tag Event
 		Sub Dismissed()
-		  MainPage.appletCreateServiceToken = nil
-		  
-		  
+		  MainPage.cleanupApplet(AppletType)
 		End Sub
 	#tag EndEvent
 
+
+	#tag Method, Flags = &h0
+		Sub AppletClose()
+		  // Part of the AppletInterface interface.
+		  close
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub AppletRefresh()
+		  // Part of the AppletInterface interface.
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub AppletShow(x as integer, y as integer)
+		  // Part of the AppletInterface interface.
+		  Left = x
+		  Top = y
+		  Show
+		  
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function AppletType() As string
+		  // Part of the AppletInterface interface.
+		  Return Object(me).whatClass
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function AppletUsesTables() As String()
+		  // Part of the AppletInterface interface.
+		  dim output(-1) as String
+		  return output
+		  
+		  
+		End Function
+	#tag EndMethod
 
 	#tag Method, Flags = &h0
 		Sub buildName()
@@ -1081,7 +1124,7 @@ End
 	#tag Method, Flags = &h0
 		Sub DownloadedEvent(sender as WebFile)
 		  newlyCreatedToken.Delete
-		  self.Close
+		  AppletClose
 		  
 		  
 		  

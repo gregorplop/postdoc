@@ -205,7 +205,7 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.pggroups TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.pggroups OWNER TO pdadmin"
 		  
-		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description) VALUES ('pd_admins' , 'postdoc admin group' , 'all admins should be members of this group')"
+		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description , tokens) VALUES ('pd_admins' , 'postdoc admin group' , 'all admins should be members of this group' , 'runPdConsoleWeb')"
 		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description) VALUES ('pd_backends' , 'postdoc backend group' , 'all backend users should be members of this group')"
 		  statements.Append "INSERT INTO resources.pggroups (name , friendlyname , description) VALUES ('pd_users' , 'postdoc generic user group' , 'all postdoc users should be members of this group')"
 		  
@@ -258,6 +258,7 @@ Protected Class pdinit
 		  statements.Append "ALTER TABLE resources.applications OWNER TO pdadmin"
 		  
 		  statements.Append "INSERT INTO resources.applications (name , friendlyname , description , active) VALUES ('PDCONTROLLER' , 'pdController' , 'the postdoc backend' , true)"
+		  statements.Append "INSERT INTO resources.applications (name , friendlyname , description , active) VALUES ('PDCONSOLE_WEB' , 'pdConsole_web' , 'the postdoc default configurator' , true)"
 		  
 		  statements.Append "CREATE TYPE resources.resourcetypes AS ENUM ('ARCHIVE' , 'DATASET' , 'APPLICATION')"
 		  statements.Append "ALTER TYPE resources.resourcetypes OWNER TO pdadmin"
@@ -273,7 +274,8 @@ Protected Class pdinit
 		  statements.Append "GRANT SELECT ON TABLE resources.accesstokens TO GROUP pd_users"
 		  statements.Append "ALTER TABLE resources.accesstokens OWNER TO pdadmin"
 		  
-		  statements.Append "INSERT INTO resources.accesstokens (name , friendlyname , description , active , resourcetype , resourcename , execute) VALUES ('runPdConroller' , 'Allow execute pdcontroller' , 'Allows for pdcontroller local execution' , true , 'APPLICATION' , 'PDCONTROLLER' , true)"
+		  statements.Append "INSERT INTO resources.accesstokens (name , friendlyname , description , active , resourcetype , resourcename , execute) VALUES ('runPdConroller' , 'Allow execute pdcontroller' , 'Allows for pdcontroller execution' , true , 'APPLICATION' , 'PDCONTROLLER' , true)"
+		  statements.Append "INSERT INTO resources.accesstokens (name , friendlyname , description , active , resourcetype , resourcename , execute) VALUES ('runPdConsoleWeb' , 'Allow execute pdconsole_web' , 'Allows for pdconsole_web execution' , true , 'APPLICATION' , 'PDCONSOLE_WEB' , true)"
 		  
 		  statements.Append "CREATE TABLE resources.pdcatalog (key TEXT PRIMARY KEY , value0 TEXT)"
 		  statements.Append "COMMENT ON TABLE resources.pdcatalog IS 'This is the system catalog: contains read-only information about the current postdoc system '"
