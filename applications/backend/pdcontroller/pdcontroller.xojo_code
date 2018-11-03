@@ -41,7 +41,6 @@ Inherits ServiceApplication
 		  
 		  
 		  
-		  
 		  do
 		    
 		    DoEvents
@@ -59,6 +58,12 @@ Inherits ServiceApplication
 		  // shuttingDown parameter is only valid on Windows)
 		  // We should do our cleanup
 		End Sub
+	#tag EndEvent
+
+	#tag Event
+		Function UnhandledException(error As RuntimeException) As Boolean
+		  Return defaultUnhandledExceptionHandler(error)
+		End Function
 	#tag EndEvent
 
 

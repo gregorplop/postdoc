@@ -121,6 +121,40 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function defaultUnhandledExceptionHandler(error as RuntimeException) As Boolean
+		  dim type as string = "postdoct : unknown unhandled exception"
+		  dim message(-1) as string
+		  
+		  if error <> nil then 
+		    
+		    type = Introspection.GetType(error).name
+		    
+		    message.Append "=== pdcontroller unhandled exception ========="
+		    message.Append "exception type = " + type
+		    message.Append "number = " + str(error.ErrorNumber)
+		    message.Append "message = " + error.Message
+		    message.Append "reason = " + error.Reason
+		    message.Append "stack = " + Join(error.Stack , EndOfLine)
+		    
+		    message.Append "=================================="
+		    
+		    for i as Integer = 0 to message.Ubound
+		      System.DebugLog(message(i))
+		    next i
+		    
+		    print(Join(message , EndOfLine))
+		    
+		  else
+		    System.DebugLog(type)
+		    print(type)
+		  end if
+		  
+		  
+		  return false
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Extension(extends file as FolderItem) As string
 		  return file.Name.NthField("." , file.name.CountFields("."))
 		End Function
@@ -133,8 +167,21 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function fromString(extends requestType as String) As RequestTypes
+		  select case requestType.Uppercase
+		  case "CONTROLLERACK"
+		    Return requestTypes.ControllerAcknowledge
+		  Else
+		    Return requestTypes.Invalid
+		  end select
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function fromString(extends resourceType as String) As ResourceTypes
-		  select case resourceType
+		  select case resourceType.Uppercase
 		  case "APPLICATION"
 		    Return ResourceTypes.Application
 		  Case "DATASET"
@@ -370,6 +417,19 @@ Protected Module pdcoreLib
 	#tag Method, Flags = &h0
 		Function toBase64(extends input as string) As string
 		  return EncodeBase64(input , 0)
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function toString(extends requestType as RequestTypes) As string
+		  select case requestType
+		  case requestTypes.ControllerAcknowledge
+		    return "CONTROLLERACK"
+		  else
+		    Return empty
+		  end select
+		  
 		  
 		End Function
 	#tag EndMethod
@@ -659,6 +719,11 @@ Protected Module pdcoreLib
 	#tag Constant, Name = projectURL, Type = String, Dynamic = False, Default = \"https://github.com/gregorplop/postdoc", Scope = Public
 	#tag EndConstant
 
+
+	#tag Enum, Name = RequestTypes, Type = Integer, Flags = &h0
+		ControllerAcknowledge
+		Invalid
+	#tag EndEnum
 
 	#tag Enum, Name = ResourceTypes, Type = Integer, Flags = &h0
 		Archive

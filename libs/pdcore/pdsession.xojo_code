@@ -35,11 +35,10 @@ Protected Class pdsession
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Private Sub buildChannelNames()
+	#tag Method, Flags = &h1
+		Protected Sub buildChannelNames()
 		  channel_public = activeServiceToken.database.Lowercase + "_" + "public"
 		  channel_private = activeServiceToken.database.Lowercase + "_" + lastPID
-		  channel_service = activeServiceToken.database.Lowercase + "_" + "service"
 		  
 		End Sub
 	#tag EndMethod
@@ -156,6 +155,34 @@ Protected Class pdsession
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function createRequest(type as RequestTypes, parameters as Dictionary) As pdOutcome
+		  dim newRequest as new pdsysrequest
+		  
+		  select case type
+		  case RequestTypes.ControllerAcknowledge
+		    
+		    newRequest.isResponse = false
+		    newRequest.outcome = nil
+		    newRequest.ownRequest = true
+		    newRequest.parameters = parameters
+		    newRequest.timeoutPeriod = 10
+		    newRequest.timestamp_issued = pgNOW
+		    newRequest.type = type
+		    
+		    
+		    
+		  else
+		    Return new pdOutcome(CurrentMethodName + ": Request type not supported")
+		  end select
+		  
+		  
+		  
+		  
+		  return new pdOutcome(true)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function inTransaction() As Boolean
 		  Return transactionActive
 		  
@@ -254,6 +281,25 @@ Protected Class pdsession
 
 	#tag Method, Flags = &h1
 		Protected Sub pgQueueHandler(sender as PostgreSQLDatabase, Name as string, ID as integer, Extra as String)
+		  // fired when a message has arrived from the pg queuing mechanism
+		  
+		  #If DebugBuild then
+		    Print "pdsession: " + "name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra
+		  #Endif
+		  
+		  
+		  select case Name  // only these channels carry something meaningful
+		  case channel_private
+		    
+		    
+		    
+		    
+		  case channel_public
+		    
+		    
+		    
+		  end select
+		  
 		  
 		End Sub
 	#tag EndMethod
@@ -284,6 +330,20 @@ Protected Class pdsession
 		  pgsession.Close
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function pgUUID() As String
+		  if pgsession = nil or connected = false then return empty
+		  dim rs as RecordSet = pgsession.SQLSelect("SELECT resources.gen_random_uuid()")
+		  
+		  if pgsession.Error = true then 
+		    return empty
+		  else
+		    Return rs.IdxField(1).StringValue
+		  end if
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
@@ -317,6 +377,14 @@ Protected Class pdsession
 
 
 	#tag Hook, Flags = &h0
+		Event RequestComplete(request as pdsysrequest)
+	#tag EndHook
+
+	#tag Hook, Flags = &h0
+		Event RequestTimeout(request as pdsysrequest)
+	#tag EndHook
+
+	#tag Hook, Flags = &h0
 		Event serviceCredentialsRequest(serviceName as string , serviceFriendlyname as string) As pair
 	#tag EndHook
 
@@ -335,10 +403,6 @@ Protected Class pdsession
 
 	#tag Property, Flags = &h1
 		Protected channel_public As string
-	#tag EndProperty
-
-	#tag Property, Flags = &h1
-		Protected channel_service As string
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
@@ -367,6 +431,10 @@ Protected Class pdsession
 
 	#tag Property, Flags = &h1
 		Protected pgsession As PostgreSQLDatabase
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		requestQueue(-1) As pdsysrequest
 	#tag EndProperty
 
 	#tag Property, Flags = &h21

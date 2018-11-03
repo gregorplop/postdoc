@@ -21,6 +21,7 @@ Class=pdstorage_session;../../../libs/pdstorage/pdstorage_session.xojo_code;&h00
 Class=pdstorage_session_maintenance;../../../libs/pdstorage/pdstorage_session_maintenance.xojo_code;&h000000001418FFFF;&h000000003D162FFF;false
 Class=pdstorage_vfs;../../../libs/pdstorage/pdstorage_vfs.xojo_code;&h000000004A8C7FFF;&h000000003D162FFF;false
 Class=pdaccesstoken;../../../libs/pdcore/pdaccesstoken.xojo_code;&h0000000013491FFF;&h000000002C015FFF;false
+Class=pdsysrequest;../../../libs/pdcore/pdsysrequest.xojo_code;&h000000004F6A77FF;&h000000002C015FFF;false
 MajorVersion=1
 MinorVersion=0
 SubVersion=0
