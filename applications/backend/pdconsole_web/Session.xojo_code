@@ -41,6 +41,10 @@ Inherits WebSession
 		  activeServiceToken = nil
 		  ServiceTokens = nil
 		  
+		  // temporary
+		  testSession.pgSessionClose
+		  
+		  
 		End Sub
 	#tag EndMethod
 
@@ -127,6 +131,20 @@ Inherits WebSession
 		  activeServiceToken.username = username
 		  activeServiceToken.password = password.toBase64
 		  
+		  // create the backend session - this is temporary
+		  dim backendToken as pdOutcome = pdservicetoken.Open(appFolder.Child("tokens").Child("pdbackend@mypostdoc@localhost.pdst"))
+		  if backendToken.ok = false then 
+		    System.DebugLog("Error loading backend service token: " + backendToken.fatalErrorMsg)
+		  else
+		    testSession = new pdsession(backendToken.returnObject , "pdconsole_web")
+		    dim sessionConnect as pdOutcome = testSession.connect
+		    if sessionConnect.ok = False then System.DebugLog("Error connecting to the backend service: " + sessionConnect.fatalErrorMsg)
+		  end if
+		  AddHandler testSession.RequestComplete , WeakAddressOf MainPage.event_requestComplete
+		  AddHandler testSession.RequestTimeout , WeakAddressOf MainPage.event_requestTimeout
+		  //  test code end ----
+		  
+		  
 		  MainPage.init
 		  
 		  Return new pdOutcome(true)
@@ -147,6 +165,14 @@ Inherits WebSession
 
 	#tag Property, Flags = &h21
 		Private ServiceTokens(-1) As pdservicetoken
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		#tag Note
+			this is temporary
+			
+		#tag EndNote
+		testSession As pdsession
 	#tag EndProperty
 
 

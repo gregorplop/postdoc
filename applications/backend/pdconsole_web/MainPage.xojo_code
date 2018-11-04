@@ -296,6 +296,20 @@ End
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Sub event_requestComplete(sender as pdsession, request as pdsysrequest)
+		  System.DebugLog("request complete: " + request.uuid)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub event_requestTimeout(sender as pdsession, request as pdsysrequest)
+		  System.DebugLog("request timeout: " + request.uuid)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub init()
 		  populateAppletsList
 		  refreshStateIndicators

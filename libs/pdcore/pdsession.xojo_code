@@ -39,7 +39,7 @@ Protected Class pdsession
 		Protected Sub buildChannelNames()
 		  channel_public = activeServiceToken.database.Lowercase + "_" + "public"
 		  channel_private = activeServiceToken.database.Lowercase + "_" + lastPID
-		  
+		  channel_service = activeServiceToken.database.Lowercase + "_" + "service"
 		End Sub
 	#tag EndMethod
 
@@ -102,6 +102,7 @@ Protected Class pdsession
 		  
 		  ServiceVerifyPeriod = pdServiceVerifyPeriod
 		  pgQueuePoll.Mode = timer.ModeMultiple
+		  sysRequestThread.Run
 		  
 		  return success
 		  
@@ -114,13 +115,17 @@ Protected Class pdsession
 		  // the developer needs to set the app name
 		  // also, if applicable, the pdUsername is required. It can be followed by the pdusername password: it has to be pgMD5hash encoded
 		  
-		  if serviceToken = nil then exit sub
+		  if serviceToken = nil then return
 		  
 		  // initialize the PostgreSQL NOTIFY queue poll timer
 		  pgQueuePoll = new Timer
 		  pgQueuePoll.Mode = timer.ModeOff
 		  pgQueuePoll.Period = pgQueueRefreshInterval
 		  AddHandler pgQueuePoll.Action , WeakAddressOf pgQueuePoll_Action
+		  
+		  sysRequestThread = new Thread
+		  sysRequestThread.Priority = 3  // low-to-average
+		  AddHandler sysRequestThread.Run , WeakAddressOf sysRequestDispatcher
 		  
 		  // initialize the PostgreSQL database session
 		  // certificates and SSL encryption not supported at this point
@@ -155,28 +160,49 @@ Protected Class pdsession
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function createRequest(type as RequestTypes, parameters as Dictionary) As pdOutcome
+		Function createRequest(body as JSONItem) As pdOutcome
+		  if body.HasName("requesttype") = false then Return new pdOutcome(CurrentMethodName + ": No request type defined")
+		  
+		  dim uuid as String = pgUUID
+		  if uuid = empty then return new pdOutcome(CurrentMethodName + ": Error creating new request id")
+		  
+		  dim notifyCmd as String = "NOTIFY "
 		  dim newRequest as new pdsysrequest
 		  
-		  select case type
+		  newRequest.outcome = nil
+		  newRequest.parameters = body
+		  newRequest.timeoutPeriod = 60  // Default setting
+		  newRequest.timestamp_issued = pgNOW
+		  newRequest.uuid = uuid
+		  newRequest.pid_requestor = lastPID.Val
+		  newRequest.pid_handler = 0
+		  newRequest.type = body.Value("requesttype").StringValue.sysRequestFromString
+		  
+		  // this information is filled in for the receiver, the sender already has it in the objects's properties
+		  newRequest.parameters.Value("pid_requestor") = newRequest.pid_requestor
+		  newRequest.parameters.Value("uuid") = newRequest.uuid
+		  newRequest.parameters.Value("timestamp_issued") = newRequest.timestamp_issued.SQLDateTime
+		  
+		  // parameter checks
+		  select case body.Value("requesttype").StringValue.sysRequestFromString
+		    
 		  case RequestTypes.ControllerAcknowledge
-		    
-		    newRequest.isResponse = false
-		    newRequest.outcome = nil
-		    newRequest.ownRequest = true
-		    newRequest.parameters = parameters
-		    newRequest.timeoutPeriod = 10
-		    newRequest.timestamp_issued = pgNOW
-		    newRequest.type = type
-		    
-		    
+		    newRequest.ownRequestAwaitingResponse = true
+		    if body.HasName("host") = False then return new pdOutcome(CurrentMethodName + ": ControllerAcknowledge request is missing host parameter")
+		    if body.Value("host").StringValue.trim = empty then return new pdOutcome(CurrentMethodName + ": ControllerAcknowledge request does not specify host")
+		    notifyCmd.Append(channel_service + " , ")
 		    
 		  else
 		    Return new pdOutcome(CurrentMethodName + ": Request type not supported")
 		  end select
 		  
+		  notifyCmd.Append(newRequest.parameters.ToString.sqlQuote)
 		  
+		  pgsession.SQLExecute(notifyCmd)
+		  if pgsession.Error = true then return new pdOutcome(CurrentMethodName + ": Could not send " + body.Value("requesttype").StringValue + " request: " + pgsession.ErrorMessage.pgErrorSingleLine)
 		  
+		  // we need to keep it until it either receives a response or timeouts
+		  if newRequest.ownRequestAwaitingResponse = true then requestQueue.Append newRequest
 		  
 		  return new pdOutcome(true)
 		End Function
@@ -282,23 +308,13 @@ Protected Class pdsession
 	#tag Method, Flags = &h1
 		Protected Sub pgQueueHandler(sender as PostgreSQLDatabase, Name as string, ID as integer, Extra as String)
 		  // fired when a message has arrived from the pg queuing mechanism
-		  
 		  #If DebugBuild then
 		    Print "pdsession: " + "name: " + Name + "  //  ID: " + str(ID) + "   //   extra: " + Extra
 		  #Endif
 		  
+		  if str(ID) = lastPID then return  // own message, ignore
 		  
-		  select case Name  // only these channels carry something meaningful
-		  case channel_private
-		    
-		    
-		    
-		    
-		  case channel_public
-		    
-		    
-		    
-		  end select
+		  
 		  
 		  
 		End Sub
@@ -312,8 +328,7 @@ Protected Class pdsession
 		  if ServiceCheckCounter = ServiceVerifyPeriod then
 		    ServiceCheckCounter = 0
 		    if pgPID = empty then
-		      pgQueuePoll.Mode = timer.ModeOff
-		      connected = False
+		      pgSessionClose
 		      RaiseEvent ServiceDisconnected
 		    end if
 		  end if
@@ -322,8 +337,8 @@ Protected Class pdsession
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Sub pgSessionClose()
+	#tag Method, Flags = &h0
+		Sub pgSessionClose()
 		  pgQueuePoll.Mode = timer.ModeOff
 		  connected = false
 		  transactionActive = false
@@ -351,6 +366,27 @@ Protected Class pdsession
 		  // pdOutcome.returnObject is an ORed pdaccesstoken
 		  
 		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Sub sysRequestDispatcher(sender as Thread)
+		  do  // handler/dispatcher main loop
+		    
+		    
+		    if requestQueue.Ubound > -1 then
+		      print empty
+		      for i as integer = 0 to requestQueue.Ubound
+		        print requestQueue(i).uuid + "   :   " + requestQueue(i).type.toString
+		      next i
+		      print empty
+		    end if
+		    
+		    
+		    app.SleepCurrentThread(200)
+		  loop until connected = False
+		  
+		  
+		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
@@ -406,6 +442,10 @@ Protected Class pdsession
 	#tag EndProperty
 
 	#tag Property, Flags = &h1
+		Protected channel_service As string
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
 		Protected connected As Boolean = false
 	#tag EndProperty
 
@@ -443,6 +483,10 @@ Protected Class pdsession
 
 	#tag Property, Flags = &h1
 		Protected ServiceVerifyPeriod As Integer
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		Protected sysRequestThread As Thread
 	#tag EndProperty
 
 	#tag Property, Flags = &h1

@@ -3,7 +3,7 @@ Begin WebDialog ControllerManagement Implements AppletInterface
    Compatibility   =   ""
    Cursor          =   0
    Enabled         =   True
-   Height          =   322
+   Height          =   371
    HelpTag         =   ""
    HorizontalCenter=   0
    Index           =   0
@@ -24,7 +24,7 @@ Begin WebDialog ControllerManagement Implements AppletInterface
    Type            =   2
    VerticalCenter  =   0
    Visible         =   True
-   Width           =   580
+   Width           =   744
    ZIndex          =   1
    _DeclareLineRendered=   False
    _HorizontalPercent=   0.0
@@ -35,6 +35,112 @@ Begin WebDialog ControllerManagement Implements AppletInterface
    _OpenEventFired =   False
    _ShownEventFired=   False
    _VerticalPercent=   0.0
+   Begin WebButton createBtn
+      AutoDisable     =   False
+      Caption         =   "Create"
+      Cursor          =   0
+      Enabled         =   True
+      Height          =   21
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      Left            =   0
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   False
+      LockTop         =   False
+      LockVertical    =   False
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   0
+      Top             =   350
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   109
+      ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
+      _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
+   End
+   Begin WebListBox requestList
+      AlternateRowColor=   &cEDF3FE00
+      ColumnCount     =   1
+      ColumnWidths    =   "*"
+      Cursor          =   0
+      Enabled         =   True
+      HasHeading      =   True
+      HeaderStyle     =   "0"
+      Height          =   350
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      InitialValue    =   ""
+      Left            =   0
+      ListIndex       =   -1
+      LockBottom      =   True
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      LockVertical    =   False
+      MinimumRowHeight=   20
+      Multiline       =   False
+      PrimaryRowColor =   &cFFFFFF00
+      Scope           =   0
+      SelectionStyle  =   "0"
+      Style           =   "0"
+      TabOrder        =   1
+      Top             =   0
+      VerticalCenter  =   0
+      Visible         =   True
+      Width           =   744
+      ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
+      _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
+   End
+   Begin WebTimer Refresh
+      Cursor          =   0
+      Enabled         =   True
+      HelpTag         =   ""
+      HorizontalCenter=   0
+      Index           =   -2147483648
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockHorizontal  =   False
+      LockLeft        =   False
+      LockRight       =   False
+      LockTop         =   False
+      LockVertical    =   False
+      Mode            =   0
+      Period          =   1000
+      Scope           =   0
+      Style           =   "0"
+      TabOrder        =   -1
+      VerticalCenter  =   0
+      ZIndex          =   1
+      _DeclareLineRendered=   False
+      _HorizontalPercent=   0.0
+      _IsEmbedded     =   False
+      _Locked         =   False
+      _NeedsRendering =   True
+      _OfficialControl=   False
+      _OpenEventFired =   False
+      _VerticalPercent=   0.0
+   End
 End
 #tag EndWebPage
 
@@ -98,6 +204,47 @@ End
 
 #tag EndWindowCode
 
+#tag Events createBtn
+	#tag Event
+		Sub Action()
+		  dim outcome as pdOutcome = Session.testSession.createRequest(pdsysrequest.ControllerAcknowledge("controllername"))
+		  
+		  if outcome.ok = false then
+		    MsgBox outcome.fatalErrorMsg
+		    return
+		  end if
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events requestList
+	#tag Event
+		Sub Shown()
+		  me.ColumnCount = 3
+		  me.Heading(0) = "Requests"
+		  me.Heading(1) = "IDs"
+		  me.Heading(2) = "Outcomes"
+		  
+		  Refresh.Mode = timer.ModeMultiple
+		  
+		  
+		  
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events Refresh
+	#tag Event
+		Sub Action()
+		  requestList.DeleteAllRows
+		  
+		  for i as Integer = 0 to Session.testSession.requestQueue.Ubound
+		    requestList.AddRow Session.testSession.requestQueue(i).type.toString , Session.testSession.requestQueue(i).uuid , str(Session.testSession.requestQueue(i).ownRequestAwaitingResponse)
+		  next i
+		  
+		End Sub
+	#tag EndEvent
+#tag EndEvents
 #tag ViewBehavior
 	#tag ViewProperty
 		Name="Cursor"

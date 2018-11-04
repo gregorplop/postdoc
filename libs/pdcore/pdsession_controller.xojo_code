@@ -5,7 +5,7 @@ Inherits pdsession
 		Protected Sub buildChannelNames()
 		  Super.buildChannelNames
 		  
-		  channel_service = activeServiceToken.database.Lowercase + "_" + "service"
+		  //channel_service = activeServiceToken.database.Lowercase + "_" + "service"
 		  
 		  
 		End Sub
@@ -59,16 +59,45 @@ Inherits pdsession
 
 	#tag Method, Flags = &h1
 		Protected Sub pgQueueHandler(sender as PostgreSQLDatabase, Name as string, ID as integer, Extra as String)
+		  if str(ID) = lastPID then return  // own message
 		  Super.pgQueueHandler(sender , Name , ID , Extra)
 		  
-		  Select case Name
-		  case channel_service
+		  dim body as new JSONItem
+		  try
+		    body.Load(Extra)
+		  Catch e as JSONException
+		    return
+		  end try
+		  
+		  if body.HasName("requesttype") = false then return
+		  if body.HasName("pid_requestor") = false then return
+		  if body.HasName("uuid") = false then return
+		  if body.HasName("timestamp_issued") = false then return
+		  
+		  dim receivedRequest as new pdsysrequest
+		  receivedRequest.ownRequestAwaitingResponse = false
+		  receivedRequest.parameters = body
+		  receivedRequest.pid_handler = lastPID.val
+		  receivedRequest.pid_requestor = body.Value("pid_requestor").IntegerValue
+		  receivedRequest.retries = 0
+		  receivedRequest.timestamp_issued = body.Value("timestamp_issued").DateValue
+		  receivedRequest.uuid = body.Value("uuid").StringValue
+		  
+		  select case body.Value("requesttype").StringValue.sysRequestFromString
+		    
+		  case RequestTypes.ControllerAcknowledge
+		    if body.HasName("host") = false then return
+		    if body.Value("host").StringValue.Uppercase <> getHostname then return
+		    receivedRequest.type = RequestTypes.ControllerAcknowledge
 		    
 		    
-		    
-		    
-		    
-		  end select
+		  else
+		    return
+		  end Select
+		  
+		  // add a request to be processed by the thread
+		  requestQueue.Append receivedRequest
+		  
 		  
 		  
 		End Sub
@@ -85,10 +114,6 @@ Inherits pdsession
 		End Function
 	#tag EndMethod
 
-
-	#tag Property, Flags = &h1
-		Protected channel_service As string
-	#tag EndProperty
 
 	#tag Property, Flags = &h1
 		Protected master As Boolean = false

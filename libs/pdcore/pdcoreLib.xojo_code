@@ -167,36 +167,6 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Function fromString(extends requestType as String) As RequestTypes
-		  select case requestType.Uppercase
-		  case "CONTROLLERACK"
-		    Return requestTypes.ControllerAcknowledge
-		  Else
-		    Return requestTypes.Invalid
-		  end select
-		  
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function fromString(extends resourceType as String) As ResourceTypes
-		  select case resourceType.Uppercase
-		  case "APPLICATION"
-		    Return ResourceTypes.Application
-		  Case "DATASET"
-		    Return resourceTypes.Dataset
-		  Case "ARCHIVE"
-		    Return resourceTypes.Archive
-		  Else
-		    Return resourceTypes.Invalid
-		  end select
-		  
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
 		Function getGUIappArguments() As string()
 		  dim arguments(-1) as string
 		  dim processCL as String = System.commandline
@@ -380,6 +350,23 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function ResourceTypeFromString(extends resourceType as String) As ResourceTypes
+		  select case resourceType.Uppercase
+		  case "APPLICATION"
+		    Return ResourceTypes.Application
+		  Case "DATASET"
+		    Return resourceTypes.Dataset
+		  Case "ARCHIVE"
+		    Return resourceTypes.Archive
+		  Else
+		    Return resourceTypes.Invalid
+		  end select
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function sqlQuote(extends input as Boolean) As string
 		  if input = true then
 		    return "'true'"
@@ -410,6 +397,19 @@ Protected Module pdcoreLib
 		  else
 		    return " '" + input + "' "
 		  end if
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Function sysRequestFromString(extends requestType as String) As RequestTypes
+		  select case requestType.Uppercase
+		  case "CONTROLLERACK"
+		    Return requestTypes.ControllerAcknowledge
+		  Else
+		    Return requestTypes.Invalid
+		  end select
+		  
 		  
 		End Function
 	#tag EndMethod

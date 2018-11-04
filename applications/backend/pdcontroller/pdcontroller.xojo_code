@@ -24,11 +24,17 @@ Inherits ServiceApplication
 		  // quit with our exit code
 		  
 		  terminateFlag = false
-		  Print "pdcontroller starting on " + getHostname
+		  MsgOut( "pdcontroller starting on " + getHostname)
 		  
-		  dim tokenFile as FolderItem = appFolder.Child("tokens").Child(args(1))
-		  if tokenFile = nil then quitFormal("Path to token file " + args(1) + " is invalid" , 1)
-		  if tokenFile.Exists = false then quitFormal("Token file " + args(1) + " does not exist" , 2)
+		  
+		  dim tokenFile as FolderItem
+		  if appFolder.Child("tokens").Count = 1 then 
+		    tokenFile = appFolder.Child("tokens").Item(1)  // no parameters approach
+		  else
+		    tokenFile = appFolder.Child("tokens").Child(args(1))
+		    if tokenFile = nil then quitFormal("Path to token file " + args(1) + " is invalid" , 1)
+		    if tokenFile.Exists = false then quitFormal("Token file " + args(1) + " does not exist" , 2)
+		  end if
 		  
 		  // password-protected tokens not supported
 		  dim outcome as pdOutcome = pdservicetoken.Open(tokenFile)
@@ -39,7 +45,7 @@ Inherits ServiceApplication
 		  outcome = session.connect
 		  if outcome.ok = false then quitFormal("Error connecting to " + token.host + " : " + outcome.fatalErrorMsg , 4)
 		  
-		  
+		  MsgOut("Connected to " + token.host + " on database " + token.database + " as " + token.username)
 		  
 		  do
 		    
@@ -57,6 +63,9 @@ Inherits ServiceApplication
 		  // This gets called on all platforms (but the
 		  // shuttingDown parameter is only valid on Windows)
 		  // We should do our cleanup
+		  
+		  MsgOut("pdcontroller is terminating")
+		  
 		End Sub
 	#tag EndEvent
 
@@ -68,8 +77,17 @@ Inherits ServiceApplication
 
 
 	#tag Method, Flags = &h0
+		Sub MsgOut(msg as string)
+		  print msg
+		  System.DebugLog(msg)
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Sub quitFormal(msg as String , code as Integer)
 		  print msg
+		  System.DebugLog(msg)
 		  Quit(code)
 		  
 		End Sub
