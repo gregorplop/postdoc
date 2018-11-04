@@ -86,8 +86,7 @@ Inherits ServiceApplication
 
 	#tag Method, Flags = &h0
 		Sub quitFormal(msg as String , code as Integer)
-		  print msg
-		  System.DebugLog(msg)
+		  MsgOut(msg)
 		  Quit(code)
 		  
 		End Sub

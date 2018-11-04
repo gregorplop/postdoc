@@ -207,7 +207,7 @@ End
 #tag Events createBtn
 	#tag Event
 		Sub Action()
-		  dim outcome as pdOutcome = Session.testSession.createRequest(pdsysrequest.ControllerAcknowledge("controllername"))
+		  dim outcome as pdOutcome = Session.testSession.createRequest(pdsysrequest.ControllerAcknowledge("TOUGHGUY"))
 		  
 		  if outcome.ok = false then
 		    MsgBox outcome.fatalErrorMsg

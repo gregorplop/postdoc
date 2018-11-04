@@ -14,10 +14,6 @@ Protected Class pdsysrequest
 
 
 	#tag Property, Flags = &h0
-		outcome As pdOutcome
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
 		ownRequestAwaitingResponse As Boolean
 	#tag EndProperty
 
@@ -31,6 +27,14 @@ Protected Class pdsysrequest
 
 	#tag Property, Flags = &h0
 		pid_requestor As integer
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		response_content As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		response_errorMessage As String
 	#tag EndProperty
 
 	#tag Property, Flags = &h0

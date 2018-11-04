@@ -125,7 +125,7 @@ Protected Class pdsession
 		  
 		  sysRequestThread = new Thread
 		  sysRequestThread.Priority = 3  // low-to-average
-		  AddHandler sysRequestThread.Run , WeakAddressOf sysRequestDispatcher
+		  AddHandler sysRequestThread.Run , WeakAddressOf Request_dispatch
 		  
 		  // initialize the PostgreSQL database session
 		  // certificates and SSL encryption not supported at this point
@@ -157,55 +157,6 @@ Protected Class pdsession
 		  connected = false
 		  
 		End Sub
-	#tag EndMethod
-
-	#tag Method, Flags = &h0
-		Function createRequest(body as JSONItem) As pdOutcome
-		  if body.HasName("requesttype") = false then Return new pdOutcome(CurrentMethodName + ": No request type defined")
-		  
-		  dim uuid as String = pgUUID
-		  if uuid = empty then return new pdOutcome(CurrentMethodName + ": Error creating new request id")
-		  
-		  dim notifyCmd as String = "NOTIFY "
-		  dim newRequest as new pdsysrequest
-		  
-		  newRequest.outcome = nil
-		  newRequest.parameters = body
-		  newRequest.timeoutPeriod = 60  // Default setting
-		  newRequest.timestamp_issued = pgNOW
-		  newRequest.uuid = uuid
-		  newRequest.pid_requestor = lastPID.Val
-		  newRequest.pid_handler = 0
-		  newRequest.type = body.Value("requesttype").StringValue.sysRequestFromString
-		  
-		  // this information is filled in for the receiver, the sender already has it in the objects's properties
-		  newRequest.parameters.Value("pid_requestor") = newRequest.pid_requestor
-		  newRequest.parameters.Value("uuid") = newRequest.uuid
-		  newRequest.parameters.Value("timestamp_issued") = newRequest.timestamp_issued.SQLDateTime
-		  
-		  // parameter checks
-		  select case body.Value("requesttype").StringValue.sysRequestFromString
-		    
-		  case RequestTypes.ControllerAcknowledge
-		    newRequest.ownRequestAwaitingResponse = true
-		    if body.HasName("host") = False then return new pdOutcome(CurrentMethodName + ": ControllerAcknowledge request is missing host parameter")
-		    if body.Value("host").StringValue.trim = empty then return new pdOutcome(CurrentMethodName + ": ControllerAcknowledge request does not specify host")
-		    notifyCmd.Append(channel_service + " , ")
-		    
-		  else
-		    Return new pdOutcome(CurrentMethodName + ": Request type not supported")
-		  end select
-		  
-		  notifyCmd.Append(newRequest.parameters.ToString.sqlQuote)
-		  
-		  pgsession.SQLExecute(notifyCmd)
-		  if pgsession.Error = true then return new pdOutcome(CurrentMethodName + ": Could not send " + body.Value("requesttype").StringValue + " request: " + pgsession.ErrorMessage.pgErrorSingleLine)
-		  
-		  // we need to keep it until it either receives a response or timeouts
-		  if newRequest.ownRequestAwaitingResponse = true then requestQueue.Append newRequest
-		  
-		  return new pdOutcome(true)
-		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
@@ -362,31 +313,115 @@ Protected Class pdsession
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Function rightsOnResource(resourcetype as ResourceTypes, resourceName as string, optional alsoContent as TriState = TriState.DoesntMatter) As pdOutcome
-		  // pdOutcome.returnObject is an ORed pdaccesstoken
+		Protected Function Request_create(body as JSONItem) As pdOutcome
+		  if body.HasName("requesttype") = false then Return new pdOutcome(CurrentMethodName + ": No request type defined")
+		  
+		  dim uuid as String = pgUUID
+		  if uuid = empty then return new pdOutcome(CurrentMethodName + ": Error creating new request id")
+		  
+		  dim notifyCmd as String = "NOTIFY "
+		  dim newRequest as new pdsysrequest
+		  
+		  newRequest.response_content = empty
+		  newRequest.response_errorMessage = empty
+		  newRequest.parameters = body
+		  newRequest.timeoutPeriod = 60  // Default setting
+		  newRequest.timestamp_issued = pgNOW
+		  newRequest.uuid = uuid
+		  newRequest.pid_requestor = lastPID.Val
+		  newRequest.pid_handler = 0
+		  newRequest.type = body.Value("requesttype").StringValue.sysRequestFromString
+		  
+		  // this information is filled in for the receiver, the sender already has it in the objects's properties
+		  newRequest.parameters.Value("pid_requestor") = newRequest.pid_requestor
+		  newRequest.parameters.Value("uuid") = newRequest.uuid
+		  newRequest.parameters.Value("timestamp_issued") = newRequest.timestamp_issued.SQLDateTime
+		  
+		  // parameter checks
+		  select case body.Value("requesttype").StringValue.sysRequestFromString
+		    
+		  case RequestTypes.ControllerAcknowledge
+		    newRequest.ownRequestAwaitingResponse = true
+		    if body.HasName("host") = False then return new pdOutcome(CurrentMethodName + ": ControllerAcknowledge request is missing host parameter")
+		    if body.Value("host").StringValue.trim = empty then return new pdOutcome(CurrentMethodName + ": ControllerAcknowledge request does not specify host")
+		    notifyCmd.Append(channel_service + " , ")
+		    
+		  else
+		    Return new pdOutcome(CurrentMethodName + ": Request type not supported")
+		  end select
+		  
+		  notifyCmd.Append(newRequest.parameters.ToString.sqlQuote)
+		  
+		  pgsession.SQLExecute(notifyCmd)
+		  if pgsession.Error = true then return new pdOutcome(CurrentMethodName + ": Could not send " + body.Value("requesttype").StringValue + " request: " + pgsession.ErrorMessage.pgErrorSingleLine)
+		  
+		  // we need to keep it until it either receives a response or timeouts
+		  if newRequest.ownRequestAwaitingResponse = true then requestQueue.Append newRequest
+		  
+		  return new pdOutcome(true)
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Sub Request_dispatch(sender as Thread)
+		  dim reqIdx as integer
+		  dim respondOutcome as pdOutcome
+		  
+		  do  // handler/dispatcher main loop
+		    reqIdx = -1
+		    
+		    for i as integer = 0 to requestQueue.Ubound
+		      if requestQueue(i).ownRequestAwaitingResponse = false then 
+		        reqIdx = i
+		        exit for i
+		      end if
+		    next i
+		    
+		    if reqIdx = -1 then // did not find any requests to process
+		      app.SleepCurrentThread(200)
+		      Continue do
+		    end if
+		    
+		    // we have a request at index reqIdx
+		    
+		    select case requestQueue(reqIdx).type
+		      
+		    case RequestTypes.ControllerAcknowledge
+		      requestQueue(reqIdx).response_content = "ALIVE"
+		      requestQueue(reqIdx).response_errorMessage = empty
+		      
+		      respondOutcome = Request_respond(requestQueue(reqIdx).uuid)
+		      if respondOutcome.ok = true then  // sent back ok
+		        requestQueue.remove(reqIdx)
+		      else  // error sending response
+		        System.DebugLog("Error sending response for request " + requestQueue(reqIdx).uuid)
+		        requestQueue.Remove(reqIdx) // do not keep the failed request, you might want to keep a more extended log of these
+		        // the request ought to timeout on the sender
+		      end if
+		      
+		    else // unrecognizable request, no need for it to exist
+		      requestQueue.Remove(reqIdx)
+		    end select
+		    
+		    
+		    
+		  loop until connected = False
+		  
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function Request_respond(uuid as string) As pdOutcome
 		  
 		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
-		Protected Sub sysRequestDispatcher(sender as Thread)
-		  do  // handler/dispatcher main loop
-		    
-		    
-		    if requestQueue.Ubound > -1 then
-		      print empty
-		      for i as integer = 0 to requestQueue.Ubound
-		        print requestQueue(i).uuid + "   :   " + requestQueue(i).type.toString
-		      next i
-		      print empty
-		    end if
-		    
-		    
-		    app.SleepCurrentThread(200)
-		  loop until connected = False
+		Protected Function rightsOnResource(resourcetype as ResourceTypes, resourceName as string, optional alsoContent as TriState = TriState.DoesntMatter) As pdOutcome
+		  // pdOutcome.returnObject is an ORed pdaccesstoken
 		  
-		  
-		End Sub
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h21
