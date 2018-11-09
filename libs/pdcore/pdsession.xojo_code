@@ -300,7 +300,8 @@ Protected Class pdsession
 		    requestQueue(responseIDX).response_content = if(body.HasName("response_content") , body.Value("response_content").StringValue , empty)
 		    requestQueue(responseIDX).response_errorMessage = if(body.HasName("response_errormessage") , body.Value("response_errormessage").StringValue , empty)
 		    
-		    RaiseEvent RequestComplete(RequestQueue(responseIDX))  // request has been responded to
+		    RaiseEvent RequestComplete(RequestQueue(responseIDX))  // request has been responded to, let the app know about it
+		    requestQueue.Remove(responseIDX)  // request has been handled, remove from queue
 		    
 		  else  // this is a request this client has to handle
 		    

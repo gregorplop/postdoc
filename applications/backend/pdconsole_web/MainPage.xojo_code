@@ -298,6 +298,7 @@ End
 	#tag Method, Flags = &h0
 		Sub event_requestComplete(sender as pdsession, request as pdsysrequest)
 		  System.DebugLog("request complete: " + request.uuid)
+		  System.DebugLog(request.parameters.ToString)
 		  
 		End Sub
 	#tag EndMethod
@@ -305,7 +306,7 @@ End
 	#tag Method, Flags = &h0
 		Sub event_requestTimeout(sender as pdsession, request as pdsysrequest)
 		  System.DebugLog("request timeout: " + request.uuid)
-		  
+		  System.DebugLog(request.parameters.ToString)
 		End Sub
 	#tag EndMethod
 
