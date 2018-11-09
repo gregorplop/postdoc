@@ -84,28 +84,29 @@ Inherits pdsession
 		  dim receivedRequest as new pdsysrequest
 		  
 		  if body.HasName("response_content") = true or body.HasName("response_errormessage") = true then  // this is a response to a request
-		    return  // event has been raised in the base class
+		    return  // if relevant to this client, event has been raised in the base class
 		    
-		  else  // this is a request this client has to handle
+		  else  // this is a NEW request this client MIGHT have to handle
+		    
+		    select case body.Value("requesttype").StringValue.sysRequestFromString
+		    case RequestTypes.ControllerAcknowledge  
+		      if body.HasName("host") = false then return
+		      if body.Value("host").StringValue.Uppercase <> getHostname then return
+		      
+		      receivedRequest.type = RequestTypes.ControllerAcknowledge // this client has to handle this incoming request
+		      
+		    else
+		      return
+		    end Select
 		    
 		    receivedRequest.ownRequestAwaitingResponse = false
+		    receivedRequest.containsResponse = False
 		    receivedRequest.parameters = body
 		    receivedRequest.pid_handler = lastPID.val
 		    receivedRequest.pid_requestor = body.Value("pid_requestor").IntegerValue
 		    receivedRequest.retries = 0
 		    receivedRequest.timestamp_issued = body.Value("timestamp_issued").DateValue
 		    receivedRequest.uuid = body.Value("uuid").StringValue
-		    
-		    select case body.Value("requesttype").StringValue.sysRequestFromString
-		    case RequestTypes.ControllerAcknowledge  
-		      if body.HasName("host") = false then return
-		      if body.Value("host").StringValue.Uppercase <> getHostname then return
-		      receivedRequest.type = RequestTypes.ControllerAcknowledge
-		      
-		      
-		    else
-		      return
-		    end Select
 		    
 		    requestQueue.Append receivedRequest  // add a request to be processed by the thread Request_dispatch implemented in the base class
 		    

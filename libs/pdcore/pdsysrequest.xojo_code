@@ -14,6 +14,10 @@ Protected Class pdsysrequest
 
 
 	#tag Property, Flags = &h0
+		containsResponse As Boolean = false
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		ownRequestAwaitingResponse As Boolean
 	#tag EndProperty
 
@@ -146,9 +150,16 @@ Protected Class pdsysrequest
 			Name="response_content"
 			Group="Behavior"
 			Type="String"
+			EditorType="MultiLineEditor"
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="response_errorMessage"
+			Group="Behavior"
+			Type="String"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="response_channel"
 			Group="Behavior"
 			Type="String"
 		#tag EndViewProperty

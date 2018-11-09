@@ -276,7 +276,6 @@ Protected Class pdsession
 		  if body.HasName("pid_requestor") = false then return
 		  if body.HasName("uuid") = false then return
 		  if body.HasName("timestamp_issued") = false then return
-		  
 		  // this message could be 
 		  // 1. irrelevant to this client (notably, a request this client is not supposed to handle OR a response to someone else's request)
 		  // 2. a request this client has to handle (append it to its requestQueue for the request_dispatch method to handle) 
@@ -293,6 +292,7 @@ Protected Class pdsession
 		    
 		    // yes, this is a response to a request this client has made
 		    
+		    requestQueue(responseIDX).containsResponse = true
 		    requestQueue(responseIDX).parameters = body // update request Dictionary
 		    requestQueue(responseIDX).pid_handler = if(body.HasName("pid_handler") , body.Value("pid_handler").IntegerValue , 0)
 		    requestQueue(responseIDX).timestamp_response = if(body.HasName("timestamp_response") , body.Value("timestamp_response").DateValue , requestQueue(responseIDX).timestamp_issued)
@@ -303,10 +303,10 @@ Protected Class pdsession
 		    RaiseEvent RequestComplete(RequestQueue(responseIDX))  // request has been responded to, let the app know about it
 		    requestQueue.Remove(responseIDX)  // request has been handled, remove from queue
 		    
-		  else  // this is a request this client has to handle
+		  else  // this is a NEW request this client has to handle
 		    
-		    // nothing yet
-		    //select case body.Value("requesttype").StringValue.sysRequestFromString
+		    // there are no request types for a base request session client to handle YET
+		    Return
 		    
 		  end if
 		End Sub
@@ -353,8 +353,8 @@ Protected Class pdsession
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h1
-		Protected Function Request_create(body as JSONItem) As pdOutcome
+	#tag Method, Flags = &h0
+		Function Request_create(body as JSONItem) As pdOutcome
 		  if body.HasName("requesttype") = false then Return new pdOutcome(CurrentMethodName + ": No request type defined")
 		  
 		  dim uuid as String = pgUUID
@@ -363,6 +363,7 @@ Protected Class pdsession
 		  dim notifyCmd as String = "NOTIFY "
 		  dim newRequest as new pdsysrequest
 		  
+		  newRequest.containsResponse = False
 		  newRequest.response_content = empty
 		  newRequest.response_errorMessage = empty
 		  newRequest.parameters = body
@@ -412,22 +413,23 @@ Protected Class pdsession
 		    reqIdx = -1
 		    
 		    for i as integer = 0 to requestQueue.Ubound
-		      if requestQueue(i).ownRequestAwaitingResponse = false then 
+		      if requestQueue(i).ownRequestAwaitingResponse = false and requestQueue(i).containsResponse = false then
 		        reqIdx = i
 		        exit for i
 		      end if
 		    next i
 		    
 		    if reqIdx = -1 then // did not find any requests to process
-		      app.SleepCurrentThread(200)
+		      app.SleepCurrentThread(150)
 		      Continue do
 		    end if
 		    
-		    // we have a request at index reqIdx
+		    // we have a request to process at index reqIdx
 		    
 		    select case requestQueue(reqIdx).type
 		      
 		    case RequestTypes.ControllerAcknowledge
+		      requestQueue(reqIdx).containsResponse = true   // because of this, if response fails to be sent, it will not be recalculated
 		      requestQueue(reqIdx).response_content = "!ALIVE!"
 		      requestQueue(reqIdx).response_errorMessage = empty
 		      requestQueue(reqIdx).response_channel = pgsession.DatabaseName.Lowercase + "_" + str(requestQueue(reqIdx).pid_requestor)  // send it to the requestor's private channel, no need for everyone to receive it
@@ -454,8 +456,8 @@ Protected Class pdsession
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h0
-		Function Request_locateInQueue(uuid as string) As integer
+	#tag Method, Flags = &h1
+		Protected Function Request_locateInQueue(uuid as string) As integer
 		  for i as Integer = 0 to requestQueue.Ubound
 		    if requestQueue(i).uuid = uuid then return i
 		  next i
@@ -467,27 +469,21 @@ Protected Class pdsession
 
 	#tag Method, Flags = &h1
 		Protected Function Request_respond(uuid as string) As pdOutcome
-		  dim request as pdsysrequest
+		  dim reqIDX as Integer = Request_locateInQueue(uuid)
+		  if reqIDX= -1 then return new pdOutcome(CurrentMethodName + ": Request " + uuid + " was not found on the queue")
 		  
-		  for i as integer = 0 to requestQueue.Ubound
-		    if requestQueue(i).uuid = uuid then
-		      request = requestQueue(i)
-		      exit for i
-		    end if
-		  next i
+		  requestQueue(reqIDX).pid_handler = lastPID.Val
+		  requestQueue(reqIDX).containsResponse = true
 		  
-		  if request = nil then return new pdOutcome(CurrentMethodName + ": Request " + uuid + " was not found on the queue")
+		  requestQueue(reqIDX).parameters.Value("pid_handler") = requestQueue(reqIDX).pid_handler
+		  requestQueue(reqIDX).parameters.Value("timestamp_response") = pgNOW.SQLDateTime
+		  requestQueue(reqIDX).parameters.Value("response_content") = requestQueue(reqIDX).response_content
+		  requestQueue(reqIDX).parameters.Value("request_errormessage") = requestQueue(reqIDX).response_errorMessage
 		  
-		  request.pid_handler = lastPID.Val
-		  
-		  request.parameters.Value("pid_handler") = request.pid_handler
-		  request.parameters.Value("timestamp_response") = pgNOW.SQLDateTime
-		  request.parameters.Value("response_content") = request.response_content
-		  request.parameters.Value("request_errormessage") = request.response_errorMessage
 		  
 		  dim notifyCmd as string = "NOTIFY "
-		  notifyCmd.Append(request.response_channel + " , ")
-		  notifyCmd.Append(request.parameters.ToString.sqlQuote)
+		  notifyCmd.Append(requestQueue(reqIDX).response_channel + " , ")
+		  notifyCmd.Append(requestQueue(reqIDX).parameters.ToString.sqlQuote)
 		  
 		  pgsession.SQLExecute(notifyCmd)
 		  if pgsession.Error = true then return new pdOutcome(CurrentMethodName + ": Error sending response for request " + uuid + " : " + pgsession.ErrorMessage.pgErrorSingleLine)
