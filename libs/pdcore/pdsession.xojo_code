@@ -265,9 +265,49 @@ Protected Class pdsession
 		  
 		  if str(ID) = lastPID then return  // own message, ignore
 		  
+		  dim body as new JSONItem
+		  try
+		    body.Load(Extra)
+		  Catch e as JSONException
+		    return
+		  end try
 		  
+		  if body.HasName("requesttype") = false then return
+		  if body.HasName("pid_requestor") = false then return
+		  if body.HasName("uuid") = false then return
+		  if body.HasName("timestamp_issued") = false then return
 		  
+		  // this message could be 
+		  // 1. irrelevant to this client (notably, a request this client is not supposed to handle OR a response to someone else's request)
+		  // 2. a request this client has to handle (append it to its requestQueue for the request_dispatch method to handle) 
+		  // 3. a response to a request this client has made (and needs to be evaluated and lead to a RequestComplete event)
 		  
+		  // used either/or
+		  dim receivedRequest as pdsysrequest 
+		  dim responseIDX as Integer
+		  
+		  if body.HasName("response_content") = true or body.HasName("response_errormessage") = true then  // this is a response to a request
+		    
+		    responseIDX = Request_locateInQueue(body.Value("uuid").StringValue)  // is this a response to a request this client has made?
+		    if responseIDX < 0 then return // no, the client hasn't made this request, ignore this message
+		    
+		    // yes, this is a response to a request this client has made
+		    
+		    requestQueue(responseIDX).parameters = body // update request Dictionary
+		    requestQueue(responseIDX).pid_handler = if(body.HasName("pid_handler") , body.Value("pid_handler").IntegerValue , 0)
+		    requestQueue(responseIDX).timestamp_response = if(body.HasName("timestamp_response") , body.Value("timestamp_response").DateValue , requestQueue(responseIDX).timestamp_issued)
+		    requestQueue(responseIDX).response_channel = Name
+		    requestQueue(responseIDX).response_content = if(body.HasName("response_content") , body.Value("response_content").StringValue , empty)
+		    requestQueue(responseIDX).response_errorMessage = if(body.HasName("response_errormessage") , body.Value("response_errormessage").StringValue , empty)
+		    
+		    RaiseEvent RequestComplete(RequestQueue(responseIDX))  // request has been responded to
+		    
+		  else  // this is a request this client has to handle
+		    
+		    // nothing yet
+		    //select case body.Value("requesttype").StringValue.sysRequestFromString
+		    
+		  end if
 		End Sub
 	#tag EndMethod
 
@@ -387,16 +427,18 @@ Protected Class pdsession
 		    select case requestQueue(reqIdx).type
 		      
 		    case RequestTypes.ControllerAcknowledge
-		      requestQueue(reqIdx).response_content = "ALIVE"
+		      requestQueue(reqIdx).response_content = "!ALIVE!"
 		      requestQueue(reqIdx).response_errorMessage = empty
+		      requestQueue(reqIdx).response_channel = pgsession.DatabaseName.Lowercase + "_" + str(requestQueue(reqIdx).pid_requestor)  // send it to the requestor's private channel, no need for everyone to receive it
 		      
 		      respondOutcome = Request_respond(requestQueue(reqIdx).uuid)
 		      if respondOutcome.ok = true then  // sent back ok
 		        requestQueue.remove(reqIdx)
 		      else  // error sending response
 		        System.DebugLog("Error sending response for request " + requestQueue(reqIdx).uuid)
-		        requestQueue.Remove(reqIdx) // do not keep the failed request, you might want to keep a more extended log of these
-		        // the request ought to timeout on the sender
+		        requestQueue(reqIdx).response_errorMessage = "Error sending response: " + respondOutcome.fatalErrorMsg
+		        // someone should keep an eye on the queue for entries with ownRequestAwaitingResponse = false and response_errorMessage <> empty
+		        // we should not keep these entries on the list for too long or have them piling up
 		      end if
 		      
 		    else // unrecognizable request, no need for it to exist
@@ -411,9 +453,46 @@ Protected Class pdsession
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h0
+		Function Request_locateInQueue(uuid as string) As integer
+		  for i as Integer = 0 to requestQueue.Ubound
+		    if requestQueue(i).uuid = uuid then return i
+		  next i
+		  
+		  return -1
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h1
 		Protected Function Request_respond(uuid as string) As pdOutcome
+		  dim request as pdsysrequest
 		  
+		  for i as integer = 0 to requestQueue.Ubound
+		    if requestQueue(i).uuid = uuid then
+		      request = requestQueue(i)
+		      exit for i
+		    end if
+		  next i
+		  
+		  if request = nil then return new pdOutcome(CurrentMethodName + ": Request " + uuid + " was not found on the queue")
+		  
+		  request.pid_handler = lastPID.Val
+		  
+		  request.parameters.Value("pid_handler") = request.pid_handler
+		  request.parameters.Value("timestamp_response") = pgNOW.SQLDateTime
+		  request.parameters.Value("response_content") = request.response_content
+		  request.parameters.Value("request_errormessage") = request.response_errorMessage
+		  
+		  dim notifyCmd as string = "NOTIFY "
+		  notifyCmd.Append(request.response_channel + " , ")
+		  notifyCmd.Append(request.parameters.ToString.sqlQuote)
+		  
+		  pgsession.SQLExecute(notifyCmd)
+		  if pgsession.Error = true then return new pdOutcome(CurrentMethodName + ": Error sending response for request " + uuid + " : " + pgsession.ErrorMessage.pgErrorSingleLine)
+		  
+		  
+		  return new pdOutcome(true)
 		End Function
 	#tag EndMethod
 

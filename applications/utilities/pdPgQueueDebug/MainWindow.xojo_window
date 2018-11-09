@@ -22,7 +22,7 @@ Begin Window MainWindow
    MinimizeButton  =   True
    MinWidth        =   64
    Placement       =   0
-   Resizeable      =   False
+   Resizeable      =   True
    Title           =   "pdPgQueueDebug"
    Visible         =   True
    Width           =   662
@@ -50,6 +50,7 @@ Begin Window MainWindow
       TextSize        =   0.0
       TextUnit        =   0
       Top             =   8
+      Transparent     =   True
       Underline       =   False
       Visible         =   True
       Width           =   642
@@ -91,6 +92,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   53
+         Transparent     =   True
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -134,6 +136,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   53
+         Transparent     =   True
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -161,6 +164,7 @@ Begin Window MainWindow
          Selectable      =   False
          TabIndex        =   2
          TabPanelIndex   =   0
+         TabStop         =   True
          Text            =   "Server Address"
          TextAlign       =   0
          TextColor       =   &c00000000
@@ -195,6 +199,7 @@ Begin Window MainWindow
          Selectable      =   False
          TabIndex        =   3
          TabPanelIndex   =   0
+         TabStop         =   True
          Text            =   "Server Port"
          TextAlign       =   0
          TextColor       =   &c00000000
@@ -234,6 +239,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   31
+         Transparent     =   True
          Underline       =   False
          Visible         =   True
          Width           =   134
@@ -260,6 +266,7 @@ Begin Window MainWindow
          Selectable      =   False
          TabIndex        =   5
          TabPanelIndex   =   0
+         TabStop         =   True
          Text            =   "Database"
          TextAlign       =   0
          TextColor       =   &c00000000
@@ -304,12 +311,13 @@ Begin Window MainWindow
          TabIndex        =   6
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "postdoc"
+         Text            =   "mypostdoc"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   52
+         Transparent     =   True
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -337,6 +345,7 @@ Begin Window MainWindow
          Selectable      =   False
          TabIndex        =   7
          TabPanelIndex   =   0
+         TabStop         =   True
          Text            =   "Username"
          TextAlign       =   0
          TextColor       =   &c00000000
@@ -381,12 +390,13 @@ Begin Window MainWindow
          TabIndex        =   8
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "pduser"
+         Text            =   "pdadmin"
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   52
+         Transparent     =   True
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -414,6 +424,7 @@ Begin Window MainWindow
          Selectable      =   False
          TabIndex        =   9
          TabPanelIndex   =   0
+         TabStop         =   True
          Text            =   "Password"
          TextAlign       =   0
          TextColor       =   &c00000000
@@ -464,6 +475,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   53
+         Transparent     =   True
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -515,6 +527,7 @@ Begin Window MainWindow
       TextSize        =   0.0
       TextUnit        =   0
       Top             =   98
+      Transparent     =   True
       Underline       =   False
       Visible         =   True
       Width           =   157
@@ -562,6 +575,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   123
+         Transparent     =   True
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -607,6 +621,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   381
+         Transparent     =   True
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -639,6 +654,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   418
+         Transparent     =   True
          Underline       =   False
          Visible         =   True
          Width           =   138
@@ -670,6 +686,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   380
+         Transparent     =   True
          Underline       =   False
          Visible         =   True
          Width           =   59
@@ -697,10 +714,10 @@ Begin Window MainWindow
       LimitText       =   0
       LineHeight      =   0.0
       LineSpacing     =   1.0
-      LockBottom      =   False
+      LockBottom      =   True
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   True
       Mask            =   ""
       Multiline       =   True
@@ -718,6 +735,7 @@ Begin Window MainWindow
       TextSize        =   0.0
       TextUnit        =   0
       Top             =   464
+      Transparent     =   True
       Underline       =   False
       UseFocusRing    =   True
       Visible         =   True
@@ -737,7 +755,7 @@ Begin Window MainWindow
       LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   True
       Scope           =   0
       TabIndex        =   3
@@ -747,6 +765,7 @@ Begin Window MainWindow
       TextSize        =   0.0
       TextUnit        =   0
       Top             =   98
+      Transparent     =   True
       Underline       =   False
       Visible         =   True
       Width           =   473
@@ -779,7 +798,7 @@ Begin Window MainWindow
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   True
-         LockRight       =   False
+         LockRight       =   True
          LockTop         =   True
          RequiresSelection=   False
          Scope           =   0
@@ -794,6 +813,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   123
+         Transparent     =   True
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -826,6 +846,7 @@ Begin Window MainWindow
       TextSize        =   0.0
       TextUnit        =   0
       Top             =   381
+      Transparent     =   True
       Underline       =   False
       Visible         =   True
       Width           =   473
@@ -857,6 +878,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   410
+         Transparent     =   True
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -884,6 +906,7 @@ Begin Window MainWindow
          Selectable      =   False
          TabIndex        =   2
          TabPanelIndex   =   0
+         TabStop         =   True
          Text            =   "Send message"
          TextAlign       =   0
          TextColor       =   &c00000000
@@ -918,6 +941,7 @@ Begin Window MainWindow
          Selectable      =   False
          TabIndex        =   3
          TabPanelIndex   =   0
+         TabStop         =   True
          Text            =   "to channel"
          TextAlign       =   0
          TextColor       =   &c00000000
@@ -958,6 +982,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   410
+         Transparent     =   True
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
@@ -990,6 +1015,7 @@ Begin Window MainWindow
          TextSize        =   0.0
          TextUnit        =   0
          Top             =   409
+         Transparent     =   True
          Underline       =   False
          Visible         =   True
          Width           =   77
@@ -1157,11 +1183,22 @@ End
 		  me.Heading(1) = "Sender"
 		  me.Heading(2) = "Content"
 		  
-		  me.ColumnWidths = "30%,15%,55%"
+		  me.ColumnWidths = "10%,10%,80%"
 		  me.HasHeading = true
 		  
 		  me.HeaderType(-1) = Listbox.HeaderTypes.NotSortable
 		  
+		  
+		End Sub
+	#tag EndEvent
+	#tag Event
+		Sub DoubleClick()
+		  Dim row As Integer
+		  row = Me.RowFromXY(System.MouseX - Me.Left - Self.Left, System.MouseY - Me.Top - Self.Top)
+		  
+		  log.AppendText(EndOfLine)
+		  log.AppendText(me.cell(row,2))
+		  log.AppendText(EndOfLine)
 		  
 		End Sub
 	#tag EndEvent

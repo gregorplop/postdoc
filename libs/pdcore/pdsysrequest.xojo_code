@@ -30,6 +30,10 @@ Protected Class pdsysrequest
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
+		response_channel As String
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
 		response_content As String
 	#tag EndProperty
 
@@ -137,6 +141,16 @@ Protected Class pdsysrequest
 			Group="Behavior"
 			InitialValue="0"
 			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="response_content"
+			Group="Behavior"
+			Type="String"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="response_errorMessage"
+			Group="Behavior"
+			Type="String"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class
