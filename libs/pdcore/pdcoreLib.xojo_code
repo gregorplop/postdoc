@@ -142,11 +142,15 @@ Protected Module pdcoreLib
 		      System.DebugLog(message(i))
 		    next i
 		    
-		    print(Join(message , EndOfLine))
+		    #if TargetHasGUI = false then 
+		      print(Join(message , EndOfLine))
+		    #Endif
 		    
 		  else
 		    System.DebugLog(type)
-		    print(type)
+		    #if TargetHasGUI = false then 
+		      print(type)
+		    #Endif
 		  end if
 		  
 		  
@@ -325,11 +329,14 @@ Protected Module pdcoreLib
 		    
 		    do until ReadStream.EOF
 		      
+		      // subject to OutOfMemoryException and OutOfBoundsException when working with 2-3gb sized files
+		      // we need to handle these errors
 		      WriteStream.Write(ReadStream.Read(MByte * mbChunk))
 		      
 		      if ReadStream.ReadError = true then 
 		        ReadStream.close
 		        WriteStream.Close
+		        targetBlock = empty
 		        return new pdOutcome(CurrentMethodName + ": Error code " + str(ReadStream.LastErrorCode) + " while reading file " + file.NativePath)
 		      end if
 		      
@@ -338,10 +345,11 @@ Protected Module pdcoreLib
 		    ReadStream.close
 		    WriteStream.close
 		    
-		  catch e as IOException
+		  catch e as RuntimeException
 		    ReadStream.close
 		    WriteStream.Close
-		    return new pdOutcome(CurrentMethodName + ": IO Error while reading file " + file.NativePath)
+		    targetBlock = empty
+		    return new pdOutcome(CurrentMethodName + ": Error while reading file or writing to memory" + file.NativePath)
 		  end try
 		  
 		  
