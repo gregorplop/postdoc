@@ -40,7 +40,7 @@ Begin WebDialog ControllerManagement Implements AppletInterface
       Caption         =   "Create"
       Cursor          =   0
       Enabled         =   True
-      Height          =   21
+      Height          =   39
       HelpTag         =   ""
       HorizontalCenter=   0
       Index           =   -2147483648

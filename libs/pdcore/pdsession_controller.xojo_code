@@ -62,13 +62,15 @@ Inherits pdsession
 		  if str(ID) = lastPID then return  // own message
 		  Super.pgQueueHandler(sender , Name , ID , Extra)   // let the base class hadle its own basic requests
 		  
+		  // determine whether incoming request carries JSON-formatted message
 		  dim body as new JSONItem
 		  try
 		    body.Load(Extra)
 		  Catch e as JSONException
-		    return
+		    return  // if not properly formatted, pretend we never saw it
 		  end try
 		  
+		  // determine whether incoming message is a valid request (of any kind)
 		  if body.HasName("requesttype") = false then return
 		  if body.HasName("pid_requestor") = false then return
 		  if body.HasName("uuid") = false then return
@@ -81,7 +83,7 @@ Inherits pdsession
 		  // and in any case, we should be careful not to handle requests or responses that have been already handled by the base class
 		  
 		  // used either/or
-		  dim receivedRequest as new pdsysrequest
+		  dim receivedRequest as pdsysrequest
 		  
 		  if body.HasName("response_content") = true or body.HasName("response_errormessage") = true then  // this is a response to a request
 		    return  // if relevant to this client, event has been raised in the base class
@@ -99,6 +101,7 @@ Inherits pdsession
 		      return
 		    end Select
 		    
+		    receivedRequest = new pdsysrequest   // prepare the new request queue entry
 		    receivedRequest.ownRequestAwaitingResponse = false
 		    receivedRequest.containsResponse = False
 		    receivedRequest.parameters = body

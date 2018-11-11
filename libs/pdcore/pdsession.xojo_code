@@ -406,13 +406,16 @@ Protected Class pdsession
 
 	#tag Method, Flags = &h1
 		Protected Sub Request_dispatch(sender as Thread)
+		  // IMPORTANT: In the current design, this method is universal (ie, implements functionality needed by base class AND ALL mission-specific subclasses)
+		  
+		  dim executionFrequency as Integer = 10   // this sets how many times per second this thread looks for a request to process(or dispatch). Adjustable only in code
 		  dim reqIdx as integer
 		  dim respondOutcome as pdOutcome
 		  
 		  do  // handler/dispatcher main loop
 		    reqIdx = -1
 		    
-		    for i as integer = 0 to requestQueue.Ubound
+		    for i as integer = 0 to requestQueue.Ubound  // try to find a request that needs to be processed
 		      if requestQueue(i).ownRequestAwaitingResponse = false and requestQueue(i).containsResponse = false then
 		        reqIdx = i
 		        exit for i
@@ -420,7 +423,7 @@ Protected Class pdsession
 		    next i
 		    
 		    if reqIdx = -1 then // did not find any requests to process
-		      app.SleepCurrentThread(150)
+		      app.SleepCurrentThread(1000/executionFrequency)
 		      Continue do
 		    end if
 		    
@@ -443,6 +446,8 @@ Protected Class pdsession
 		        // someone should keep an eye on the queue for entries with ownRequestAwaitingResponse = false and response_errorMessage <> empty
 		        // we should not keep these entries on the list for too long or have them piling up
 		      end if
+		      
+		      
 		      
 		    else // unrecognizable request, no need for it to exist
 		      requestQueue.Remove(reqIdx)
@@ -477,9 +482,8 @@ Protected Class pdsession
 		  
 		  requestQueue(reqIDX).parameters.Value("pid_handler") = requestQueue(reqIDX).pid_handler
 		  requestQueue(reqIDX).parameters.Value("timestamp_response") = pgNOW.SQLDateTime
-		  requestQueue(reqIDX).parameters.Value("response_content") = requestQueue(reqIDX).response_content
-		  requestQueue(reqIDX).parameters.Value("request_errormessage") = requestQueue(reqIDX).response_errorMessage
-		  
+		  requestQueue(reqIDX).parameters.Value("response_content") = requestQueue(reqIDX).response_content  // handler needs to have previously filled this in
+		  requestQueue(reqIDX).parameters.Value("request_errormessage") = requestQueue(reqIDX).response_errorMessage  // handler needs to have previously filled this in
 		  
 		  dim notifyCmd as string = "NOTIFY "
 		  notifyCmd.Append(requestQueue(reqIDX).response_channel + " , ")
@@ -487,7 +491,6 @@ Protected Class pdsession
 		  
 		  pgsession.SQLExecute(notifyCmd)
 		  if pgsession.Error = true then return new pdOutcome(CurrentMethodName + ": Error sending response for request " + uuid + " : " + pgsession.ErrorMessage.pgErrorSingleLine)
-		  
 		  
 		  return new pdOutcome(true)
 		End Function
