@@ -166,6 +166,13 @@ Protected Class pdsession
 		End Function
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Function isBaseClass() As Boolean
+		  return if(Object(me).whatClass = baseClassName , true , false)
+		  
+		End Function
+	#tag EndMethod
+
 	#tag Method, Flags = &h0
 		Function isConnected() As Boolean
 		  Return connected
@@ -406,59 +413,42 @@ Protected Class pdsession
 
 	#tag Method, Flags = &h1
 		Protected Sub Request_dispatch(sender as Thread)
-		  // IMPORTANT: In the current design, this method is universal (ie, implements functionality needed by base class AND ALL mission-specific subclasses)
-		  
-		  dim executionFrequency as Integer = 10   // this sets how many times per second this thread looks for a request to process(or dispatch). Adjustable only in code
-		  dim reqIdx as integer
-		  dim respondOutcome as pdOutcome
-		  
 		  do  // handler/dispatcher main loop
-		    reqIdx = -1
 		    
-		    for i as integer = 0 to requestQueue.Ubound  // try to find a request that needs to be processed
-		      if requestQueue(i).ownRequestAwaitingResponse = false and requestQueue(i).containsResponse = false then
-		        reqIdx = i
-		        exit for i
-		      end if
-		    next i
+		    requestQueueIdx = Request_getUnhandled
 		    
-		    if reqIdx = -1 then // did not find any requests to process
-		      app.SleepCurrentThread(1000/executionFrequency)
-		      Continue do
+		    if Request_getUnhandled = -1 then // did not find any requests to process, sleep for a while and look again
+		      app.SleepCurrentThread(1000 / RequestDispatcherFrequency)
+		      
+		    else // we have a request to process at index requestQueueIdx
+		      
+		      select case requestQueue(requestQueueIdx).type
+		        
+		      case RequestTypes.Invalid  // just an example , add more request types that are handled by the BASE CLASS
+		        requestQueue.Remove(requestQueueIdx)
+		        requestQueueIdx = -1
+		        
+		      else // unrecognizable request, either invalid or for a specialized member class to handle
+		        if isBaseClass = true then requestQueue.Remove(requestQueueIdx)  // no handler other than this method
+		      end select
+		      
 		    end if
 		    
-		    // we have a request to process at index reqIdx
-		    
-		    select case requestQueue(reqIdx).type
-		      
-		    case RequestTypes.ControllerAcknowledge
-		      requestQueue(reqIdx).containsResponse = true   // because of this, if response fails to be sent, it will not be recalculated
-		      requestQueue(reqIdx).response_content = "!ALIVE!"
-		      requestQueue(reqIdx).response_errorMessage = empty
-		      requestQueue(reqIdx).response_channel = pgsession.DatabaseName.Lowercase + "_" + str(requestQueue(reqIdx).pid_requestor)  // send it to the requestor's private channel, no need for everyone to receive it
-		      
-		      respondOutcome = Request_respond(requestQueue(reqIdx).uuid)
-		      if respondOutcome.ok = true then  // sent back ok
-		        requestQueue.remove(reqIdx)
-		      else  // error sending response
-		        System.DebugLog("Error sending response for request " + requestQueue(reqIdx).uuid)
-		        requestQueue(reqIdx).response_errorMessage = "Error sending response: " + respondOutcome.fatalErrorMsg
-		        // someone should keep an eye on the queue for entries with ownRequestAwaitingResponse = false and response_errorMessage <> empty
-		        // we should not keep these entries on the list for too long or have them piling up
-		      end if
-		      
-		      
-		      
-		    else // unrecognizable request, no need for it to exist
-		      requestQueue.Remove(reqIdx)
-		    end select
-		    
-		    
-		    
-		  loop until connected = False
+		  loop until connected = False or isBaseClass = false  // if it's a more specialized session class, the loop continues to the parent's method
 		  
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function Request_getUnhandled() As integer
+		  for i as integer = 0 to requestQueue.Ubound  // try to find a request that needs to be processed
+		    if requestQueue(i).ownRequestAwaitingResponse = false and requestQueue(i).containsResponse = false then return i
+		  next i
+		  
+		  return -1
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1
@@ -587,8 +577,15 @@ Protected Class pdsession
 		Protected pgsession As PostgreSQLDatabase
 	#tag EndProperty
 
-	#tag Property, Flags = &h0
-		requestQueue(-1) As pdsysrequest
+	#tag Property, Flags = &h1
+		Protected requestQueue(-1) As pdsysrequest
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		#tag Note
+			used by request dispatcher base & child methods
+		#tag EndNote
+		Protected requestQueueIdx As Integer
 	#tag EndProperty
 
 	#tag Property, Flags = &h21
@@ -608,10 +605,16 @@ Protected Class pdsession
 	#tag EndProperty
 
 
+	#tag Constant, Name = baseClassName, Type = String, Dynamic = False, Default = \"pdsession", Scope = Private
+	#tag EndConstant
+
 	#tag Constant, Name = pdServiceVerifyPeriod, Type = Double, Dynamic = False, Default = \"200", Scope = Public
 	#tag EndConstant
 
 	#tag Constant, Name = pgQueueRefreshInterval, Type = Double, Dynamic = False, Default = \"300", Scope = Public
+	#tag EndConstant
+
+	#tag Constant, Name = RequestDispatcherFrequency, Type = Double, Dynamic = False, Default = \"10", Scope = Protected
 	#tag EndConstant
 
 

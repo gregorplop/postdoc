@@ -121,6 +121,43 @@ Inherits pdsession
 		End Sub
 	#tag EndMethod
 
+	#tag Method, Flags = &h1
+		Protected Sub Request_dispatch(sender as Thread)
+		  do
+		    Super.Request_dispatch(sender) // call the base class dispatcher
+		    
+		    if requestQueueIdx > -1 then // the base class has found an unhandled request , it doesn't know how to handle it and is passing it through
+		      
+		      select case requestQueue(requestQueueIdx).type
+		        
+		      case RequestTypes.ControllerAcknowledge  // HANDLE here, not dispatch someplace else
+		        requestQueue(requestQueueIdx).containsResponse = true   // because of this, if response fails to be sent, it will not be recalculated
+		        requestQueue(requestQueueIdx).response_content = "!ALIVE!"
+		        requestQueue(requestQueueIdx).response_errorMessage = empty
+		        requestQueue(requestQueueIdx).response_channel = pgsession.DatabaseName.Lowercase + "_" + str(requestQueue(requestQueueIdx).pid_requestor)  // send it to the requestor's private channel, no need for everyone to receive it
+		        
+		        // we'll actively handle it from the dispatcher method, just because it's a simple one: we only have to send out the response
+		        dim respondOutcome as pdOutcome = Request_respond(requestQueue(requestQueueIdx).uuid)
+		        if respondOutcome.ok = true then  // sent back ok
+		          requestQueue.remove(requestQueueIdx)
+		        else  // error sending response
+		          System.DebugLog("Error sending response for request " + requestQueue(requestQueueIdx).uuid)
+		          requestQueue(requestQueueIdx).response_errorMessage = "Error sending response: " + respondOutcome.fatalErrorMsg
+		          // someone should keep an eye on the queue for entries with ownRequestAwaitingResponse = false and response_errorMessage <> empty
+		          // we should not keep these entries on the list for too long or have them piling up indefinitely
+		        end if
+		        
+		      else // unrecognizable request, plus there's no one else down the dispatch ladder to have a go at it. we'll remove it
+		        requestQueue.Remove(requestQueueIdx)
+		      end select
+		      
+		    end if
+		    
+		  loop until connected = false
+		  
+		End Sub
+	#tag EndMethod
+
 	#tag Method, Flags = &h21
 		Private Function validateController() As pdOutcome
 		  // to be implemented
