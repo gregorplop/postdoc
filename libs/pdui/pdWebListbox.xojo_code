@@ -1,6 +1,62 @@
 #tag Class
 Protected Class pdWebListbox
 Inherits WebListBox
+	#tag Method, Flags = &h0
+		Function uniqueValueExistsInList(uniqueValue as string) As integer
+		  if uniqueColumn < 0 then raise new OutOfBoundsException
+		  if uniqueColumn > ColumnCount - 1 then raise new OutOfBoundsException
+		  
+		  for i as integer = 0 to RowCount - 1
+		    if Cell(uniqueColumn) = uniqueValue then return i
+		  next i
+		  
+		  return -1
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub updateAddRow(row() as string)
+		  if row.Ubound <> ColumnCount - 1 then Raise new OutOfBoundsException
+		  if uniqueColumn < 0 then raise new OutOfBoundsException
+		  if uniqueColumn > ColumnCount - 1 then raise new OutOfBoundsException
+		  
+		  // we need to decide whether to update or insert
+		  
+		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
+		Sub updateClose()
+		  if uniqueColumn < 0 then raise new OutOfBoundsException
+		  if uniqueColumn > ColumnCount - 1 then raise new OutOfBoundsException
+		  if RowCount = 0 then return
+		  
+		  dim idx as integer = 0
+		  
+		  do
+		    
+		    
+		    
+		    
+		  loop until idx = RowCount - 1
+		  
+		  
+		  redim uniqueValues(-1)
+		  
+		End Sub
+	#tag EndMethod
+
+
+	#tag Property, Flags = &h0
+		uniqueColumn As Integer = -1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		uniqueValues(-1) As string
+	#tag EndProperty
+
+
 	#tag ViewBehavior
 		#tag ViewProperty
 			Name="AlternateRowColor"
@@ -266,6 +322,12 @@ Inherits WebListBox
 			Name="_VerticalPercent"
 			Group="Behavior"
 			Type="Double"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="uniqueColumn"
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class
