@@ -1,8 +1,8 @@
 #tag Class
 Protected Class pdWebListbox
 Inherits WebListBox
-	#tag Method, Flags = &h0
-		Function uniqueValueExistsInList(uniqueValue as string) As integer
+	#tag Method, Flags = &h21
+		Private Function uniqueValueExistsInList(uniqueValue as string) As integer
 		  if uniqueColumn < 0 then raise new OutOfBoundsException
 		  if uniqueColumn > ColumnCount - 1 then raise new OutOfBoundsException
 		  
@@ -62,7 +62,11 @@ Inherits WebListBox
 		  
 		  dim idx as integer = 0
 		  do
-		    if valuesToRemove.IndexOf(cell(idx , uniqueColumn)) >= 0 then RemoveRow(idx)
+		    if valuesToRemove.IndexOf(cell(idx , uniqueColumn)) >= 0 then 
+		      RemoveRow(idx)
+		    else
+		      idx= idx + 1
+		    end if
 		  loop until idx = RowCount - 1
 		  
 		  

@@ -35,7 +35,7 @@ Begin WebDialog ActiveUsersMonitor Implements AppletInterface
    _OpenEventFired =   False
    _ShownEventFired=   False
    _VerticalPercent=   0.0
-   Begin WebListBox UserList
+   Begin pdWebListbox UserList
       AlternateRowColor=   &cEDF3FE00
       ColumnCount     =   1
       ColumnWidths    =   "*"
@@ -127,7 +127,7 @@ Begin WebDialog ActiveUsersMonitor Implements AppletInterface
       Scope           =   0
       Style           =   "0"
       TabOrder        =   0
-      Text            =   "Only showing postdoc sessions , refresh time is 2 seconds."
+      Text            =   "NoticeLabel"
       TextAlign       =   0
       Top             =   354
       VerticalCenter  =   0
@@ -202,33 +202,38 @@ End
 		Sub RefreshList(content() as Dictionary)
 		  dim row(4) as String
 		  
-		  if content.Ubound < 0 then
-		    if UserList.RowCount > 0 then UserList.DeleteAllRows
-		    noticeLabel.Text = "No users"
-		    Return
-		  end if
-		  
+		  // this code need reviewing
 		  if content.Ubound = 0 and content(0).HasKey("error") then
 		    if UserList.RowCount > 0 then UserList.DeleteAllRows
 		    noticeLabel.Text = content(0).Value("error").StringValue.pgErrorSingleLine
 		    Return
 		  end if
 		  
-		  dim selectionIDX as Integer = UserList.ListIndex
+		  dim pgAppname , pduser as string
 		  
-		  UserList.DeleteAllRows
 		  for i as integer = 0 to content.Ubound
-		    row(0) = str(i+1)
-		    row(1) = content(i).Value("pid").StringValue
-		    row(2) = content(i).Value("application_name").StringValue
-		    row(3) = content(i).Value("usename").StringValue
+		    if content(i).Value("application_name").StringValue.CountFields("//") <> 3 then Continue for i
+		    if content(i).Value("application_name").StringValue.NthField("//" , 1) <> "pd" then Continue for i
+		    pgAppname = content(i).Value("application_name").StringValue.NthField("//" , 2)
+		    pduser = if(content(i).Value("application_name").StringValue.NthField("//" , 3) = content(i).Value("usename").StringValue , empty , content(i).Value("application_name").StringValue.NthField("//" , 3))
+		    
+		    row(0) = content(i).Value("pid").StringValue
+		    row(1) = pgAppname
+		    row(2) = content(i).Value("usename").StringValue
+		    row(3) = pduser
 		    row(4) = content(i).Value("client_addr").StringValue
-		    UserList.AddRow row
+		    
+		    UserList.updateAddRow(row)
+		    
 		  next i
 		  
-		  if selectionIDX >= 0 and selectionIDX <= UserList.RowCount - 1 then UserList.ListIndex = selectionIDX
+		  UserList.updateCleanup
 		End Sub
 	#tag EndMethod
+
+
+	#tag Constant, Name = DefaultNotice, Type = String, Dynamic = False, Default = \"Only showing postdoc sessions \x2C refresh time is 2 seconds.", Scope = Public
+	#tag EndConstant
 
 
 #tag EndWindowCode
@@ -237,16 +242,16 @@ End
 	#tag Event
 		Sub Open()
 		  me.ColumnCount  = 5
-		  me.Heading(0) = "#"
-		  me.Heading(1) = "pgPID"
-		  me.Heading(2) = "Session"
-		  me.Heading(3) = "Postgres user"
-		  me.Heading(4) = "IP Address"
 		  
-		  me.ColumnWidths = "5%,10%,35%,25%,25%"
+		  me.Heading(0) = "pgPID"
+		  me.Heading(1) = "Application"
+		  me.Heading(2) = "Postgres user"
+		  me.Heading(3) = "Postdoc user"
+		  me.Heading(4) = "Client IP address"
 		  
+		  me.ColumnWidths = "10%,25%,20%,20%,25%"
 		  
-		  
+		  me.uniqueColumn = 0 
 		  me.HasHeading = true
 		  
 		  
@@ -264,6 +269,13 @@ End
 	#tag Event
 		Sub Action()
 		  RefreshList(Session.getActiveDBbackends)
+		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events noticeLabel
+	#tag Event
+		Sub Open()
+		  me.Text = DefaultNotice
 		End Sub
 	#tag EndEvent
 #tag EndEvents
