@@ -7,7 +7,7 @@ Inherits WebListBox
 		  if uniqueColumn > ColumnCount - 1 then raise new OutOfBoundsException
 		  
 		  for i as integer = 0 to RowCount - 1
-		    if Cell(uniqueColumn) = uniqueValue then return i
+		    if Cell(i , uniqueColumn) = uniqueValue then return i
 		  next i
 		  
 		  return -1
@@ -23,26 +23,50 @@ Inherits WebListBox
 		  
 		  // we need to decide whether to update or insert
 		  
+		  dim positionInList as Integer = uniqueValueExistsInList(row(uniqueColumn))
+		  
+		  if positionInList < 0 then // add
+		    
+		    if uniqueValueIDLastHandled < 0 then  // addrow
+		      AddRow(row)
+		    else  // InsertRow
+		      InsertRow(uniqueValueIDLastHandled , row)
+		    end if
+		    
+		  else // update
+		    
+		    for i as Integer = 0 to row.Ubound
+		      cell(positionInList , i) = row(i)
+		    next i
+		    
+		    uniqueValueIDLastHandled = positionInList
+		    
+		  end if
+		  
+		  if uniqueValuesAdded.IndexOf(row(uniqueColumn)) < 0 then uniqueValuesAdded.Append row(uniqueColumn)
+		  
 		End Sub
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
-		Sub updateClose()
+		Sub updateCleanup()
 		  if uniqueColumn < 0 then raise new OutOfBoundsException
 		  if uniqueColumn > ColumnCount - 1 then raise new OutOfBoundsException
 		  if RowCount = 0 then return
 		  
-		  dim idx as integer = 0
+		  dim valuesToRemove(-1) as String
 		  
+		  for i as Integer = 0 to RowCount - 1
+		    if uniqueValuesAdded.IndexOf(cell(i , uniqueColumn)) < 0 then valuesToRemove.Append cell(i , uniqueColumn)
+		  next i
+		  
+		  dim idx as integer = 0
 		  do
-		    
-		    
-		    
-		    
+		    if valuesToRemove.IndexOf(cell(idx , uniqueColumn)) >= 0 then RemoveRow(idx)
 		  loop until idx = RowCount - 1
 		  
 		  
-		  redim uniqueValues(-1)
+		  redim uniqueValuesAdded(-1)
 		  
 		End Sub
 	#tag EndMethod
@@ -53,7 +77,15 @@ Inherits WebListBox
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		uniqueValues(-1) As string
+		uniqueValueIDLastHandled As Integer = -1
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		uniqueValuesAdded(-1) As string
+	#tag EndProperty
+
+	#tag Property, Flags = &h0
+		uniqueValueSelected As string
 	#tag EndProperty
 
 
@@ -325,6 +357,18 @@ Inherits WebListBox
 		#tag EndViewProperty
 		#tag ViewProperty
 			Name="uniqueColumn"
+			Group="Behavior"
+			InitialValue="-1"
+			Type="Integer"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="uniqueValueSelected"
+			Group="Behavior"
+			Type="string"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="uniqueValueIDLastHandled"
 			Group="Behavior"
 			InitialValue="-1"
 			Type="Integer"
