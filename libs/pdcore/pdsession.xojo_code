@@ -321,8 +321,11 @@ Protected Class pdsession
 
 	#tag Method, Flags = &h21
 		Private Sub pgQueuePoll_Action(sender as Timer)
+		  AlternatingPulse = not AlternatingPulse
+		  
 		  pgsession.CheckForNotifications
 		  
+		  // check for service
 		  ServiceCheckCounter = ServiceCheckCounter + 1
 		  if ServiceCheckCounter = ServiceVerifyPeriod then
 		    ServiceCheckCounter = 0
@@ -332,7 +335,7 @@ Protected Class pdsession
 		    end if
 		  end if
 		  
-		  
+		  ...check for timeouts
 		End Sub
 	#tag EndMethod
 
@@ -356,6 +359,22 @@ Protected Class pdsession
 		  else
 		    Return rs.IdxField(1).StringValue
 		  end if
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function Requests_getTimedOut() As integer()
+		  dim output(-1) as Integer
+		  
+		  for i as integer = 0 to requestQueue.Ubound  // try to find all requests that have timed out
+		    if requestQueue(i).ownRequestAwaitingResponse = true and requestQueue(i).containsResponse = false then // own , unhandled requests
+		      if now.TotalSeconds - requestQueue(i).timestamp_issued.TotalSeconds > requestQueue(i).timeoutPeriod then output.Append i
+		    end if
+		  next i
+		  
+		  return output
+		  
 		  
 		End Function
 	#tag EndMethod
@@ -391,6 +410,7 @@ Protected Class pdsession
 		    
 		  case RequestTypes.ControllerAcknowledge
 		    newRequest.ownRequestAwaitingResponse = true
+		    newRequest.timeoutPeriod = 10  // specific for this request type
 		    if body.HasName("host") = False then return new pdOutcome(CurrentMethodName + ": ControllerAcknowledge request is missing host parameter")
 		    if body.Value("host").StringValue.trim = empty then return new pdOutcome(CurrentMethodName + ": ControllerAcknowledge request does not specify host")
 		    notifyCmd.Append(channel_service + " , ")
@@ -540,6 +560,10 @@ Protected Class pdsession
 
 	#tag Property, Flags = &h1
 		Protected activeServiceToken As pdservicetoken
+	#tag EndProperty
+
+	#tag Property, Flags = &h1
+		Protected AlternatingPulse As Boolean
 	#tag EndProperty
 
 	#tag Property, Flags = &h1

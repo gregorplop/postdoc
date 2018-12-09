@@ -405,18 +405,24 @@ Protected Class pdinit
 		  dim pdcatalogCheck as Boolean = false
 		  dim archivesCheck as Boolean = false
 		  dim accesstokensCheck as Boolean = false
+		  dim controllersCheck as Boolean = false
+		  dim datasetsCheck as Boolean = false
 		  // you get the point
 		  
 		  while not rs.EOF
 		    if rs.Field("schemaname").StringValue = "resources" and rs.Field("tablename").StringValue = "pdcatalog" then pdcatalogCheck = true
 		    if rs.Field("schemaname").StringValue = "resources" and rs.Field("tablename").StringValue = "archives" then archivesCheck = true
 		    if rs.Field("schemaname").StringValue = "resources" and rs.Field("tablename").StringValue = "accesstokens" then accesstokensCheck = true
+		    if rs.Field("schemaname").StringValue = "resources" and rs.Field("tablename").StringValue = "controllers" then controllersCheck = true
+		    if rs.Field("schemaname").StringValue = "resources" and rs.Field("tablename").StringValue = "datasets" then datasetsCheck = true
 		    rs.MoveNext
 		  wend
 		  
 		  if pdcatalogCheck = False then return success
 		  if archivesCheck = False then return success
 		  if accesstokensCheck = False then return success
+		  if controllersCheck = false then Return success
+		  if datasetsCheck = false then return success
 		  
 		  // second set of checks
 		  rs = activeSession.SQLSelect("SELECT * FROM resources.pdcatalog WHERE key LIKE 'pd%'")
