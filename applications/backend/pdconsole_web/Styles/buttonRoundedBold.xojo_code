@@ -7,7 +7,7 @@ Inherits WebStyle
 		corner-topleft=100%
 		corner-bottomleft=100%
 		corner-bottomright=100%
-		misc-background=solid FF0500FF
+		misc-background=solid 00FF00FF
 	#tag EndWebStyleStateGroup
 	#tag WebStyleStateGroup
 	#tag EndWebStyleStateGroup

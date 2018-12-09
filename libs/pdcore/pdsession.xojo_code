@@ -496,7 +496,9 @@ Protected Class pdsession
 	#tag Method, Flags = &h21
 		Private Function validatePDuser() As pdOutcome
 		  // to be implemented
+		  // validate if pduser exists for this postdoc system and has supplied a correct password (if required
 		  
+		  // succeed always until implemented
 		  dim success as new pdOutcome(true)
 		  success.returnObject = true
 		  return success
@@ -507,7 +509,10 @@ Protected Class pdsession
 	#tag Method, Flags = &h21
 		Private Function validateSession() As pdOutcome
 		  // to be implemented
+		  // check if the application has the right to connect (execute) to the postdoc system
 		  
+		  
+		  // succeed always, until implemented
 		  dim success as new pdOutcome(true)
 		  success.returnObject = true
 		  return success
