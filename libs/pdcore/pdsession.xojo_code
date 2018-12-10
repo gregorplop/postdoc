@@ -307,8 +307,10 @@ Protected Class pdsession
 		    requestQueue(responseIDX).response_content = if(body.HasName("response_content") , body.Value("response_content").StringValue , empty)
 		    requestQueue(responseIDX).response_errorMessage = if(body.HasName("response_errormessage") , body.Value("response_errormessage").StringValue , empty)
 		    
-		    RaiseEvent RequestComplete(RequestQueue(responseIDX))  // request has been responded to, let the app know about it
+		    dim responded as pdsysrequest = requestQueue(responseIDX).Clone
 		    requestQueue.Remove(responseIDX)  // request has been handled, remove from queue
+		    
+		    RaiseEvent RequestComplete(responded)  // request has been responded to, let the app know about it
 		    
 		  else  // this is a NEW request this client has to handle
 		    
@@ -322,11 +324,11 @@ Protected Class pdsession
 	#tag Method, Flags = &h21
 		Private Sub pgQueuePoll_Action(sender as Timer)
 		  AlternatingPulse = not AlternatingPulse
+		  ServiceCheckCounter = ServiceCheckCounter + 1
 		  
 		  pgsession.CheckForNotifications
 		  
 		  // check for service
-		  ServiceCheckCounter = ServiceCheckCounter + 1
 		  if ServiceCheckCounter = ServiceVerifyPeriod then
 		    ServiceCheckCounter = 0
 		    if pgPID = empty then
@@ -335,7 +337,17 @@ Protected Class pdsession
 		    end if
 		  end if
 		  
-		  ...check for timeouts
+		  // check for request timeouts
+		  if AlternatingPulse = true then // or false, doesn't matter. we just want this code to run every other time this event is fired
+		    dim timedOutID as Integer = Request_getTimedOut
+		    if timedOutID > -1 then
+		      dim timedOutRequest as pdsysrequest = requestQueue(timedOutID).Clone
+		      requestQueue.Remove(timedOutID)
+		      RaiseEvent RequestTimeout(timedOutRequest)
+		    end if
+		  end if
+		  
+		  
 		End Sub
 	#tag EndMethod
 
@@ -359,22 +371,6 @@ Protected Class pdsession
 		  else
 		    Return rs.IdxField(1).StringValue
 		  end if
-		  
-		End Function
-	#tag EndMethod
-
-	#tag Method, Flags = &h1
-		Protected Function Requests_getTimedOut() As integer()
-		  dim output(-1) as Integer
-		  
-		  for i as integer = 0 to requestQueue.Ubound  // try to find all requests that have timed out
-		    if requestQueue(i).ownRequestAwaitingResponse = true and requestQueue(i).containsResponse = false then // own , unhandled requests
-		      if now.TotalSeconds - requestQueue(i).timestamp_issued.TotalSeconds > requestQueue(i).timeoutPeriod then output.Append i
-		    end if
-		  next i
-		  
-		  return output
-		  
 		  
 		End Function
 	#tag EndMethod
@@ -458,6 +454,19 @@ Protected Class pdsession
 		  
 		  
 		End Sub
+	#tag EndMethod
+
+	#tag Method, Flags = &h1
+		Protected Function Request_getTimedOut() As Integer
+		  for i as integer = 0 to requestQueue.Ubound  // try to find all requests that have timed out
+		    if requestQueue(i).ownRequestAwaitingResponse = true and requestQueue(i).containsResponse = false then // own , unhandled requests
+		      if now.TotalSeconds - requestQueue(i).timestamp_issued.TotalSeconds > requestQueue(i).timeoutPeriod then Return i
+		    end if
+		  next i
+		  
+		  return -1
+		  
+		End Function
 	#tag EndMethod
 
 	#tag Method, Flags = &h1

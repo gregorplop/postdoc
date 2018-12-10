@@ -91,13 +91,14 @@ Inherits pdsession
 		  else  // this is a NEW request this client MIGHT have to handle
 		    
 		    select case body.Value("requesttype").StringValue.sysRequestFromString
+		      
 		    case RequestTypes.ControllerAcknowledge  
 		      if body.HasName("host") = false then return
 		      if body.Value("host").StringValue.Uppercase <> getHostname then return
 		      
 		      receivedRequest.type = RequestTypes.ControllerAcknowledge // this client has to handle this incoming request
 		      
-		    else
+		    else  // none of this session type's business
 		      return
 		    end Select
 		    
@@ -107,7 +108,6 @@ Inherits pdsession
 		    receivedRequest.parameters = body
 		    receivedRequest.pid_handler = lastPID.val
 		    receivedRequest.pid_requestor = body.Value("pid_requestor").IntegerValue
-		    receivedRequest.retries = 0
 		    receivedRequest.timestamp_issued = body.Value("timestamp_issued").DateValue
 		    receivedRequest.uuid = body.Value("uuid").StringValue
 		    

@@ -14,6 +14,7 @@ Folder=pdstorage;../../../libs/pdstorage;&h0000000045F297FF;&h0000000000000000;f
 Module=pdcoreLib;../../../libs/pdcore/pdcoreLib.xojo_code;&h0000000062CE37FF;&h000000006A00DFFF;false
 Class=pdOutcome;../../../libs/pdcore/pdOutcome.xojo_code;&h00000000763BAFFF;&h000000006A00DFFF;false
 Class=pdservicetoken;../../../libs/pdcore/pdservicetoken.xojo_code;&h00000000033ED7FF;&h000000006A00DFFF;false
+Class=pdsession_controller;../../../libs/pdcore/pdsession_controller.xojo_code;&h00000000673287FF;&h000000006A00DFFF;false
 Class=pdsession;../../../libs/pdcore/pdsession.xojo_code;&h00000000475B77FF;&h000000006A00DFFF;false
 Class=pdinit;../../../libs/pdinit/pdinit.xojo_code;&h0000000021CB6FFF;&h000000007D12D7FF;false
 Class=pdstorage_session_maintenance;../../../libs/pdstorage/pdstorage_session_maintenance.xojo_code;&h0000000030717FFF;&h0000000045F297FF;false

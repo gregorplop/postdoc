@@ -46,10 +46,6 @@ Protected Class pdsysrequest
 	#tag EndProperty
 
 	#tag Property, Flags = &h0
-		retries As Integer = 0
-	#tag EndProperty
-
-	#tag Property, Flags = &h0
 		timeoutPeriod As Integer
 	#tag EndProperty
 
@@ -162,6 +158,13 @@ Protected Class pdsysrequest
 			Name="response_channel"
 			Group="Behavior"
 			Type="String"
+			EditorType="MultiLineEditor"
+		#tag EndViewProperty
+		#tag ViewProperty
+			Name="containsResponse"
+			Group="Behavior"
+			InitialValue="false"
+			Type="Boolean"
 		#tag EndViewProperty
 	#tag EndViewBehavior
 End Class

@@ -110,6 +110,30 @@ Protected Module pdcoreLib
 	#tag EndMethod
 
 	#tag Method, Flags = &h0
+		Function Clone(extends source as pdsysrequest) As pdsysrequest
+		  dim copy as new pdsysrequest
+		  
+		  copy.containsResponse = source.containsResponse
+		  copy.ownRequestAwaitingResponse = source.ownRequestAwaitingResponse
+		  copy.parameters = source.parameters
+		  copy.pid_handler = source.pid_handler
+		  copy.pid_requestor = source.pid_requestor
+		  copy.response_channel = source.response_channel
+		  copy.response_content = source.response_content
+		  copy.response_errorMessage = source.response_errorMessage
+		  copy.timeoutPeriod = source.timeoutPeriod
+		  copy.timestamp_issued = new date(source.timestamp_issued)
+		  copy.timestamp_response = new date(source.timestamp_response)
+		  copy.type = source.type
+		  copy.uuid = source.uuid
+		  
+		  return copy
+		  
+		  
+		End Function
+	#tag EndMethod
+
+	#tag Method, Flags = &h0
 		Function Contains(extends input as string , what as string) As Boolean
 		  if input.InStr(what) > 0 then 
 		    return true
