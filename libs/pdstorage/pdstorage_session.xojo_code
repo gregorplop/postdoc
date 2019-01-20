@@ -712,8 +712,12 @@ Protected Class pdstorage_session
 		End Function
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Private Shared Function getVFSsalt() As string
+	#tag Method, Flags = &h0
+		Shared Function getVFSsalt() As string
+		  // this is a constant string that becomes part of user-entered passwords to form the complete VFS password
+		  // it is characteristic of each build. You can change it to your own.
+		  // you are adviced to generate it through obfuscated code as in the original implementation.
+		  
 		  Dim Chars() As String = Array("s", "z", "W", "A", "x", "1", "p", "y", "t", "X", "F", "K", "U", "D", "4", "h", "n", "I", "l", "Z", "Q", "S", "V", "0", "M", "k", "T", "=", "N", "C", "d", "R")
 		  Return DefineEncoding(DecodeBase64(Chars(11) + Chars(13) + Chars(17) + Chars(15) + Chars(28) + Chars(13) + Chars(31) + Chars(29) + Chars(31) + Chars(7) + Chars(24) + Chars(14) + Chars(24) + Chars(10) + Chars(30) + Chars(16) + Chars(21) + Chars(13) + Chars(3) + Chars(8) + Chars(28) + Chars(26) + Chars(12) + Chars(4) + Chars(17) + Chars(12) + Chars(19) + Chars(14) + Chars(28) + Chars(5) + Chars(12) + Chars(1) + Chars(19) + Chars(7) + Chars(6) + Chars(20) + Chars(21) + Chars(2) + Chars(18) + Chars(0) + Chars(22) + Chars(23) + Chars(8) + Chars(2) + Chars(19) + Chars(9) + Chars(17) + Chars(18) + Chars(24) + Chars(21) + Chars(25) + Chars(27)),Encodings.UTF8)
 		End Function
@@ -965,7 +969,7 @@ Protected Class pdstorage_session
 		    end if 
 		    
 		    while not fragmentStream.EOF
-		      content = fragmentStream.Read(maxRecordSize / 2)  // notice that reading happens in double the steps
+		      content = fragmentStream.Read(fragmentSize * MByte)
 		      targetStream.Write(content)
 		      
 		      if fragmentStream.ReadError = true then
@@ -1056,7 +1060,7 @@ Protected Class pdstorage_session
 		  
 		  do until readStream.EOF
 		    
-		    fragmentData = readStream.Read(maxRecordSize)  // get a fragment
+		    fragmentData = readStream.Read(fragmentSize * MByte)  // get a fragment
 		    
 		    // we need to decide which medium to write it to
 		    mediumPickTimeout = 0
@@ -1397,7 +1401,7 @@ Protected Class pdstorage_session
 	#tag EndProperty
 
 
-	#tag Constant, Name = maxRecordSize, Type = Double, Dynamic = False, Default = \"67108864", Scope = Private
+	#tag Constant, Name = fragmentSize, Type = Double, Dynamic = False, Default = \"8", Scope = Private
 	#tag EndConstant
 
 

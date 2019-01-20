@@ -7,13 +7,6 @@ Protected Class pdstorage_maintenance
 		End Sub
 	#tag EndMethod
 
-	#tag Method, Flags = &h21
-		Private Shared Function getVFSsalt() As string
-		  Dim Chars() As String = Array("s", "z", "W", "A", "x", "1", "p", "y", "t", "X", "F", "K", "U", "D", "4", "h", "n", "I", "l", "Z", "Q", "S", "V", "0", "M", "k", "T", "=", "N", "C", "d", "R")
-		  Return DefineEncoding(DecodeBase64(Chars(11) + Chars(13) + Chars(17) + Chars(15) + Chars(28) + Chars(13) + Chars(31) + Chars(29) + Chars(31) + Chars(7) + Chars(24) + Chars(14) + Chars(24) + Chars(10) + Chars(30) + Chars(16) + Chars(21) + Chars(13) + Chars(3) + Chars(8) + Chars(28) + Chars(26) + Chars(12) + Chars(4) + Chars(17) + Chars(12) + Chars(19) + Chars(14) + Chars(28) + Chars(5) + Chars(12) + Chars(1) + Chars(19) + Chars(7) + Chars(6) + Chars(20) + Chars(21) + Chars(2) + Chars(18) + Chars(0) + Chars(22) + Chars(23) + Chars(8) + Chars(2) + Chars(19) + Chars(9) + Chars(17) + Chars(18) + Chars(24) + Chars(21) + Chars(25) + Chars(27)),Encodings.UTF8)
-		End Function
-	#tag EndMethod
-
 	#tag Method, Flags = &h0
 		Shared Function initVFS(initVFS as pdstorage_vfs) As pdOutcome
 		  // requires:
@@ -37,7 +30,7 @@ Protected Class pdstorage_maintenance
 		  if initVFS.password <> empty then // encrypt VFS master table
 		    if initVFS.password.Len < 6 then return new pdOutcome(CurrentMethodName + ": Password must be more than 5 characters")
 		    if initVFS.password.len > 10 then return new pdOutcome(CurrentMethodName + ": Password must be maximum 10 characters")
-		    newDBobject.EncryptionKey = getVFSsalt.left(16-(initVFS.password.len+3)) + initVFS.password + getVFSsalt.Right(3)
+		    newDBobject.EncryptionKey = pdstorage_session.getVFSsalt.left(16-(initVFS.password.len+3)) + initVFS.password + pdstorage_session.getVFSsalt.Right(3)
 		  end if
 		  
 		  if newDBobject.CreateDatabaseFile = false then return new pdOutcome(CurrentMethodName + ": Error creating database: " + newDBobject.ErrorMessage)
