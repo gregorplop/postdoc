@@ -264,6 +264,31 @@ End
 
 
 	#tag MenuHandler
+		Function EditCopyheader() As Boolean Handles EditCopyheader.Action
+			dim header(-1) as string
+			
+			for i as Integer = 0 to MainList.ColumnCount - 1
+			header.Append MainList.Heading(i)
+			next i
+			
+			dim c as new Clipboard
+			c.SetText(Join(header , chr(9)))
+			c.Close
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
+		Function FileClose() As Boolean Handles FileClose.Action
+			
+			Return True
+			
+		End Function
+	#tag EndMenuHandler
+
+	#tag MenuHandler
 		Function FileOpen() As Boolean Handles FileOpen.Action
 			dim file2open as FolderItem = GetOpenFolderItem("")
 			if file2open = nil then return true
@@ -552,6 +577,22 @@ End
 		  end select
 		  
 		End Function
+	#tag EndEvent
+	#tag Event
+		Sub Open()
+		  dim passwdfile as FolderItem = SpecialFolder.UserHome.Child("sqlite.pass")
+		  
+		  if passwdfile = nil then return
+		  if passwdfile.Exists = False then return
+		  
+		  dim readstream as TextInputStream = TextInputStream.Open(passwdfile)
+		  
+		  dim password as String = readstream.ReadLine
+		  
+		  readstream.close
+		  
+		  if password.Trim <> "" then me.Text = password
+		End Sub
 	#tag EndEvent
 #tag EndEvents
 #tag ViewBehavior

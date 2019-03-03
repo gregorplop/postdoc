@@ -80,6 +80,16 @@ Begin Menu MainMenuBar
          AutoEnable = True
          Visible = True
       End
+      Begin MenuItem EditCopyheader
+         SpecialMenu = 0
+         Text = "Copy &Header"
+         Index = -2147483648
+         ShortcutKey = "H"
+         Shortcut = "Cmd+H"
+         MenuModifier = True
+         AutoEnable = True
+         Visible = True
+      End
       Begin MenuItem EditPaste
          SpecialMenu = 0
          Text = "&Paste"

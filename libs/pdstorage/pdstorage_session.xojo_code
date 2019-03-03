@@ -1401,7 +1401,7 @@ Protected Class pdstorage_session
 	#tag EndProperty
 
 
-	#tag Constant, Name = fragmentSize, Type = Double, Dynamic = False, Default = \"8", Scope = Private
+	#tag Constant, Name = fragmentSize, Type = Double, Dynamic = False, Default = \"16", Scope = Private
 	#tag EndConstant
 
 
