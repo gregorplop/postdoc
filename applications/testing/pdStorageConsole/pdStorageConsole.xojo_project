@@ -1,5 +1,5 @@
 Type=Desktop
-RBProjectVersion=2018.03
+RBProjectVersion=2018.04
 MinIDEVersion=20070100
 Class=App;App.xojo_code;&h0000000024C91FFF;&h0000000000000000;false
 Window=InputWindow;InputWindow.xojo_window;&h0000000075AC7FFF;&h0000000000000000;false
@@ -19,6 +19,7 @@ Module=pdcoreLib;../../../libs/pdcore/pdcoreLib.xojo_code;&h00000000667CD7FF;&h0
 Class=pdOutcome;../../../libs/pdcore/pdOutcome.xojo_code;&h000000005700CFFF;&h000000001B826FFF;false
 Module=ConsoleLib;ConsoleLib.xojo_code;&h000000001FDB97FF;&h0000000000000000;false
 Window=NewPoolWindow;NewPoolWindow.xojo_window;&h0000000055AFE7FF;&h0000000000000000;false
+Class=pdsysrequest;../../../libs/pdcore/pdsysrequest.xojo_code;&h0000000078B4B7FF;&h000000001B826FFF;false
 DefaultWindow=MainWindow
 MajorVersion=1
 MinorVersion=0

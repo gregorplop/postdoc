@@ -181,7 +181,7 @@ Begin Window MainWindow
       HelpTag         =   ""
       Index           =   -2147483648
       Italic          =   False
-      Left            =   436
+      Left            =   618
       LimitText       =   0
       LockBottom      =   False
       LockedInPosition=   False
@@ -205,7 +205,7 @@ Begin Window MainWindow
       Underline       =   False
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   428
+      Width           =   246
    End
    Begin TextField encryptionKey
       AcceptTabs      =   False
@@ -249,6 +249,49 @@ Begin Window MainWindow
       UseFocusRing    =   True
       Visible         =   True
       Width           =   230
+   End
+   Begin TextField immediateSQL
+      AcceptTabs      =   False
+      Alignment       =   2
+      AutoDeactivate  =   True
+      AutomaticallyCheckSpelling=   False
+      BackColor       =   &cFFFFFF00
+      Bold            =   False
+      Border          =   True
+      CueText         =   "SQL immediate execution"
+      DataField       =   ""
+      DataSource      =   ""
+      Enabled         =   True
+      Format          =   ""
+      Height          =   22
+      HelpTag         =   ""
+      Index           =   -2147483648
+      Italic          =   False
+      Left            =   260
+      LimitText       =   0
+      LockBottom      =   False
+      LockedInPosition=   False
+      LockLeft        =   True
+      LockRight       =   True
+      LockTop         =   True
+      Mask            =   ""
+      Password        =   False
+      ReadOnly        =   False
+      Scope           =   0
+      TabIndex        =   6
+      TabPanelIndex   =   0
+      TabStop         =   True
+      Text            =   ""
+      TextColor       =   &c00000000
+      TextFont        =   "System"
+      TextSize        =   16.0
+      TextUnit        =   0
+      Top             =   2
+      Transparent     =   True
+      Underline       =   False
+      UseFocusRing    =   True
+      Visible         =   True
+      Width           =   337
    End
 End
 #tag EndWindow
@@ -434,6 +477,9 @@ End
 		    
 		    if activeDB.Error = true then
 		      MsgBox activeDB.ErrorMessage
+		    elseif rs = nil then
+		      MainList.DeleteAllRows
+		      MsgBox "Statement executed OK but returned no result"
 		    else
 		      showRecordset(rs , activeDB.FieldSchema(TableSelector.Text))
 		    end if
@@ -593,6 +639,24 @@ End
 		  
 		  if password.Trim <> "" then me.Text = password
 		End Sub
+	#tag EndEvent
+#tag EndEvents
+#tag Events immediateSQL
+	#tag Event
+		Function KeyDown(Key As String) As Boolean
+		  select case asc(key)
+		    
+		  case 3,13
+		    
+		    showTable(me.Text)
+		    
+		    return true
+		  else
+		    return false
+		    
+		  end select
+		  
+		End Function
 	#tag EndEvent
 #tag EndEvents
 #tag ViewBehavior

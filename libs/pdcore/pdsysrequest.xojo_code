@@ -137,12 +137,6 @@ Protected Class pdsysrequest
 			Type="integer"
 		#tag EndViewProperty
 		#tag ViewProperty
-			Name="retries"
-			Group="Behavior"
-			InitialValue="0"
-			Type="Integer"
-		#tag EndViewProperty
-		#tag ViewProperty
 			Name="response_content"
 			Group="Behavior"
 			Type="String"
