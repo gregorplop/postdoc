@@ -9,7 +9,7 @@ Begin Window MainWindow
    FullScreen      =   False
    FullScreenButton=   False
    HasBackColor    =   False
-   Height          =   658
+   Height          =   666
    ImplicitInstance=   True
    LiveResize      =   True
    MacProcID       =   0
@@ -25,7 +25,7 @@ Begin Window MainWindow
    Resizeable      =   True
    Title           =   "pdPgQueueDebug"
    Visible         =   True
-   Width           =   662
+   Width           =   802
    Begin GroupBox dbConnectionGroup
       AutoDeactivate  =   True
       Bold            =   True
@@ -40,7 +40,7 @@ Begin Window MainWindow
       LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   True
       Scope           =   0
       TabIndex        =   0
@@ -53,7 +53,7 @@ Begin Window MainWindow
       Transparent     =   True
       Underline       =   False
       Visible         =   True
-      Width           =   642
+      Width           =   772
       Begin TextField dbAddress_field
          AcceptTabs      =   False
          Alignment       =   2
@@ -225,11 +225,11 @@ Begin Window MainWindow
          Index           =   -2147483648
          InitialParent   =   "dbConnectionGroup"
          Italic          =   False
-         Left            =   498
+         Left            =   628
          LockBottom      =   False
          LockedInPosition=   False
-         LockLeft        =   True
-         LockRight       =   False
+         LockLeft        =   False
+         LockRight       =   True
          LockTop         =   True
          Scope           =   0
          TabIndex        =   4
@@ -311,7 +311,7 @@ Begin Window MainWindow
          TabIndex        =   6
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "mypostdoc"
+         Text            =   ""
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -390,7 +390,7 @@ Begin Window MainWindow
          TabIndex        =   8
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "pdadmin"
+         Text            =   ""
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -469,7 +469,7 @@ Begin Window MainWindow
          TabIndex        =   10
          TabPanelIndex   =   0
          TabStop         =   True
-         Text            =   "test"
+         Text            =   ""
          TextColor       =   &c00000000
          TextFont        =   "System"
          TextSize        =   0.0
@@ -530,7 +530,7 @@ Begin Window MainWindow
       Transparent     =   True
       Underline       =   False
       Visible         =   True
-      Width           =   157
+      Width           =   179
       Begin Listbox activeChannelsList
          AutoDeactivate  =   True
          AutoHideScrollbars=   True
@@ -560,7 +560,7 @@ Begin Window MainWindow
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   True
-         LockRight       =   False
+         LockRight       =   True
          LockTop         =   True
          RequiresSelection=   False
          Scope           =   0
@@ -579,7 +579,7 @@ Begin Window MainWindow
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
-         Width           =   138
+         Width           =   160
          _ScrollOffset   =   0
          _ScrollWidth    =   -1
       End
@@ -606,7 +606,7 @@ Begin Window MainWindow
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   True
-         LockRight       =   False
+         LockRight       =   True
          LockTop         =   True
          Mask            =   ""
          Password        =   False
@@ -625,7 +625,7 @@ Begin Window MainWindow
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
-         Width           =   76
+         Width           =   98
       End
       Begin PushButton unlisten_btn
          AutoDeactivate  =   True
@@ -644,7 +644,7 @@ Begin Window MainWindow
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   True
-         LockRight       =   False
+         LockRight       =   True
          LockTop         =   True
          Scope           =   0
          TabIndex        =   3
@@ -657,7 +657,7 @@ Begin Window MainWindow
          Transparent     =   True
          Underline       =   False
          Visible         =   True
-         Width           =   138
+         Width           =   160
       End
       Begin PushButton listen_btn
          AutoDeactivate  =   True
@@ -672,11 +672,11 @@ Begin Window MainWindow
          Index           =   -2147483648
          InitialParent   =   "listeningGroup"
          Italic          =   False
-         Left            =   98
+         Left            =   120
          LockBottom      =   False
          LockedInPosition=   False
-         LockLeft        =   True
-         LockRight       =   False
+         LockLeft        =   False
+         LockRight       =   True
          LockTop         =   True
          Scope           =   0
          TabIndex        =   4
@@ -704,7 +704,7 @@ Begin Window MainWindow
       DataSource      =   ""
       Enabled         =   True
       Format          =   ""
-      Height          =   174
+      Height          =   182
       HelpTag         =   ""
       HideSelection   =   True
       Index           =   -2147483648
@@ -739,7 +739,7 @@ Begin Window MainWindow
       Underline       =   False
       UseFocusRing    =   True
       Visible         =   True
-      Width           =   642
+      Width           =   782
    End
    Begin GroupBox incomingGroup
       AutoDeactivate  =   True
@@ -751,7 +751,7 @@ Begin Window MainWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
-      Left            =   179
+      Left            =   201
       LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   True
@@ -768,7 +768,7 @@ Begin Window MainWindow
       Transparent     =   True
       Underline       =   False
       Visible         =   True
-      Width           =   473
+      Width           =   591
       Begin Listbox incomingList
          AutoDeactivate  =   True
          AutoHideScrollbars=   True
@@ -794,7 +794,7 @@ Begin Window MainWindow
          InitialParent   =   "incomingGroup"
          InitialValue    =   ""
          Italic          =   False
-         Left            =   191
+         Left            =   213
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   True
@@ -817,7 +817,7 @@ Begin Window MainWindow
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
-         Width           =   449
+         Width           =   567
          _ScrollOffset   =   0
          _ScrollWidth    =   -1
       End
@@ -832,11 +832,11 @@ Begin Window MainWindow
       Index           =   -2147483648
       InitialParent   =   ""
       Italic          =   False
-      Left            =   179
+      Left            =   201
       LockBottom      =   False
       LockedInPosition=   False
       LockLeft        =   True
-      LockRight       =   False
+      LockRight       =   True
       LockTop         =   True
       Scope           =   0
       TabIndex        =   4
@@ -849,7 +849,7 @@ Begin Window MainWindow
       Transparent     =   True
       Underline       =   False
       Visible         =   True
-      Width           =   473
+      Width           =   581
       Begin ComboBox sendMessage
          AutoComplete    =   False
          AutoDeactivate  =   True
@@ -863,7 +863,7 @@ Begin Window MainWindow
          InitialParent   =   "outgoingGroup"
          InitialValue    =   ""
          Italic          =   False
-         Left            =   280
+         Left            =   302
          ListIndex       =   0
          LockBottom      =   False
          LockedInPosition=   False
@@ -882,7 +882,7 @@ Begin Window MainWindow
          Underline       =   False
          UseFocusRing    =   True
          Visible         =   True
-         Width           =   101
+         Width           =   152
       End
       Begin Label sendLabel
          AutoDeactivate  =   True
@@ -895,7 +895,7 @@ Begin Window MainWindow
          Index           =   -2147483648
          InitialParent   =   "outgoingGroup"
          Italic          =   False
-         Left            =   189
+         Left            =   211
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   True
@@ -930,7 +930,7 @@ Begin Window MainWindow
          Index           =   -2147483648
          InitialParent   =   "outgoingGroup"
          Italic          =   False
-         Left            =   386
+         Left            =   466
          LockBottom      =   False
          LockedInPosition=   False
          LockLeft        =   True
@@ -967,7 +967,7 @@ Begin Window MainWindow
          InitialParent   =   "outgoingGroup"
          InitialValue    =   ""
          Italic          =   False
-         Left            =   454
+         Left            =   540
          ListIndex       =   0
          LockBottom      =   False
          LockedInPosition=   False
@@ -1001,11 +1001,11 @@ Begin Window MainWindow
          Index           =   -2147483648
          InitialParent   =   "outgoingGroup"
          Italic          =   False
-         Left            =   567
+         Left            =   697
          LockBottom      =   False
          LockedInPosition=   False
-         LockLeft        =   True
-         LockRight       =   False
+         LockLeft        =   False
+         LockRight       =   True
          LockTop         =   True
          Scope           =   0
          TabIndex        =   5
@@ -1109,7 +1109,7 @@ End
 		Sub ReceivedNotification(aName as String, aPid as Integer, aExtra as String)
 		  dim d as new date
 		  
-		  incomingList.AddRow d.SQLDateTime , str(aPid) , aExtra
+		  incomingList.AddRow d.SQLDateTime , str(aPid) , aName , aExtra
 		  
 		  incomingList.ListIndex = incomingList.LastIndex
 		End Sub
@@ -1178,12 +1178,13 @@ End
 #tag Events incomingList
 	#tag Event
 		Sub Open()
-		  me.ColumnCount = 3
+		  me.ColumnCount = 4
 		  me.Heading(0) = "Timestamp"
 		  me.Heading(1) = "Sender"
-		  me.Heading(2) = "Content"
+		  me.Heading(2) = "Channel"
+		  me.Heading(3) = "Content"
 		  
-		  me.ColumnWidths = "10%,10%,80%"
+		  me.ColumnWidths = "20%,20%,20%,40%"
 		  me.HasHeading = true
 		  
 		  me.HeaderType(-1) = Listbox.HeaderTypes.NotSortable
