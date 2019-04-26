@@ -1,4 +1,5 @@
-## postdoc.  (project now defunct, repo remains for historical reasons. see the 2019 entry in following paragraph)
+## postdoc.  
+(project now defunct, repo remains for historical reasons. see the 2019 entry in following paragraph)
 ### A PostgreSQL-based Electronic Document Management framework for Xojo
 postdoc aims to be a way for Xojo developers to easily create workflow-enabled EDM applications. It abstracts the underlying database structure for storing metadata as well as version and status information. In addition to that, it provides a mechanism for storing binary content outside the database, while providing access to it via the same database connection.
 - - -
