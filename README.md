@@ -4,6 +4,7 @@ postdoc aims to be a way for Xojo developers to easily create workflow-enabled E
 - - -
 ### The state of postdoc.
 **(April 2019)**
+
 Due to to severely limited personal time, development on the project (as the pharaonic endeavour it was) has stopped and will not start again.
 
 **But,** this does not mean that all work already done is tossed down the drain!
@@ -12,7 +13,9 @@ An effort is being made to salvage interesting (and independent/reusable) parts 
 Already, 2 utilities have their own repository: pgNotifyDebug and SQLiteExplorer
 postdoc's object storage mechanism will follow, rebranded as **"Limnie"**
 
+
 **(2018)**
+
 *Well, postdoc doesn't really exist yet!*
 
 It is still under heavy development and large parts of it have not even left the design stage, meaning, it has not been decided on the optimal way to implement them!
