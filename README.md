@@ -3,6 +3,14 @@
 postdoc aims to be a way for Xojo developers to easily create workflow-enabled EDM applications. It abstracts the underlying database structure for storing metadata as well as version and status information. In addition to that, it provides a mechanism for storing binary content outside the database, while providing access to it via the same database connection.
 - - -
 ### The state of postdoc.
+**(April 2019)**
+Due to to severely limited personal time, development on the project (as the pharaonic endeavour it was) has stopped and will not start again.
+**But,** this does not mean that all work already done is tossed down the drain!
+An effort is being made to salvage interesting (and independent/reusable) parts by moving some of them to separate repos, where they can start a life of their own and be more visible to whoever might have a use for them. 
+Already, 2 utilities have their own repository: pgNotifyDebug and SQLiteExplorer
+postdoc's object storage mechanism will follow, rebranded as **"Limnie"**
+
+**(2018)**
 *Well, postdoc doesn't really exist yet!*
 
 It is still under heavy development and large parts of it have not even left the design stage, meaning, it has not been decided on the optimal way to implement them!
